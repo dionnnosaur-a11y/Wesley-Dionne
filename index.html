@@ -20,7 +20,7 @@
       --crimson: #8a1c1c;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; touch-action: manipulation; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--cream-bg); color: var(--text-dark); font-family: 'Montserrat', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 15px; }
 
     .container { background: var(--card-bg); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 16px; max-width: 480px; width: 100%; padding: 30px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
@@ -44,7 +44,7 @@
       background: #000; 
       user-select: none;
     }
-    video { width: 100%; display: block; max-height: 380px; pointer-events: auto; }
+    video { width: 100%; display: block; max-height: 380px; }
     
     .draggable-caption {
       position: absolute;
@@ -72,53 +72,49 @@
     }
     .ig-caption-input::placeholder { color: rgba(255, 255, 255, 0.75); font-weight: 400; }
 
-    /* iOS/IG Double Handles Timeline Trimmer */
-    .timeline-wrapper { margin: 15px 0; text-align: center; }
-    .timeline-container {
+    /* Custom Dual-Handle Timeline Trimmer */
+    .trimmer-track {
       position: relative;
-      height: 48px;
-      background: #1a1a1a;
+      width: 100%;
+      height: 44px;
+      background: #2a2621;
       border-radius: 8px;
-      border: 2px solid var(--gold);
+      margin: 15px 0 8px;
+      user-select: none;
+      touch-action: none;
+      border: 1px solid rgba(197, 160, 89, 0.4);
       overflow: hidden;
-      margin-bottom: 8px;
     }
-    .timeline-region {
+    .trimmer-fill {
       position: absolute;
-      top: 0; height: 100%;
+      top: 0; bottom: 0;
       background: rgba(197, 160, 89, 0.35);
-      border-left: 3px solid var(--gold);
-      border-right: 3px solid var(--gold);
+      border-top: 2px solid var(--gold);
+      border-bottom: 2px solid var(--gold);
       pointer-events: none;
     }
-    .range-input {
+    .trimmer-handle {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: none;
-      pointer-events: none;
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    .range-input::-webkit-slider-thumb {
-      height: 100%; width: 20px;
+      top: 0; bottom: 0;
+      width: 20px;
       background: var(--gold);
-      cursor: pointer;
-      pointer-events: auto;
-      -webkit-appearance: none;
       border-radius: 4px;
+      cursor: ew-resize;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       box-shadow: 0 0 6px rgba(0,0,0,0.6);
+      z-index: 5;
     }
-    .range-input::-moz-range-thumb {
-      height: 100%; width: 20px;
-      background: var(--gold);
-      cursor: pointer;
-      pointer-events: auto;
-      border-radius: 4px;
-      box-shadow: 0 0 6px rgba(0,0,0,0.6);
+    .trimmer-handle::after {
+      content: '||';
+      color: #fff;
+      font-size: 10px;
+      font-weight: bold;
+      opacity: 0.8;
     }
     
-    .duration-text { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+    .duration-text { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; margin-bottom: 15px; }
     .hidden { display: none !important; }
   </style>
 
@@ -184,22 +180,15 @@
         startTime = 0;
         endTime = Math.min(10, videoDuration);
 
-        const sSlider = document.getElementById('start-slider');
-        const eSlider = document.getElementById('end-slider');
-        
-        sSlider.max = videoDuration;
-        eSlider.max = videoDuration;
-        sSlider.value = startTime;
-        eSlider.value = endTime;
-
         vid.currentTime = startTime;
         vid.play();
 
-        window.updateTrimControls();
+        updateTrimmerUI();
+        document.getElementById('select-vid-btn').textContent = "Select another video";
         document.getElementById('editor-controls').classList.remove('hidden');
       };
 
-      // Loop video strictly within trimmed bounds directly in the player
+      // Loop video directly inside the main player bounded by trim points
       vid.ontimeupdate = () => {
         if (vid.currentTime >= endTime || vid.currentTime < startTime) {
           vid.currentTime = startTime;
@@ -207,53 +196,83 @@
       };
     };
 
-    window.updateTrimControls = () => {
-      const sSlider = document.getElementById('start-slider');
-      const eSlider = document.getElementById('end-slider');
+    function updateTrimmerUI() {
+      const track = document.getElementById('trimmer-track');
+      const fill = document.getElementById('trimmer-fill');
+      const hStart = document.getElementById('handle-start');
+      const hEnd = document.getElementById('handle-end');
+
+      const startPct = (startTime / videoDuration) * 100;
+      const endPct = (endTime / videoDuration) * 100;
+
+      fill.style.left = startPct + "%";
+      fill.style.width = (endPct - startPct) + "%";
+
+      hStart.style.left = `calc(${startPct}% - 10px)`;
+      hEnd.style.left = `calc(${endPct}% - 10px)`;
+
+      document.getElementById('duration-display').textContent = (endTime - startTime).toFixed(1);
+    }
+
+    function initTrimmerEvents() {
+      const track = document.getElementById('trimmer-track');
+      const hStart = document.getElementById('handle-start');
+      const hEnd = document.getElementById('handle-end');
       const vid = document.getElementById('video-preview');
+      let activeHandle = null;
 
-      let s = parseFloat(sSlider.value);
-      let e = parseFloat(eSlider.value);
+      function getSecFromEvent(e) {
+        const rect = track.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        let pct = (clientX - rect.left) / rect.width;
+        pct = Math.max(0, Math.min(1, pct));
+        return pct * videoDuration;
+      }
 
-      if (e - s < 5) {
-        if (event && event.target === sSlider) {
-          s = Math.max(0, e - 5);
-          sSlider.value = s;
-        } else {
-          e = Math.min(videoDuration, s + 5);
-          eSlider.value = e;
+      function onMove(e) {
+        if (!activeHandle) return;
+        let sec = getSecFromEvent(e);
+
+        if (activeHandle === 'start') {
+          if (endTime - sec < 5) sec = endTime - 5;
+          if (endTime - sec > 10) sec = endTime - 10;
+          startTime = Math.max(0, sec);
+          vid.currentTime = startTime;
+        } else if (activeHandle === 'end') {
+          if (sec - startTime < 5) sec = startTime + 5;
+          if (sec - startTime > 10) sec = startTime + 10;
+          endTime = Math.min(videoDuration, sec);
+          vid.currentTime = startTime;
         }
+        updateTrimmerUI();
       }
 
-      if (e - s > 10) {
-        if (event && event.target === sSlider) {
-          e = Math.min(videoDuration, s + 10);
-          eSlider.value = e;
-        } else {
-          s = Math.max(0, e - 10);
-          sSlider.value = s;
-        }
+      function onEnd() {
+        activeHandle = null;
+        window.removeEventListener('mousemove', onMove);
+        window.removeEventListener('mouseup', onEnd);
+        window.removeEventListener('touchmove', onMove);
+        window.removeEventListener('touchend', onEnd);
       }
 
-      startTime = s;
-      endTime = e;
-      const selectedDur = (endTime - startTime).toFixed(1);
+      const startDrag = (handle, e) => {
+        e.stopPropagation();
+        activeHandle = handle;
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onEnd);
+        window.addEventListener('touchmove', onMove);
+        window.addEventListener('touchend', onEnd);
+      };
 
-      document.getElementById('duration-display').textContent = selectedDur;
-
-      const region = document.getElementById('timeline-region');
-      const leftPercent = (startTime / videoDuration) * 100;
-      const rightPercent = 100 - ((endTime / videoDuration) * 100);
-      region.style.left = leftPercent + "%";
-      region.style.right = rightPercent + "%";
-
-      if (vid.currentTime < startTime || vid.currentTime > endTime) {
-        vid.currentTime = startTime;
-      }
-    };
+      hStart.addEventListener('mousedown', (e) => startDrag('start', e));
+      hStart.addEventListener('touchstart', (e) => startDrag('start', e));
+      hEnd.addEventListener('mousedown', (e) => startDrag('end', e));
+      hEnd.addEventListener('touchstart', (e) => startDrag('end', e));
+    }
 
     window.resetEditor = () => {
       document.getElementById('video-file').value = "";
+      document.getElementById('select-vid-btn').textContent = "Select Video";
       document.getElementById('editor-controls').classList.add('hidden');
     };
 
@@ -307,8 +326,10 @@
       }
     };
 
-    // Make Instagram Caption Draggable across the video screen
+    // Make Instagram Caption Draggable across video stage
     window.addEventListener('DOMContentLoaded', () => {
+      initTrimmerEvents();
+
       const dragItem = document.getElementById("drag-caption");
       const container = document.getElementById("video-stage");
       let active = false, currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
@@ -368,11 +389,11 @@
       <div class="names-header" style="font-size:2.2rem;">Trim & Caption</div>
       
       <input type="file" id="video-file" accept="video/*" onchange="loadVideo(event)" style="display:none;">
-      <button class="btn" style="margin-bottom:10px;" onclick="document.getElementById('video-file').click()">Select another video</button>
+      <button id="select-vid-btn" class="btn" style="margin-bottom:10px;" onclick="document.getElementById('video-file').click()">Select Video</button>
 
       <div id="editor-controls" class="hidden">
         
-        <!-- Video Preview with Draggable IG Caption -->
+        <!-- Video Stage with Draggable IG Caption -->
         <div class="video-stage" id="video-stage">
           <video id="video-preview" playsinline autoplay loop muted></video>
           <div class="draggable-caption" id="drag-caption">
@@ -380,15 +401,13 @@
           </div>
         </div>
 
-        <!-- iOS/IG Style Double-Slider Timeline Trimmer -->
-        <div class="timeline-wrapper">
-          <div class="timeline-container">
-            <div class="timeline-region" id="timeline-region"></div>
-            <input type="range" class="range-input" id="start-slider" min="0" step="0.1" oninput="updateTrimControls()">
-            <input type="range" class="range-input" id="end-slider" min="0" step="0.1" oninput="updateTrimControls()">
-          </div>
-          <div class="duration-text">SELECTED DURATION: <span id="duration-display">0</span>s (Constraint: 5-10s)</div>
+        <!-- Clean Custom Dual-Handle Trimmer -->
+        <div class="trimmer-track" id="trimmer-track">
+          <div class="trimmer-fill" id="trimmer-fill"></div>
+          <div class="trimmer-handle" id="handle-start"></div>
+          <div class="trimmer-handle" id="handle-end"></div>
         </div>
+        <div class="duration-text">SELECTED DURATION: <span id="duration-display">0.0</span>s (Constraint: 5-10s)</div>
 
         <div>
           <button class="btn btn-secondary" onclick="resetEditor()">Cancel</button>
