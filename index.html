@@ -7,7 +7,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@400;600;700;800&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -23,6 +23,26 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--cream-bg); color: var(--text-dark); font-family: 'Montserrat', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 15px; }
+
+    /* MANDARIN FONT STYLING OVERRIDES */
+    body.lang-zh {
+      font-family: 'Zhi Mang Xing', cursive, sans-serif;
+    }
+    body.lang-zh .names-header {
+      font-family: 'Zhi Mang Xing', cursive;
+      font-size: 3.4rem;
+    }
+    body.lang-zh .btn, 
+    body.lang-zh .add-caption-btn, 
+    body.lang-zh .trash-bin,
+    body.lang-zh .duration-text,
+    body.lang-zh p {
+      font-family: 'Zhi Mang Xing', cursive, sans-serif;
+      font-size: 1.15rem;
+    }
+    body.lang-zh .btn {
+      padding: 8px 26px;
+    }
 
     .container { position: relative; background: var(--card-bg); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 16px; max-width: 480px; width: 100%; padding: 35px 20px 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
     
@@ -47,6 +67,7 @@
       padding: 2px 4px;
       border-radius: 4px;
       transition: all 0.2s ease;
+      font-family: 'Montserrat', sans-serif !important;
     }
     .lang-btn.active {
       color: var(--gold-dark);
@@ -194,7 +215,9 @@
       touch-action: none;
       display: flex;
       justify-content: center;
-      max-width: 85%;
+      max-width: 90%;
+      padding: 15px;
+      margin: -15px;
     }
 
     .caption-wrapper {
@@ -202,11 +225,12 @@
       display: inline-block;
       background: #000000;
       border-radius: 14px;
-      padding: 8px 16px;
+      padding: 10px 18px;
       box-shadow: 0 6px 16px rgba(0,0,0,0.5);
-      min-width: 90px;
+      min-width: 100px;
       max-width: 100%;
       transition: border 0.2s ease;
+      pointer-events: auto;
     }
 
     .caption-mirror {
@@ -218,7 +242,7 @@
       word-break: break-word;
       visibility: hidden;
       display: inline-block;
-      min-width: 60px;
+      min-width: 70px;
     }
     
     .ig-caption-input {
@@ -230,7 +254,7 @@
       font-family: 'Montserrat', sans-serif;
       font-weight: 800;
       font-size: 1.25rem;
-      padding: 8px 16px;
+      padding: 10px 18px;
       border-radius: 14px;
       border: none;
       text-align: center;
@@ -239,8 +263,14 @@
       overflow: hidden;
       line-height: 1.35;
       box-sizing: border-box;
+      pointer-events: auto;
     }
     .ig-caption-input::placeholder { color: rgba(255, 255, 255, 0.6); font-weight: 700; }
+
+    body.lang-zh .caption-mirror,
+    body.lang-zh .ig-caption-input {
+      font-family: 'Zhi Mang Xing', cursive, sans-serif;
+    }
 
     .trimmer-track {
       position: relative;
@@ -401,6 +431,7 @@
       currentLang = lang;
       localStorage.setItem('app_lang', lang);
 
+      document.body.classList.toggle('lang-zh', lang === 'zh');
       document.getElementById('lang-en').classList.toggle('active', lang === 'en');
       document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
 
@@ -443,12 +474,10 @@
       document.getElementById('page-editor').classList.remove('hidden');
     };
 
-    // iOS WebKit-compatible filmstrip generator
     async function generateFilmstrip(videoUrl) {
       const filmstrip = document.getElementById('filmstrip-container');
       filmstrip.innerHTML = '';
 
-      // Offscreen element required by iOS WebKit to force frame rendering
       const tempVideo = document.createElement('video');
       tempVideo.src = videoUrl;
       tempVideo.muted = true;
@@ -485,7 +514,7 @@
           const finish = () => {
             if (!done) {
               done = true;
-              setTimeout(resolve, 50); // Frame buffer sync for Safari
+              setTimeout(resolve, 50);
             }
           };
           tempVideo.addEventListener('seeked', finish, { once: true });
@@ -613,10 +642,10 @@
       mirror.textContent = textVal;
 
       const len = input.value.length;
-      let fontSize = "1.25rem";
-      if (len > 40) fontSize = "0.85rem";
-      else if (len > 25) fontSize = "0.95rem";
-      else if (len > 12) fontSize = "1.1rem";
+      let fontSize = currentLang === 'zh' ? "1.4rem" : "1.25rem";
+      if (len > 40) fontSize = currentLang === 'zh' ? "1.0rem" : "0.85rem";
+      else if (len > 25) fontSize = currentLang === 'zh' ? "1.15rem" : "0.95rem";
+      else if (len > 12) fontSize = currentLang === 'zh' ? "1.3rem" : "1.1rem";
 
       input.style.fontSize = fontSize;
       mirror.style.fontSize = fontSize;
@@ -778,31 +807,48 @@
       const dragItem = document.getElementById("drag-caption");
       const container = document.getElementById("video-stage");
       const trashBin = document.getElementById("trash-bin");
-      let active = false, currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
+
+      let active = false;
+      let hasMoved = false;
+      let startX, startY;
+      let currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
       let isOverTrash = false;
 
       const dragStart = (e) => {
-        if (e.target.tagName === 'TEXTAREA') return;
+        if (!dragItem.contains(e.target)) return;
+
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        active = true;
+        hasMoved = false;
+        startX = clientX;
+        startY = clientY;
         initialX = clientX - xOffset;
         initialY = clientY - yOffset;
 
-        if (dragItem.contains(e.target)) {
-          active = true;
-          trashBin.classList.remove('hidden');
-        }
+        trashBin.classList.remove('hidden');
       };
 
       const drag = (e) => {
         if (!active) return;
+
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
         currentX = clientX - initialX;
         currentY = clientY - initialY;
 
-        if (e.type === "touchmove" && e.cancelable) e.preventDefault();
+        const deltaX = Math.abs(clientX - startX);
+        const deltaY = Math.abs(clientY - startY);
+
+        if (deltaX > 5 || deltaY > 5) {
+          hasMoved = true;
+        }
+
+        if (e.type === "touchmove" && e.cancelable) {
+          e.preventDefault();
+        }
 
         xOffset = currentX;
         yOffset = currentY;
@@ -814,10 +860,10 @@
         const stickerCenterX = stickerRect.left + stickerRect.width / 2;
 
         if (
-          stickerCenterX >= trashRect.left - 20 &&
-          stickerCenterX <= trashRect.right + 20 &&
-          stickerCenterY >= trashRect.top - 20 &&
-          stickerCenterY <= trashRect.bottom + 20
+          stickerCenterX >= trashRect.left - 25 &&
+          stickerCenterX <= trashRect.right + 25 &&
+          stickerCenterY >= trashRect.top - 25 &&
+          stickerCenterY <= trashRect.bottom + 25
         ) {
           isOverTrash = true;
           trashBin.classList.add('hovered');
@@ -827,7 +873,7 @@
         }
       };
 
-      const dragEnd = () => {
+      const dragEnd = (e) => {
         if (!active) return;
         active = false;
         trashBin.classList.add('hidden');
@@ -838,6 +884,8 @@
           isOverTrash = false;
           xOffset = 0;
           yOffset = 0;
+        } else if (!hasMoved) {
+          document.getElementById('ig-caption').focus();
         }
       };
 
@@ -864,7 +912,7 @@
     <div id="page-welcome">
       <div class="names-header">Wesley & Dionne</div>
       <div class="xi-symbol">囍</div>
-      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;" data-i18n="subtitle">Our Wedding, Through Your Eyes</p>
+      <p style="margin-bottom:15px;" data-i18n="subtitle">Our Wedding, Through Your Eyes</p>
 
       <img src="image_0.png" style="width:75%; border-radius:10px; margin-bottom:15px;" alt="Wesley & Dionne">
 
@@ -937,7 +985,7 @@
     <div id="page-thanks" class="hidden">
       <div class="xi-symbol" style="font-size:3rem;">囍</div>
       <div class="names-header" data-i18n="thanksTitle">Thank You!</div>
-      <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem;" data-i18n="thanksMessage">Your clip has been sent to the moderator queue for tonight's reception big screen playback!</p>
+      <p style="margin-top:10px; color:var(--text-muted);" data-i18n="thanksMessage">Your clip has been sent to the moderator queue for tonight's reception big screen playback!</p>
     </div>
 
   </div>
