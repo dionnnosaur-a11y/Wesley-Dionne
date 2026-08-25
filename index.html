@@ -26,7 +26,6 @@
 
     .container { position: relative; background: var(--card-bg); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 16px; max-width: 480px; width: 100%; padding: 35px 20px 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
     
-    /* Language Toggle Switcher */
     .lang-switcher {
       position: absolute;
       top: 14px;
@@ -65,7 +64,6 @@
     .token-section { margin-top: 20px; padding-top: 15px; border-top: 1px dashed var(--gold); }
     .input-field { width: 80%; padding: 10px; border: 1px solid var(--gold); border-radius: 8px; text-align: center; font-size: 1rem; text-transform: uppercase; margin-bottom: 10px; }
 
-    /* Video Stage */
     .video-stage { 
       position: relative; 
       width: 100%; 
@@ -80,7 +78,6 @@
     }
     video { width: 100%; height: 100%; display: block; object-fit: cover; }
     
-    /* Loading Spinner Overlay */
     .video-loader {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -105,7 +102,6 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Play/Pause Overlay Icon */
     .play-pause-btn {
       position: absolute;
       top: 50%;
@@ -135,7 +131,6 @@
     .play-pause-btn.paused { opacity: 1; }
     .play-pause-btn.playing { opacity: 0; }
 
-    /* Optional Add Caption Button */
     .add-caption-btn {
       position: absolute;
       bottom: 18px;
@@ -162,7 +157,6 @@
       border-color: #ffffff;
     }
 
-    /* Trash Bin Area (Instagram Style) */
     .trash-bin {
       position: absolute;
       bottom: 20px;
@@ -190,7 +184,6 @@
       box-shadow: 0 6px 20px rgba(231, 76, 60, 0.6);
     }
 
-    /* Draggable Caption Sticker with Dynamic Shrink-wrap Width */
     .draggable-caption {
       position: absolute;
       top: 65%;
@@ -216,7 +209,6 @@
       transition: border 0.2s ease;
     }
 
-    /* Hidden mirror for auto dynamic width & height calculation */
     .caption-mirror {
       font-family: 'Montserrat', sans-serif;
       font-weight: 800;
@@ -250,7 +242,6 @@
     }
     .ig-caption-input::placeholder { color: rgba(255, 255, 255, 0.6); font-weight: 700; }
 
-    /* Timeline Trimmer */
     .trimmer-track {
       position: relative;
       width: 100%;
@@ -268,14 +259,14 @@
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
       display: flex;
-      opacity: 0.85;
+      opacity: 0.95;
       pointer-events: none;
     }
     .filmstrip-container img {
       height: 100%;
+      width: 12.5%;
       object-fit: cover;
-      flex: 1;
-      min-width: 0;
+      display: block;
     }
 
     .trimmer-dimmer {
@@ -344,7 +335,6 @@
     const CLOUDINARY_PRESET = "wedding_preset";
     const GUEST_TOKENS = ["WESLEY2026", "DIONNE2026", "GUEST001", "GUEST002", "LOVE888"];
 
-    // Translation Dictionary
     const translations = {
       en: {
         subtitle: "Our Wedding, Through Your Eyes",
@@ -453,37 +443,30 @@
       document.getElementById('page-editor').classList.remove('hidden');
     };
 
-    function seekVideoFrame(video, time) {
-      return new Promise((resolve) => {
-        let resolved = false;
-        const cleanup = () => {
-          if (!resolved) {
-            resolved = true;
-            video.removeEventListener('seeked', onSeeked);
-            resolve();
-          }
-        };
-        const onSeeked = () => cleanup();
-        video.addEventListener('seeked', onSeeked);
-        video.currentTime = time;
-        setTimeout(cleanup, 300);
-      });
-    }
-
-    // Robust filmstrip generator avoiding black spaces
-    async function generateFilmstrip(file) {
+    // iOS WebKit-compatible filmstrip generator
+    async function generateFilmstrip(videoUrl) {
       const filmstrip = document.getElementById('filmstrip-container');
       filmstrip.innerHTML = '';
-      
+
+      // Offscreen element required by iOS WebKit to force frame rendering
       const tempVideo = document.createElement('video');
-      tempVideo.src = URL.createObjectURL(file);
+      tempVideo.src = videoUrl;
       tempVideo.muted = true;
       tempVideo.playsInline = true;
       tempVideo.preload = 'auto';
+      tempVideo.style.position = 'fixed';
+      tempVideo.style.top = '-9999px';
+      tempVideo.style.left = '-9999px';
+      tempVideo.style.width = '1px';
+      tempVideo.style.height = '1px';
+      document.body.appendChild(tempVideo);
 
       await new Promise(resolve => {
         if (tempVideo.readyState >= 1) resolve();
-        else tempVideo.onloadedmetadata = resolve;
+        else {
+          tempVideo.onloadedmetadata = resolve;
+          setTimeout(resolve, 1000);
+        }
       });
 
       const frameCount = 8;
@@ -492,18 +475,40 @@
       canvas.width = 120;
       canvas.height = 80;
 
+      const dur = tempVideo.duration || 1;
+
       for (let i = 0; i < frameCount; i++) {
-        const targetTime = (i / (frameCount - 1)) * (tempVideo.duration || 1);
-        await seekVideoFrame(tempVideo, targetTime);
+        const targetTime = (i / (frameCount - 1)) * (dur * 0.98);
         
-        ctx.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
-        const img = document.createElement('img');
-        img.src = canvas.toDataURL('image/jpeg', 0.6);
-        filmstrip.appendChild(img);
+        await new Promise(resolve => {
+          let done = false;
+          const finish = () => {
+            if (!done) {
+              done = true;
+              setTimeout(resolve, 50); // Frame buffer sync for Safari
+            }
+          };
+          tempVideo.addEventListener('seeked', finish, { once: true });
+          tempVideo.currentTime = targetTime;
+          setTimeout(finish, 200);
+        });
+
+        try {
+          ctx.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
+          const img = document.createElement('img');
+          img.src = canvas.toDataURL('image/jpeg', 0.6);
+          filmstrip.appendChild(img);
+        } catch (e) {
+          console.warn("Frame draw skipped:", e);
+        }
+      }
+
+      if (tempVideo.parentNode) {
+        tempVideo.parentNode.removeChild(tempVideo);
       }
     }
 
-    window.loadVideo = async (e) => {
+    window.loadVideo = (e) => {
       rawFile = e.target.files[0];
       if (!rawFile) return;
 
@@ -514,13 +519,10 @@
       err.textContent = "";
       loader.classList.remove('hidden');
       document.getElementById('editor-controls').classList.remove('hidden');
-      
-      vid.src = URL.createObjectURL(rawFile);
-      vid.muted = false;
 
-      await generateFilmstrip(rawFile);
+      const videoUrl = URL.createObjectURL(rawFile);
       
-      vid.onloadedmetadata = () => {
+      vid.onloadeddata = () => {
         videoDuration = vid.duration;
 
         if (videoDuration < 4.9) {
@@ -536,15 +538,14 @@
         vid.currentTime = startTime;
         vid.play().then(() => {
           updatePlayPauseOverlay();
-          loader.classList.add('hidden');
-        }).catch(err => {
-          console.log("Autoplay prevented:", err);
-          loader.classList.add('hidden');
-        });
+        }).catch(err => console.log("Autoplay prevented:", err));
 
         updateTrimmerUI();
         document.getElementById('select-vid-btn').textContent = translations[currentLang].reselectVid;
         removeCaption();
+
+        loader.classList.add('hidden');
+        generateFilmstrip(videoUrl);
       };
 
       vid.ontimeupdate = () => {
@@ -552,6 +553,9 @@
           vid.currentTime = startTime;
         }
       };
+
+      vid.src = videoUrl;
+      vid.muted = false;
     };
 
     window.togglePlayPause = (e) => {
@@ -601,7 +605,6 @@
       document.getElementById('trash-bin').classList.add('hidden');
     };
 
-    // Auto Dynamic Size (Width & Shrinking Font Size based on words length)
     function updateCaptionSizeAndMirror() {
       const input = document.getElementById('ig-caption');
       const mirror = document.getElementById('caption-mirror');
@@ -765,7 +768,6 @@
       }
     };
 
-    // Auto-grow & Drag to Trash Bin logic
     window.addEventListener('DOMContentLoaded', () => {
       initTrimmerEvents();
       setLanguage(currentLang);
@@ -806,7 +808,6 @@
         yOffset = currentY;
         dragItem.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
 
-        // Check distance to trash bin for highlighting & removal
         const trashRect = trashBin.getBoundingClientRect();
         const stickerRect = dragItem.getBoundingClientRect();
         const stickerCenterY = stickerRect.top + stickerRect.height / 2;
@@ -853,7 +854,6 @@
 
   <div class="container">
     
-    <!-- Language Switcher Bar -->
     <div class="lang-switcher">
       <button id="lang-en" class="lang-btn" onclick="setLanguage('en')">EN</button>
       <span>|</span>
@@ -887,10 +887,8 @@
 
       <div id="editor-controls" class="hidden">
         
-        <!-- Video Stage with Tap Play/Pause & Optional IG Sticker -->
         <div class="video-stage" id="video-stage" onclick="togglePlayPause(event)">
           
-          <!-- Processing Loading Overlay -->
           <div id="video-loader" class="video-loader hidden">
             <div class="spinner"></div>
             <span data-i18n="loadingVideo">Processing Video...</span>
@@ -899,17 +897,14 @@
           <video id="video-preview" playsinline autoplay loop></video>
           <div id="play-overlay" class="play-pause-btn playing"></div>
           
-          <!-- Optional Add Caption Button -->
           <button id="add-caption-btn" class="add-caption-btn" onclick="enableCaption(event)" data-i18n="addCaption">
             💬 + Add Caption
           </button>
 
-          <!-- Instagram-Style Trash Bin -->
           <div id="trash-bin" class="trash-bin hidden" data-i18n="dragTrash">
             🗑️ Drag here to delete
           </div>
 
-          <!-- Draggable Caption Sticker with Shrink-Wrap Dynamic Width -->
           <div class="draggable-caption hidden" id="drag-caption">
             <div class="caption-wrapper">
               <span id="caption-mirror" class="caption-mirror"></span>
@@ -918,7 +913,6 @@
           </div>
         </div>
 
-        <!-- Custom Timeline Trimmer with Video Frames -->
         <div class="trimmer-track" id="trimmer-track">
           <div class="filmstrip-container" id="filmstrip-container"></div>
           <div class="trimmer-dimmer" id="dimmer-left"></div>
