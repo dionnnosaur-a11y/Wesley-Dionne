@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wesley & Dionne | Our Wedding Through Your Eyes</title>
+
+  <!-- Google Fonts: Alex Brush & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --gold: #c5a059;
+      --gold-dark: #9e7a37;
+      --gold-light: #f4e8c1;
+      --cream-bg: #faf8f3;
+      --card-bg: #ffffff;
+      --text-dark: #2c2925;
+      --text-muted: #6e675f;
+      --crimson-accent: #8a1c1c;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--cream-bg);
+      color: var(--text-dark);
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 10px;
+    }
+
+    .container {
+      background: var(--card-bg);
+      border: 1px solid rgba(197, 160, 89, 0.3);
+      border-radius: 16px;
+      max-width: 520px;
+      width: 100%;
+      padding: 35px 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      text-align: center;
+      position: relative;
+    }
+
+    /* Alex Brush Header Font */
+    .names-header {
+      font-family: 'Alex Brush', cursive;
+      font-size: 3.2rem;
+      color: var(--gold-dark);
+      line-height: 1.1;
+      margin-bottom: 5px;
+    }
+
+    .xi-symbol {
+      font-size: 2.2rem;
+      color: var(--crimson-accent);
+      margin: 10px 0;
+      display: inline-block;
+    }
+
+    .sub-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .couple-img {
+      width: 80%;
+      max-width: 280px;
+      height: auto;
+      border-radius: 12px;
+      margin: 10px auto 20px;
+      display: block;
+    }
+
+    /* Buttons */
+    .btn {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #ffffff;
+      font-weight: 600;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 30px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 1px;
+      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(197, 160, 89, 0.25);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(197, 160, 89, 0.35);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--text-muted);
+      color: var(--text-muted);
+      margin-right: 8px;
+    }
+
+    /* Token & Form Controls */
+    .token-section {
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px dashed var(--gold-light);
+    }
+
+    .input-field {
+      width: 80%;
+      padding: 12px;
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      background: var(--cream-bg);
+      outline: none;
+    }
+
+    /* Editor Controls */
+    video {
+      width: 100%;
+      max-height: 250px;
+      border-radius: 8px;
+      margin: 15px 0;
+      background: #000;
+    }
+
+    .slider-group {
+      margin: 15px 0;
+      text-align: left;
+    }
+
+    .slider-group label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--gold);
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--gold-light);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      margin-top: 10px;
+      resize: none;
+    }
+
+    .status-msg {
+      font-size: 0.85rem;
+      color: var(--crimson-accent);
+      margin-top: 10px;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- PAGE 1: WELCOME & TOKEN ENTRY (SCROLL DOWN) -->
+    <div id="page-welcome">
+      <div class="names-header">Wesley & Dionne</div>
+      <div class="xi-symbol">囍</div>
+      <div class="sub-title">Our Wedding, Through Your Eyes</div>
+
+      <img src="image_0.png" alt="Wesley & Dionne" class="couple-img" id="hero-img">
+
+      <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.5;">
+        Thank you for being part of our special day.<br>Share your favorite 5–10 second video clip with us!
+      </p>
+
+      <button class="btn" onclick="scrollToToken()">Share A Memory</button>
+
+      <div id="token-area" class="token-section">
+        <h3 style="font-size:1.1rem; color:var(--gold-dark); margin-bottom:10px;">Enter Passcode</h3>
+        <input type="text" id="token-input" class="input-field" placeholder="ENTER TOKEN" maxlength="12">
+        <br>
+        <button class="btn" onclick="validateToken()">Verify Code</button>
+        <div id="token-error" class="status-msg"></div>
+      </div>
+    </div>
+
+    <!-- PAGE 2: VIDEO EDITOR (NEXT PAGE) -->
+    <div id="page-editor" class="hidden">
+      <div class="names-header" style="font-size:2.5rem;">Upload & Edit</div>
+      <div class="sub-title">Select & Trim Your Moment</div>
+
+      <input type="file" id="video-file" accept="video/*" onchange="loadVideo(event)" style="display:none;">
+      <button class="btn" onclick="document.getElementById('video-file').click()">Choose Video File</button>
+
+      <div id="editor-controls" class="hidden">
+        <video id="video-preview" controls></video>
+
+        <div class="slider-group">
+          <label>Start Cut: <span id="start-val">0</span>s</label>
+          <input type="range" id="start-time" min="0" value="0" step="1" oninput="updateTrim()">
+        </div>
+
+        <div class="slider-group">
+          <label>End Cut: <span id="end-val">10</span>s</label>
+          <input type="range" id="end-time" min="5" value="10" step="1" oninput="updateTrim()">
+        </div>
+
+        <textarea id="caption-input" rows="2" maxlength="120" placeholder="Add an optional 1-sentence caption..."></textarea>
+
+        <div style="margin-top: 15px;">
+          <button class="btn btn-secondary" onclick="resetEditor()">Cancel</button>
+          <button class="btn" onclick="submitMemory()">Submit Memory</button>
+        </div>
+      </div>
+      <div id="editor-error" class="status-msg"></div>
+    </div>
+
+    <!-- PAGE 3: THANK YOU SCREEN -->
+    <div id="page-thanks" class="hidden">
+      <div class="xi-symbol" style="font-size:3rem;">囍</div>
+      <div class="names-header">Thank You!</div>
+      <p style="margin-top:15px; color:var(--text-muted); line-height:1.6; font-size:0.95rem;">
+        Your clip and message have been saved forever.<br>Wesley & Dionne are so grateful to have you in their lives!
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    // 200+ Guest Tokens Array Support
+    const GUEST_TOKENS = ["GUEST001", "GUEST002", "WESLEY2026", "DIONNE2026", "LOVE888"];
+    
+    // Cloudinary Unsigned Setup (Replace with your keys when ready)
+    const CLOUD_NAME = "your_cloud_name";
+    const UPLOAD_PRESET = "your_unsigned_preset";
+
+    let activeToken = "";
+    let rawFile = null;
+
+    function scrollToToken() {
+      document.getElementById('token-area').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function validateToken() {
+      const code = document.getElementById('token-input').value.trim().toUpperCase();
+      const err = document.getElementById('token-error');
+
+      if (!GUEST_TOKENS.includes(code)) {
+        err.textContent = "Invalid passcode. Please check your invitation.";
+        return;
+      }
+
+      if (localStorage.getItem('submitted_' + code)) {
+        err.textContent = "This token has already been used once.";
+        return;
+      }
+
+      activeToken = code;
+      // Transition to Next Page (Video Editor)
+      document.getElementById('page-welcome').classList.add('hidden');
+      document.getElementById('page-editor').classList.remove('hidden');
+    }
+
+    function loadVideo(e) {
+      rawFile = e.target.files[0];
+      if (!rawFile) return;
+
+      const vid = document.getElementById('video-preview');
+      vid.src = URL.createObjectURL(rawFile);
+
+      vid.onloadedmetadata = function() {
+        const duration = Math.floor(vid.duration);
+        const startSlider = document.getElementById('start-time');
+        const endSlider = document.getElementById('end-time');
+
+        startSlider.max = duration;
+        endSlider.max = duration;
+        startSlider.value = 0;
+        endSlider.value = Math.min(10, duration);
+
+        updateTrim();
+        document.getElementById('editor-controls').classList.remove('hidden');
+      };
+    }
+
+    function updateTrim() {
+      const start = parseInt(document.getElementById('start-time').value);
+      const end = parseInt(document.getElementById('end-time').value);
+      const err = document.getElementById('editor-error');
+
+      document.getElementById('start-val').textContent = start;
+      document.getElementById('end-val').textContent = end;
+
+      const diff = end - start;
+      if (diff < 5 || diff > 10) {
+        err.textContent = `Selected clip is ${diff}s. Length must be between 5 and 10 seconds.`;
+      } else {
+        err.textContent = "";
+      }
+    }
+
+    function resetEditor() {
+      document.getElementById('video-file').value = "";
+      document.getElementById('editor-controls').classList.add('hidden');
+    }
+
+    async function submitMemory() {
+      const start = parseInt(document.getElementById('start-time').value);
+      const end = parseInt(document.getElementById('end-time').value);
+      const diff = end - start;
+
+      if (diff < 5 || diff > 10) {
+        document.getElementById('editor-error').textContent = "Adjust handles so your clip is between 5 and 10 seconds.";
+        return;
+      }
+
+      // Lock single use token
+      localStorage.setItem('submitted_' + activeToken, 'true');
+
+      // Transition to Thank You Screen
+      document.getElementById('page-editor').classList.add('hidden');
+      document.getElementById('page-thanks').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
