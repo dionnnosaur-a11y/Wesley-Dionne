@@ -174,6 +174,7 @@
 
       const vid = document.getElementById('video-preview');
       vid.src = URL.createObjectURL(rawFile);
+      vid.muted = false; // Enable audio
       
       vid.onloadedmetadata = () => {
         videoDuration = vid.duration;
@@ -181,7 +182,7 @@
         endTime = Math.min(10, videoDuration);
 
         vid.currentTime = startTime;
-        vid.play();
+        vid.play().catch(err => console.log("Autoplay prevented:", err));
 
         updateTrimmerUI();
         document.getElementById('select-vid-btn').textContent = "Select another video";
@@ -395,13 +396,13 @@
         
         <!-- Video Stage with Draggable IG Caption -->
         <div class="video-stage" id="video-stage">
-          <video id="video-preview" playsinline autoplay loop muted></video>
+          <video id="video-preview" playsinline autoplay loop></video>
           <div class="draggable-caption" id="drag-caption">
             <input type="text" id="ig-caption" class="ig-caption-input" placeholder="Tap to add caption..." maxlength="80">
           </div>
         </div>
 
-        <!-- Clean Custom Dual-Handle Trimmer -->
+        <!-- Clean Custom Dual-Handle Timeline Trimmer -->
         <div class="trimmer-track" id="trimmer-track">
           <div class="trimmer-fill" id="trimmer-fill"></div>
           <div class="trimmer-handle" id="handle-start"></div>
