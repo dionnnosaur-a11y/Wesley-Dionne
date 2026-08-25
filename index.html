@@ -745,7 +745,7 @@
       document.getElementById('editor-controls').classList.add('hidden');
     };
 
-    window.submitMemory = async () => {
+   window.submitMemory = async () => {
       const captionText = captionActive ? document.getElementById('ig-caption').value.trim() : "";
       const submitBtn = document.getElementById('submit-btn');
       const err = document.getElementById('editor-error');
@@ -756,8 +756,15 @@
         return;
       }
 
+      // 1. Check File Size (Cloudinary 100MB limit protection)
+      const fileSizeMB = (rawFile.size / (1024 * 1024)).toFixed(1);
+      if (rawFile.size > 95 * 1024 * 1024) {
+        err.textContent = `File is too large (${fileSizeMB}MB). Cloudinary limit is 95MB. Please choose a shorter video or recorded at 1080p.`;
+        return;
+      }
+
       submitBtn.disabled = true;
-      submitBtn.textContent = translations[currentLang].uploading;
+      submitBtn.textContent = `${translations[currentLang].uploading} (0%)`;
       err.textContent = "";
 
       try {
@@ -765,7 +772,7 @@
         formData.append("file", rawFile);
         formData.append("upload_preset", CLOUDINARY_PRESET);
 
-        // XMLHttpRequest bypasses iOS WebKit fetch payload limits
+        // Upload with XHR & progress tracking
         const uploadToCloudinary = () => {
           return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
@@ -774,22 +781,54 @@
             xhr.upload.onprogress = (e) => {
               if (e.lengthComputable) {
                 const percent = Math.round((e.loaded / e.total) * 100);
-                submitBtn.textContent = `${translations[currentLang].uploading} ${percent}%`;
+                submitBtn.textContent = `${translations[currentLang].uploading} ${percent}% (${fileSizeMB}MB)`;
               }
             };
 
             xhr.onload = () => {
+              const res = JSON.parse(xhr.responseText || '{}');
               if (xhr.status >= 200 && xhr.status < 300) {
-                resolve(JSON.parse(xhr.responseText));
+                resolve(res);
               } else {
-                try {
-                  const res = JSON.parse(xhr.responseText);
-                  reject(new Error(res.error?.message || `HTTP ${xhr.status}`));
-                } catch (e) {
-                  reject(new Error(`Upload failed with status ${xhr.status}`));
-                }
+                reject(new Error(res.error?.message || `Cloudinary Error ${xhr.status}`));
               }
             };
+
+            xhr.onerror = () => reject(new Error("Network connection dropped. Check Wi-Fi/cellular connection."));
+            xhr.ontimeout = () => reject(new Error("Upload timed out. File size too large."));
+
+            xhr.send(formData);
+          });
+        };
+
+        const data = await uploadToCloudinary();
+
+        if (!data || !data.secure_url) {
+          throw new Error("Missing secure video URL from Cloudinary.");
+        }
+
+        // Save to Firestore
+        await addDoc(collection(db, "memories"), {
+          videoUrl: data.secure_url,
+          caption: captionText,
+          startTime: startTime,
+          endTime: endTime,
+          token: activeToken,
+          status: "pending",
+          createdAt: serverTimestamp()
+        });
+
+        localStorage.setItem('submitted_' + activeToken, 'true');
+        document.getElementById('page-editor').classList.add('hidden');
+        document.getElementById('page-thanks').classList.remove('hidden');
+
+      } catch (error) {
+        console.error("Submission Error:", error);
+        err.textContent = `Upload failed: ${error.message}`;
+        submitBtn.disabled = false;
+        submitBtn.textContent = translations[currentLang].submitBtn;
+      }
+    };
 
             xhr.onerror = () => reject(new Error("Network connection dropped. Try connecting to Wi-Fi."));
             xhr.ontimeout = () => reject(new Error("Upload timed out."));
