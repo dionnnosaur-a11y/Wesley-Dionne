@@ -18,12 +18,43 @@
       --text-dark: #2c2925;
       --text-muted: #6e675f;
       --crimson: #8a1c1c;
+      --red-trash: #e74c3c;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--cream-bg); color: var(--text-dark); font-family: 'Montserrat', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 15px; }
 
-    .container { background: var(--card-bg); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 16px; max-width: 480px; width: 100%; padding: 30px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
+    .container { position: relative; background: var(--card-bg); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 16px; max-width: 480px; width: 100%; padding: 35px 20px 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
+    
+    /* Language Toggle Switcher */
+    .lang-switcher {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      z-index: 20;
+    }
+    .lang-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    .lang-btn.active {
+      color: var(--gold-dark);
+      font-weight: 800;
+      text-decoration: underline;
+    }
+
     .names-header { font-family: 'Alex Brush', cursive; font-size: 3rem; color: var(--gold-dark); line-height: 1; }
     .xi-symbol { font-size: 2rem; color: var(--crimson); margin: 8px 0; }
     
@@ -34,7 +65,7 @@
     .token-section { margin-top: 20px; padding-top: 15px; border-top: 1px dashed var(--gold); }
     .input-field { width: 80%; padding: 10px; border: 1px solid var(--gold); border-radius: 8px; text-align: center; font-size: 1rem; text-transform: uppercase; margin-bottom: 10px; }
 
-    /* Video Stage & Instagram Sticker Caption */
+    /* Video Stage */
     .video-stage { 
       position: relative; 
       width: 100%; 
@@ -49,6 +80,31 @@
     }
     video { width: 100%; height: 100%; display: block; object-fit: cover; }
     
+    /* Loading Spinner Overlay */
+    .video-loader {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 15;
+      gap: 10px;
+    }
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
     /* Play/Pause Overlay Icon */
     .play-pause-btn {
       position: absolute;
@@ -79,7 +135,7 @@
     .play-pause-btn.paused { opacity: 1; }
     .play-pause-btn.playing { opacity: 0; }
 
-    /* Optional Add Caption Floating Pill Button */
+    /* Optional Add Caption Button */
     .add-caption-btn {
       position: absolute;
       bottom: 18px;
@@ -106,7 +162,35 @@
       border-color: #ffffff;
     }
 
-    /* Draggable Instagram Caption Sticker */
+    /* Trash Bin Area (Instagram Style) */
+    .trash-bin {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      background: rgba(20, 20, 20, 0.85);
+      color: #fff;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 14;
+      pointer-events: none;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    }
+    .trash-bin.hovered {
+      background: var(--red-trash);
+      border-color: #ffffff;
+      transform: translateX(-50%) scale(1.15);
+      box-shadow: 0 6px 20px rgba(231, 76, 60, 0.6);
+    }
+
+    /* Draggable Caption Sticker with Dynamic Shrink-wrap Width */
     .draggable-caption {
       position: absolute;
       top: 65%;
@@ -115,58 +199,58 @@
       cursor: move;
       z-index: 10;
       touch-action: none;
-      width: 80%;
       display: flex;
       justify-content: center;
+      max-width: 85%;
     }
 
     .caption-wrapper {
       position: relative;
-      width: 100%;
-      max-width: 280px;
+      display: inline-block;
+      background: #000000;
+      border-radius: 14px;
+      padding: 8px 16px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+      min-width: 90px;
+      max-width: 100%;
+      transition: border 0.2s ease;
     }
 
-    .remove-caption-btn {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      background: #e74c3c;
-      color: white;
-      border: none;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      font-size: 11px;
-      font-weight: bold;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-      z-index: 12;
+    /* Hidden mirror for auto dynamic width & height calculation */
+    .caption-mirror {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 1.25rem;
+      line-height: 1.35;
+      white-space: pre-wrap;
+      word-break: break-word;
+      visibility: hidden;
+      display: inline-block;
+      min-width: 60px;
     }
     
     .ig-caption-input {
-      background: #000000;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100%; height: 100%;
+      background: transparent;
       color: #ffffff;
       font-family: 'Montserrat', sans-serif;
       font-weight: 800;
-      font-size: 1.15rem;
-      padding: 10px 16px;
+      font-size: 1.25rem;
+      padding: 8px 16px;
       border-radius: 14px;
       border: none;
       text-align: center;
       outline: none;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.5);
-      width: 100%;
       resize: none;
       overflow: hidden;
       line-height: 1.35;
-      display: block;
+      box-sizing: border-box;
     }
     .ig-caption-input::placeholder { color: rgba(255, 255, 255, 0.6); font-weight: 700; }
 
-    /* Timeline Trimmer with Video Frame Filmstrip */
+    /* Timeline Trimmer */
     .trimmer-track {
       position: relative;
       width: 100%;
@@ -184,13 +268,14 @@
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
       display: flex;
-      opacity: 0.75;
+      opacity: 0.85;
       pointer-events: none;
     }
     .filmstrip-container img {
       height: 100%;
       object-fit: cover;
       flex: 1;
+      min-width: 0;
     }
 
     .trimmer-dimmer {
@@ -259,6 +344,61 @@
     const CLOUDINARY_PRESET = "wedding_preset";
     const GUEST_TOKENS = ["WESLEY2026", "DIONNE2026", "GUEST001", "GUEST002", "LOVE888"];
 
+    // Translation Dictionary
+    const translations = {
+      en: {
+        subtitle: "Our Wedding, Through Your Eyes",
+        shareBtn: "Share A Memory",
+        passcodePlaceholder: "ENTER PASSCODE",
+        verifyBtn: "Verify Code",
+        editorTitle: "Trim & Caption",
+        selectVid: "Select Video",
+        reselectVid: "Select another video",
+        addCaption: "💬 + Add Caption",
+        typeCaption: "Type caption...",
+        dragTrash: "🗑️ Drag here to delete",
+        loadingVideo: "Processing Video...",
+        durationLabel: "SELECTED DURATION:",
+        durationConstraint: "(Constraint: 5-10s)",
+        cancelBtn: "Cancel",
+        submitBtn: "Submit Clip",
+        thanksTitle: "Thank You!",
+        thanksMessage: "Your clip has been sent to the moderator queue for tonight's reception big screen playback!",
+        errInvalidToken: "Invalid passcode. Please check your invitation.",
+        errUsedToken: "This token has already been used once.",
+        errShortVid: "Please select a video that is at least 5 seconds long.",
+        errDurationRange: "Selected duration must be between 5 and 10 seconds.",
+        uploading: "Uploading Memory...",
+        uploadFailed: "Upload failed. Please try again."
+      },
+      zh: {
+        subtitle: "用您的视角，记录我们的婚礼",
+        shareBtn: "分享温馨瞬间",
+        passcodePlaceholder: "输入邀请通行码",
+        verifyBtn: "验证代码",
+        editorTitle: "剪辑与字幕",
+        selectVid: "选择视频",
+        reselectVid: "重新选择视频",
+        addCaption: "💬 + 添加字幕",
+        typeCaption: "输入字幕...",
+        dragTrash: "🗑️ 拖动到此处删除",
+        loadingVideo: "正在加载视频...",
+        durationLabel: "已选片段时长：",
+        durationConstraint: "(限制：5-10秒)",
+        cancelBtn: "取消",
+        submitBtn: "提交视频",
+        thanksTitle: "谢谢您！",
+        thanksMessage: "您的视频已发送至审核队列，即将在今晚的晚宴大屏幕上播放！",
+        errInvalidToken: "通行码无效，请检查您的邀请函。",
+        errUsedToken: "此通行码已被使用过。",
+        errShortVid: "请选择至少 5 秒长的视频。",
+        errDurationRange: "选中的时长必须在 5 到 10 秒之间。",
+        uploading: "正在上传视频...",
+        uploadFailed: "上传失败，请重试。"
+      }
+    };
+
+    let currentLang = localStorage.getItem('app_lang') || 'en';
     let activeToken = "";
     let rawFile = null;
     let startTime = 0;
@@ -266,6 +406,29 @@
     let videoDuration = 0;
     let isDragging = false;
     let captionActive = false;
+
+    window.setLanguage = (lang) => {
+      currentLang = lang;
+      localStorage.setItem('app_lang', lang);
+
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+      document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) el.textContent = translations[lang][key];
+      });
+
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (translations[lang][key]) el.placeholder = translations[lang][key];
+      });
+
+      if (rawFile) {
+        document.getElementById('select-vid-btn').textContent = translations[lang].reselectVid;
+      }
+      updateCaptionSizeAndMirror();
+    };
 
     window.showTokenInput = () => {
       document.getElementById('btn-share').classList.add('hidden');
@@ -277,11 +440,11 @@
       const err = document.getElementById('token-error');
 
       if (!GUEST_TOKENS.includes(code)) {
-        err.textContent = "Invalid passcode. Please check your invitation.";
+        err.textContent = translations[currentLang].errInvalidToken;
         return;
       }
       if (localStorage.getItem('submitted_' + code)) {
-        err.textContent = "This token has already been used once.";
+        err.textContent = translations[currentLang].errUsedToken;
         return;
       }
 
@@ -290,7 +453,6 @@
       document.getElementById('page-editor').classList.remove('hidden');
     };
 
-    // Safe seek helper with fallback timeout to prevent infinite hangs on mobile Safari
     function seekVideoFrame(video, time) {
       return new Promise((resolve) => {
         let resolved = false;
@@ -304,10 +466,11 @@
         const onSeeked = () => cleanup();
         video.addEventListener('seeked', onSeeked);
         video.currentTime = time;
-        setTimeout(cleanup, 250);
+        setTimeout(cleanup, 300);
       });
     }
 
+    // Robust filmstrip generator avoiding black spaces
     async function generateFilmstrip(file) {
       const filmstrip = document.getElementById('filmstrip-container');
       filmstrip.innerHTML = '';
@@ -316,8 +479,12 @@
       tempVideo.src = URL.createObjectURL(file);
       tempVideo.muted = true;
       tempVideo.playsInline = true;
+      tempVideo.preload = 'auto';
 
-      await new Promise(resolve => tempVideo.onloadedmetadata = resolve);
+      await new Promise(resolve => {
+        if (tempVideo.readyState >= 1) resolve();
+        else tempVideo.onloadedmetadata = resolve;
+      });
 
       const frameCount = 8;
       const canvas = document.createElement('canvas');
@@ -331,7 +498,7 @@
         
         ctx.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
         const img = document.createElement('img');
-        img.src = canvas.toDataURL('image/jpeg', 0.5);
+        img.src = canvas.toDataURL('image/jpeg', 0.6);
         filmstrip.appendChild(img);
       }
     }
@@ -342,19 +509,24 @@
 
       const vid = document.getElementById('video-preview');
       const err = document.getElementById('editor-error');
+      const loader = document.getElementById('video-loader');
+      
       err.textContent = "";
+      loader.classList.remove('hidden');
+      document.getElementById('editor-controls').classList.remove('hidden');
       
       vid.src = URL.createObjectURL(rawFile);
       vid.muted = false;
 
-      generateFilmstrip(rawFile);
+      await generateFilmstrip(rawFile);
       
       vid.onloadedmetadata = () => {
         videoDuration = vid.duration;
 
         if (videoDuration < 4.9) {
-          err.textContent = "Please select a video that is at least 5 seconds long.";
+          err.textContent = translations[currentLang].errShortVid;
           document.getElementById('editor-controls').classList.add('hidden');
+          loader.classList.add('hidden');
           return;
         }
 
@@ -362,11 +534,16 @@
         endTime = Math.min(10, videoDuration);
 
         vid.currentTime = startTime;
-        vid.play().then(() => updatePlayPauseOverlay()).catch(err => console.log("Autoplay prevented:", err));
+        vid.play().then(() => {
+          updatePlayPauseOverlay();
+          loader.classList.add('hidden');
+        }).catch(err => {
+          console.log("Autoplay prevented:", err);
+          loader.classList.add('hidden');
+        });
 
         updateTrimmerUI();
-        document.getElementById('select-vid-btn').textContent = "Select another video";
-        document.getElementById('editor-controls').classList.remove('hidden');
+        document.getElementById('select-vid-btn').textContent = translations[currentLang].reselectVid;
         removeCaption();
       };
 
@@ -403,10 +580,14 @@
     window.enableCaption = (e) => {
       if (e) e.stopPropagation();
       captionActive = true;
-      document.getElementById('drag-caption').classList.remove('hidden');
+      const dragItem = document.getElementById('drag-caption');
+      dragItem.style.transform = `translate3d(0, 0, 0)`;
+      dragItem.classList.remove('hidden');
       document.getElementById('add-caption-btn').classList.add('hidden');
+      
       const input = document.getElementById('ig-caption');
       input.focus();
+      updateCaptionSizeAndMirror();
     };
 
     window.removeCaption = (e) => {
@@ -414,10 +595,29 @@
       captionActive = false;
       const input = document.getElementById('ig-caption');
       input.value = '';
-      input.style.height = 'auto';
+      document.getElementById('caption-mirror').textContent = '';
       document.getElementById('drag-caption').classList.add('hidden');
       document.getElementById('add-caption-btn').classList.remove('hidden');
+      document.getElementById('trash-bin').classList.add('hidden');
     };
+
+    // Auto Dynamic Size (Width & Shrinking Font Size based on words length)
+    function updateCaptionSizeAndMirror() {
+      const input = document.getElementById('ig-caption');
+      const mirror = document.getElementById('caption-mirror');
+      const textVal = input.value || translations[currentLang].typeCaption;
+      
+      mirror.textContent = textVal;
+
+      const len = input.value.length;
+      let fontSize = "1.25rem";
+      if (len > 40) fontSize = "0.85rem";
+      else if (len > 25) fontSize = "0.95rem";
+      else if (len > 12) fontSize = "1.1rem";
+
+      input.style.fontSize = fontSize;
+      mirror.style.fontSize = fontSize;
+    }
 
     function updateTrimmerUI() {
       const fill = document.getElementById('trimmer-fill');
@@ -511,7 +711,7 @@
 
     window.resetEditor = () => {
       document.getElementById('video-file').value = "";
-      document.getElementById('select-vid-btn').textContent = "Select Video";
+      document.getElementById('select-vid-btn').textContent = translations[currentLang].selectVid;
       document.getElementById('editor-controls').classList.add('hidden');
     };
 
@@ -522,12 +722,12 @@
       const dur = endTime - startTime;
 
       if (dur < 4.9 || dur > 10.1) {
-        err.textContent = "Selected duration must be between 5 and 10 seconds.";
+        err.textContent = translations[currentLang].errDurationRange;
         return;
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = "Uploading Memory...";
+      submitBtn.textContent = translations[currentLang].uploading;
       err.textContent = "";
 
       try {
@@ -559,28 +759,28 @@
 
       } catch (error) {
         console.error(error);
-        err.textContent = "Upload failed. Please try again.";
+        err.textContent = translations[currentLang].uploadFailed;
         submitBtn.disabled = false;
-        submitBtn.textContent = "Submit Clip";
+        submitBtn.textContent = translations[currentLang].submitBtn;
       }
     };
 
-    // Auto-grow caption & Draggable sticker setup
+    // Auto-grow & Drag to Trash Bin logic
     window.addEventListener('DOMContentLoaded', () => {
       initTrimmerEvents();
+      setLanguage(currentLang);
 
       const captionArea = document.getElementById('ig-caption');
-      captionArea.addEventListener('input', function() {
-        this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
-      });
+      captionArea.addEventListener('input', updateCaptionSizeAndMirror);
 
       const dragItem = document.getElementById("drag-caption");
       const container = document.getElementById("video-stage");
+      const trashBin = document.getElementById("trash-bin");
       let active = false, currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
+      let isOverTrash = false;
 
       const dragStart = (e) => {
-        if (e.target.closest('.remove-caption-btn') || e.target.tagName === 'TEXTAREA') return;
+        if (e.target.tagName === 'TEXTAREA') return;
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
         initialX = clientX - xOffset;
@@ -588,6 +788,7 @@
 
         if (dragItem.contains(e.target)) {
           active = true;
+          trashBin.classList.remove('hidden');
         }
       };
 
@@ -604,9 +805,40 @@
         xOffset = currentX;
         yOffset = currentY;
         dragItem.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+
+        // Check distance to trash bin for highlighting & removal
+        const trashRect = trashBin.getBoundingClientRect();
+        const stickerRect = dragItem.getBoundingClientRect();
+        const stickerCenterY = stickerRect.top + stickerRect.height / 2;
+        const stickerCenterX = stickerRect.left + stickerRect.width / 2;
+
+        if (
+          stickerCenterX >= trashRect.left - 20 &&
+          stickerCenterX <= trashRect.right + 20 &&
+          stickerCenterY >= trashRect.top - 20 &&
+          stickerCenterY <= trashRect.bottom + 20
+        ) {
+          isOverTrash = true;
+          trashBin.classList.add('hovered');
+        } else {
+          isOverTrash = false;
+          trashBin.classList.remove('hovered');
+        }
       };
 
-      const dragEnd = () => { active = false; };
+      const dragEnd = () => {
+        if (!active) return;
+        active = false;
+        trashBin.classList.add('hidden');
+        trashBin.classList.remove('hovered');
+
+        if (isOverTrash) {
+          removeCaption();
+          isOverTrash = false;
+          xOffset = 0;
+          yOffset = 0;
+        }
+      };
 
       container.addEventListener("touchstart", dragStart, { passive: true });
       container.addEventListener("touchend", dragEnd, { passive: true });
@@ -621,48 +853,67 @@
 
   <div class="container">
     
+    <!-- Language Switcher Bar -->
+    <div class="lang-switcher">
+      <button id="lang-en" class="lang-btn" onclick="setLanguage('en')">EN</button>
+      <span>|</span>
+      <button id="lang-zh" class="lang-btn" onclick="setLanguage('zh')">中文</button>
+    </div>
+
     <!-- STEP 1: WELCOME & TOKEN -->
     <div id="page-welcome">
       <div class="names-header">Wesley & Dionne</div>
       <div class="xi-symbol">囍</div>
-      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;">Our Wedding, Through Your Eyes</p>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;" data-i18n="subtitle">Our Wedding, Through Your Eyes</p>
 
       <img src="image_0.png" style="width:75%; border-radius:10px; margin-bottom:15px;" alt="Wesley & Dionne">
 
-      <button id="btn-share" class="btn" onclick="showTokenInput()">Share A Memory</button>
+      <button id="btn-share" class="btn" onclick="showTokenInput()" data-i18n="shareBtn">Share A Memory</button>
 
       <div id="token-area" class="token-section hidden">
-        <input type="text" id="token-input" class="input-field" placeholder="ENTER PASSCODE" maxlength="12">
+        <input type="text" id="token-input" class="input-field" placeholder="ENTER PASSCODE" data-i18n-placeholder="passcodePlaceholder" maxlength="12">
         <br>
-        <button class="btn" onclick="validateToken()">Verify Code</button>
+        <button class="btn" onclick="validateToken()" data-i18n="verifyBtn">Verify Code</button>
         <div id="token-error" style="color:var(--crimson); font-size:0.8rem; margin-top:8px;"></div>
       </div>
     </div>
 
     <!-- STEP 2: IG-STYLE VIDEO EDITOR -->
     <div id="page-editor" class="hidden">
-      <div class="names-header" style="font-size:2.2rem;">Trim & Caption</div>
+      <div class="names-header" style="font-size:2.2rem;" data-i18n="editorTitle">Trim & Caption</div>
       
       <input type="file" id="video-file" accept="video/*" onchange="loadVideo(event)" style="display:none;">
-      <button id="select-vid-btn" class="btn" style="margin-bottom:10px;" onclick="document.getElementById('video-file').click()">Select Video</button>
+      <button id="select-vid-btn" class="btn" style="margin-bottom:10px;" onclick="document.getElementById('video-file').click()" data-i18n="selectVid">Select Video</button>
 
       <div id="editor-controls" class="hidden">
         
         <!-- Video Stage with Tap Play/Pause & Optional IG Sticker -->
         <div class="video-stage" id="video-stage" onclick="togglePlayPause(event)">
+          
+          <!-- Processing Loading Overlay -->
+          <div id="video-loader" class="video-loader hidden">
+            <div class="spinner"></div>
+            <span data-i18n="loadingVideo">Processing Video...</span>
+          </div>
+
           <video id="video-preview" playsinline autoplay loop></video>
           <div id="play-overlay" class="play-pause-btn playing"></div>
           
           <!-- Optional Add Caption Button -->
-          <button id="add-caption-btn" class="add-caption-btn" onclick="enableCaption(event)">
+          <button id="add-caption-btn" class="add-caption-btn" onclick="enableCaption(event)" data-i18n="addCaption">
             💬 + Add Caption
           </button>
 
-          <!-- Draggable Caption Sticker -->
+          <!-- Instagram-Style Trash Bin -->
+          <div id="trash-bin" class="trash-bin hidden" data-i18n="dragTrash">
+            🗑️ Drag here to delete
+          </div>
+
+          <!-- Draggable Caption Sticker with Shrink-Wrap Dynamic Width -->
           <div class="draggable-caption hidden" id="drag-caption">
             <div class="caption-wrapper">
-              <button class="remove-caption-btn" onclick="removeCaption(event)">✕</button>
-              <textarea id="ig-caption" class="ig-caption-input" placeholder="Type caption..." rows="1" maxlength="100"></textarea>
+              <span id="caption-mirror" class="caption-mirror"></span>
+              <textarea id="ig-caption" class="ig-caption-input" placeholder="Type caption..." data-i18n-placeholder="typeCaption" rows="1" maxlength="80"></textarea>
             </div>
           </div>
         </div>
@@ -676,11 +927,13 @@
           <div class="trimmer-handle" id="handle-start"></div>
           <div class="trimmer-handle" id="handle-end"></div>
         </div>
-        <div class="duration-text">SELECTED DURATION: <span id="duration-display">0.0</span>s (Constraint: 5-10s)</div>
+        <div class="duration-text">
+          <span data-i18n="durationLabel">SELECTED DURATION:</span> <span id="duration-display">0.0</span>s <span data-i18n="durationConstraint">(Constraint: 5-10s)</span>
+        </div>
 
         <div>
-          <button class="btn btn-secondary" onclick="resetEditor()">Cancel</button>
-          <button id="submit-btn" class="btn" onclick="submitMemory()">Submit Clip</button>
+          <button class="btn btn-secondary" onclick="resetEditor()" data-i18n="cancelBtn">Cancel</button>
+          <button id="submit-btn" class="btn" onclick="submitMemory()" data-i18n="submitBtn">Submit Clip</button>
         </div>
       </div>
       <div id="editor-error" style="color:var(--crimson); font-size:0.8rem; margin-top:8px;"></div>
@@ -689,8 +942,8 @@
     <!-- STEP 3: THANK YOU -->
     <div id="page-thanks" class="hidden">
       <div class="xi-symbol" style="font-size:3rem;">囍</div>
-      <div class="names-header">Thank You!</div>
-      <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem;">Your clip has been sent to the moderator queue for tonight's reception big screen playback!</p>
+      <div class="names-header" data-i18n="thanksTitle">Thank You!</div>
+      <p style="margin-top:10px; color:var(--text-muted); font-size:0.9rem;" data-i18n="thanksMessage">Your clip has been sent to the moderator queue for tonight's reception big screen playback!</p>
     </div>
 
   </div>
