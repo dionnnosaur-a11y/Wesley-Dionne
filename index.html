@@ -807,112 +807,112 @@
     }
 
     window.submitMemory = async () => {
-      const captionText = captionActive ? document.getElementById('ig-caption').value.trim() : "";
-      const submitBtn = document.getElementById('submit-btn');
-      const err = document.getElementById('editor-error');
-      const vid = document.getElementById('video-preview');
-      const dur = endTime - startTime;
+  const captionText = captionActive ? document.getElementById('ig-caption').value.trim() : "";
+  const submitBtn = document.getElementById('submit-btn');
+  const err = document.getElementById('editor-error');
+  const vid = document.getElementById('video-preview');
+  const dur = endTime - startTime;
 
-      if (dur < 4.9 || dur > 10.1) {
-        err.textContent = translations[currentLang].errDurationRange;
-        return;
+  if (dur < 4.9 || dur > 10.1) {
+    err.textContent = translations[currentLang].errDurationRange;
+    return;
+  }
+
+  if (!rawFile) {
+    err.textContent = "Please select a video file first.";
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = translations[currentLang].trimmingProgress;
+  err.textContent = "";
+
+  try {
+    let uploadFile = rawFile;
+    let trimmedStart = startTime;
+    let trimmedEnd = endTime;
+
+    // 1. Extract client-side trimmed clip first
+    try {
+      const trimmedBlob = await getTrimmedVideoBlob(vid, startTime, endTime);
+      if (trimmedBlob && trimmedBlob.size > 0) {
+        uploadFile = new File([trimmedBlob], "trimmed_memory.mp4", { type: trimmedBlob.type });
+        trimmedStart = 0;
+        trimmedEnd = dur;
       }
+    } catch (trimErr) {
+      console.warn("Client trimming fallback to direct upload:", trimErr);
+    }
 
-      if (!rawFile) {
-        err.textContent = "Please select a video file first.";
-        return;
-      }
+    // 2. Validate size AFTER trimming (only triggers if the cut clip itself exceeds 95MB)
+    const fileSizeMB = (uploadFile.size / (1024 * 1024)).toFixed(1);
+    if (uploadFile.size > 95 * 1024 * 1024) {
+      throw new Error(`${translations[currentLang].errFileTooLarge} (${fileSizeMB}MB)`);
+    }
 
-      const rawMB = (rawFile.size / (1024 * 1024)).toFixed(1);
-      if (rawFile.size > 95 * 1024 * 1024) {
-        err.textContent = `${translations[currentLang].errFileTooLarge} (${rawMB}MB)`;
-        return;
-      }
+    submitBtn.textContent = `${translations[currentLang].uploading} (0%)`;
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = translations[currentLang].trimmingProgress;
-      err.textContent = "";
+    // 3. Upload only the small trimmed file to Cloudinary
+    const formData = new FormData();
+    formData.append("file", uploadFile);
+    formData.append("upload_preset", CLOUDINARY_PRESET);
 
-      try {
-        let uploadFile = rawFile;
-        let trimmedStart = startTime;
-        let trimmedEnd = endTime;
+    const uploadToCloudinary = () => {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`);
 
-        // Extract client-side trimmed clip if supported by device
-        try {
-          const trimmedBlob = await getTrimmedVideoBlob(vid, startTime, endTime);
-          if (trimmedBlob && trimmedBlob.size > 0) {
-            uploadFile = new File([trimmedBlob], "trimmed_memory.mp4", { type: trimmedBlob.type });
-            trimmedStart = 0;
-            trimmedEnd = dur;
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            submitBtn.textContent = `${translations[currentLang].uploading} ${percent}% (${fileSizeMB}MB)`;
           }
-        } catch (trimErr) {
-          console.warn("Client trimming fallback to direct upload:", trimErr);
-        }
-
-        const fileSizeMB = (uploadFile.size / (1024 * 1024)).toFixed(1);
-        submitBtn.textContent = `${translations[currentLang].uploading} (0%)`;
-
-        const formData = new FormData();
-        formData.append("file", uploadFile);
-        formData.append("upload_preset", CLOUDINARY_PRESET);
-
-        const uploadToCloudinary = () => {
-          return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`);
-
-            xhr.upload.onprogress = (e) => {
-              if (e.lengthComputable) {
-                const percent = Math.round((e.loaded / e.total) * 100);
-                submitBtn.textContent = `${translations[currentLang].uploading} ${percent}% (${fileSizeMB}MB)`;
-              }
-            };
-
-            xhr.onload = () => {
-              let res = {};
-              try { res = JSON.parse(xhr.responseText || '{}'); } catch (e) {}
-              if (xhr.status >= 200 && xhr.status < 300) {
-                resolve(res);
-              } else {
-                reject(new Error(res.error?.message || `HTTP ${xhr.status}`));
-              }
-            };
-
-            xhr.onerror = () => reject(new Error("Network connection dropped. Check Wi-Fi/cellular connection."));
-            xhr.ontimeout = () => reject(new Error("Upload timed out."));
-
-            xhr.send(formData);
-          });
         };
 
-        const data = await uploadToCloudinary();
+        xhr.onload = () => {
+          let res = {};
+          try { res = JSON.parse(xhr.responseText || '{}'); } catch (e) {}
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(res);
+          } else {
+            reject(new Error(res.error?.message || `HTTP ${xhr.status}`));
+          }
+        };
 
-        if (!data || !data.secure_url) {
-          throw new Error("Missing video URL from response.");
-        }
+        xhr.onerror = () => reject(new Error("Network connection dropped. Check Wi-Fi/cellular connection."));
+        xhr.ontimeout = () => reject(new Error("Upload timed out."));
 
-        await addDoc(collection(db, "memories"), {
-          videoUrl: data.secure_url,
-          caption: captionText,
-          startTime: trimmedStart,
-          endTime: trimmedEnd,
-          token: activeToken,
-          status: "pending",
-          createdAt: serverTimestamp()
-        });
-
-        localStorage.setItem('submitted_' + activeToken, 'true');
-        document.getElementById('page-editor').classList.add('hidden');
-        document.getElementById('page-thanks').classList.remove('hidden');
-
-      } catch (error) {
-        console.error("Submission Error:", error);
-        err.textContent = `Error: ${error.message}`;
-        submitBtn.disabled = false;
-        submitBtn.textContent = translations[currentLang].submitBtn;
-      }
+        xhr.send(formData);
+      });
     };
+
+    const data = await uploadToCloudinary();
+
+    if (!data || !data.secure_url) {
+      throw new Error("Missing video URL from response.");
+    }
+
+    await addDoc(collection(db, "memories"), {
+      videoUrl: data.secure_url,
+      caption: captionText,
+      startTime: trimmedStart,
+      endTime: trimmedEnd,
+      token: activeToken,
+      status: "pending",
+      createdAt: serverTimestamp()
+    });
+
+    localStorage.setItem('submitted_' + activeToken, 'true');
+    document.getElementById('page-editor').classList.add('hidden');
+    document.getElementById('page-thanks').classList.remove('hidden');
+
+  } catch (error) {
+    console.error("Submission Error:", error);
+    err.textContent = `Error: ${error.message}`;
+    submitBtn.disabled = false;
+    submitBtn.textContent = translations[currentLang].submitBtn;
+  }
+};
 
     window.addEventListener('DOMContentLoaded', () => {
       initTrimmerEvents();
