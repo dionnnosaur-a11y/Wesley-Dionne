@@ -47,7 +47,6 @@
       position: relative;
     }
 
-    /* Alex Brush Header Font */
     .names-header {
       font-family: 'Alex Brush', cursive;
       font-size: 3.2rem;
@@ -80,7 +79,6 @@
       display: block;
     }
 
-    /* Buttons */
     .btn {
       background: linear-gradient(135deg, var(--gold), var(--gold-dark));
       color: #ffffff;
@@ -108,11 +106,16 @@
       margin-right: 8px;
     }
 
-    /* Token & Form Controls */
     .token-section {
-      margin-top: 40px;
-      padding-top: 30px;
+      margin-top: 25px;
+      padding-top: 20px;
       border-top: 1px dashed var(--gold-light);
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .input-field {
@@ -129,7 +132,6 @@
       outline: none;
     }
 
-    /* Editor Controls */
     video {
       width: 100%;
       max-height: 250px;
@@ -179,22 +181,24 @@
 
   <div class="container">
     
-    <!-- PAGE 1: WELCOME & TOKEN ENTRY (SCROLL DOWN) -->
+    <!-- PAGE 1: WELCOME & REVEALABLE TOKEN ENTRY -->
     <div id="page-welcome">
       <div class="names-header">Wesley & Dionne</div>
       <div class="xi-symbol">囍</div>
       <div class="sub-title">Our Wedding, Through Your Eyes</div>
 
-      <img src="image_0.png" alt="Wesley & Dionne" class="couple-img" id="hero-img">
+      <img src="image_0.png" alt="Wesley & Dionne" class="couple-img">
 
       <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.5;">
         Thank you for being part of our special day.<br>Share your favorite 5–10 second video clip with us!
       </p>
 
-      <button class="btn" onclick="scrollToToken()">Share A Memory</button>
+      <!-- Primary CTA -->
+      <button id="btn-share-main" class="btn" onclick="revealTokenArea()">Share A Memory</button>
 
-      <div id="token-area" class="token-section">
-        <h3 style="font-size:1.1rem; color:var(--gold-dark); margin-bottom:10px;">Enter Passcode</h3>
+      <!-- Token Area (Initially Hidden) -->
+      <div id="token-area" class="token-section hidden">
+        <h3 style="font-size:1.1rem; color:var(--gold-dark); margin-bottom:10px;">Enter Your Passcode</h3>
         <input type="text" id="token-input" class="input-field" placeholder="ENTER TOKEN" maxlength="12">
         <br>
         <button class="btn" onclick="validateToken()">Verify Code</button>
@@ -245,18 +249,14 @@
   </div>
 
   <script>
-    // 200+ Guest Tokens Array Support
     const GUEST_TOKENS = ["GUEST001", "GUEST002", "WESLEY2026", "DIONNE2026", "LOVE888"];
-    
-    // Cloudinary Unsigned Setup (Replace with your keys when ready)
-    const CLOUD_NAME = "your_cloud_name";
-    const UPLOAD_PRESET = "your_unsigned_preset";
-
     let activeToken = "";
     let rawFile = null;
 
-    function scrollToToken() {
-      document.getElementById('token-area').scrollIntoView({ behavior: 'smooth' });
+    function revealTokenArea() {
+      document.getElementById('btn-share-main').classList.add('hidden');
+      document.getElementById('token-area').classList.remove('hidden');
+      document.getElementById('token-input').focus();
     }
 
     function validateToken() {
@@ -274,7 +274,6 @@
       }
 
       activeToken = code;
-      // Transition to Next Page (Video Editor)
       document.getElementById('page-welcome').classList.add('hidden');
       document.getElementById('page-editor').classList.remove('hidden');
     }
@@ -332,10 +331,7 @@
         return;
       }
 
-      // Lock single use token
       localStorage.setItem('submitted_' + activeToken, 'true');
-
-      // Transition to Thank You Screen
       document.getElementById('page-editor').classList.add('hidden');
       document.getElementById('page-thanks').classList.remove('hidden');
     }
