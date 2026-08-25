@@ -27,10 +27,6 @@
     body.lang-zh {
       font-family: 'Klee One', cursive, sans-serif;
     }
-    body.lang-zh .names-header {
-      font-family: 'Zhi Mang Xing', cursive;
-      font-size: 3.2rem;
-    }
     body.lang-zh .btn, 
     body.lang-zh .add-caption-btn, 
     body.lang-zh .trash-bin,
@@ -381,6 +377,8 @@
         errUsedToken: "This token has already been used once.",
         errShortVid: "Please select a video that is at least 5 seconds long.",
         errDurationRange: "Selected duration must be between 5 and 10 seconds.",
+        errFileTooLarge: "Video file is too large (max 95MB). Please pick a shorter clip.",
+        trimmingProgress: "Trimming clip...",
         uploading: "Uploading Memory...",
         uploadFailed: "Upload failed. Please try again."
       },
@@ -406,6 +404,8 @@
         errUsedToken: "此通行码已被使用过。",
         errShortVid: "请选择至少 5 秒长的视频。",
         errDurationRange: "选中的时长必须在 5 到 10 秒之间。",
+        errFileTooLarge: "视频文件过大（上限 95MB），请选择较短的片段。",
+        trimmingProgress: "正在裁剪片段...",
         uploading: "正在上传视频...",
         uploadFailed: "上传失败，请重试。"
       }
@@ -475,44 +475,48 @@
       tempVideo.src = videoUrl;
       tempVideo.muted = true;
       tempVideo.playsInline = true;
+      tempVideo.setAttribute('playsinline', '');
+      tempVideo.setAttribute('muted', '');
       tempVideo.preload = 'auto';
-      tempVideo.style.position = 'fixed';
-      tempVideo.style.top = '-9999px';
-      tempVideo.style.left = '-9999px';
+
+      // Keep temp video visible inside DOM/viewport for WebKit frame decoding
+      tempVideo.style.position = 'absolute';
+      tempVideo.style.top = '0';
+      tempVideo.style.left = '0';
       tempVideo.style.width = '1px';
       tempVideo.style.height = '1px';
+      tempVideo.style.opacity = '0.01';
+      tempVideo.style.pointerEvents = 'none';
       document.body.appendChild(tempVideo);
 
       await new Promise(resolve => {
-        if (tempVideo.readyState >= 1) resolve();
+        if (tempVideo.readyState >= 2) resolve();
         else {
-          tempVideo.onloadedmetadata = resolve;
-          setTimeout(resolve, 1000);
+          tempVideo.onloadeddata = resolve;
+          tempVideo.onerror = resolve;
+          setTimeout(resolve, 1500);
         }
       });
 
       const frameCount = 8;
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      canvas.width = 120;
-      canvas.height = 80;
+      canvas.width = 160;
+      canvas.height = 90;
 
       const dur = tempVideo.duration || 1;
 
       for (let i = 0; i < frameCount; i++) {
-        const targetTime = (i / (frameCount - 1)) * (dur * 0.98);
+        const targetTime = (i / (frameCount - 1)) * (dur * 0.95);
         
         await new Promise(resolve => {
-          let done = false;
-          const finish = () => {
-            if (!done) {
-              done = true;
-              setTimeout(resolve, 50);
-            }
+          const onSeeked = () => {
+            tempVideo.removeEventListener('seeked', onSeeked);
+            setTimeout(resolve, 80);
           };
-          tempVideo.addEventListener('seeked', finish, { once: true });
+          tempVideo.addEventListener('seeked', onSeeked);
           tempVideo.currentTime = targetTime;
-          setTimeout(finish, 200);
+          setTimeout(resolve, 350);
         });
 
         try {
@@ -521,7 +525,7 @@
           img.src = canvas.toDataURL('image/jpeg', 0.6);
           filmstrip.appendChild(img);
         } catch (e) {
-          console.warn("Frame draw skipped:", e);
+          console.warn("Frame draw error:", e);
         }
       }
 
@@ -740,10 +744,73 @@
       document.getElementById('editor-controls').classList.add('hidden');
     };
 
+    // Helper function to extract and record only the selected 5-10s clip on the client side
+    function getTrimmedVideoBlob(vidElement, start, end) {
+      return new Promise((resolve, reject) => {
+        let stream;
+        if (vidElement.captureStream) {
+          stream = vidElement.captureStream();
+        } else if (vidElement.mozCaptureStream) {
+          stream = vidElement.mozCaptureStream();
+        } else {
+          reject(new Error("Video stream capture not supported in this browser."));
+          return;
+        }
+
+        let mimeType = 'video/mp4';
+        if (!MediaRecorder.isTypeSupported(mimeType)) {
+          if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
+            mimeType = 'video/webm;codecs=vp9';
+          } else if (MediaRecorder.isTypeSupported('video/webm')) {
+            mimeType = 'video/webm';
+          } else {
+            mimeType = '';
+          }
+        }
+
+        const options = mimeType ? { mimeType } : undefined;
+        let recorder;
+        try {
+          recorder = new MediaRecorder(stream, options);
+        } catch (e) {
+          reject(new Error("MediaRecorder initialization failed."));
+          return;
+        }
+
+        const chunks = [];
+        recorder.ondataavailable = (e) => {
+          if (e.data && e.data.size > 0) chunks.push(e.data);
+        };
+
+        recorder.onstop = () => {
+          const trimmedBlob = new Blob(chunks, { type: recorder.mimeType || 'video/mp4' });
+          resolve(trimmedBlob);
+        };
+
+        vidElement.currentTime = start;
+        vidElement.play().then(() => {
+          recorder.start();
+
+          const checkTime = () => {
+            if (vidElement.currentTime >= end || vidElement.paused) {
+              vidElement.pause();
+              vidElement.removeEventListener('timeupdate', checkTime);
+              if (recorder.state !== 'inactive') {
+                recorder.stop();
+              }
+            }
+          };
+
+          vidElement.addEventListener('timeupdate', checkTime);
+        }).catch(reject);
+      });
+    }
+
     window.submitMemory = async () => {
       const captionText = captionActive ? document.getElementById('ig-caption').value.trim() : "";
       const submitBtn = document.getElementById('submit-btn');
       const err = document.getElementById('editor-error');
+      const vid = document.getElementById('video-preview');
       const dur = endTime - startTime;
 
       if (dur < 4.9 || dur > 10.1) {
@@ -756,19 +823,38 @@
         return;
       }
 
-      const fileSizeMB = (rawFile.size / (1024 * 1024)).toFixed(1);
+      const rawMB = (rawFile.size / (1024 * 1024)).toFixed(1);
       if (rawFile.size > 95 * 1024 * 1024) {
-        err.textContent = `Video is too large (${fileSizeMB}MB). Cloudinary limit is 95MB. Please upload a shorter clip or record at 1080p.`;
+        err.textContent = `${translations[currentLang].errFileTooLarge} (${rawMB}MB)`;
         return;
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = `${translations[currentLang].uploading} (0%)`;
+      submitBtn.textContent = translations[currentLang].trimmingProgress;
       err.textContent = "";
 
       try {
+        let uploadFile = rawFile;
+        let trimmedStart = startTime;
+        let trimmedEnd = endTime;
+
+        // Extract client-side trimmed clip if supported by device
+        try {
+          const trimmedBlob = await getTrimmedVideoBlob(vid, startTime, endTime);
+          if (trimmedBlob && trimmedBlob.size > 0) {
+            uploadFile = new File([trimmedBlob], "trimmed_memory.mp4", { type: trimmedBlob.type });
+            trimmedStart = 0;
+            trimmedEnd = dur;
+          }
+        } catch (trimErr) {
+          console.warn("Client trimming fallback to direct upload:", trimErr);
+        }
+
+        const fileSizeMB = (uploadFile.size / (1024 * 1024)).toFixed(1);
+        submitBtn.textContent = `${translations[currentLang].uploading} (0%)`;
+
         const formData = new FormData();
-        formData.append("file", rawFile);
+        formData.append("file", uploadFile);
         formData.append("upload_preset", CLOUDINARY_PRESET);
 
         const uploadToCloudinary = () => {
@@ -809,8 +895,8 @@
         await addDoc(collection(db, "memories"), {
           videoUrl: data.secure_url,
           caption: captionText,
-          startTime: startTime,
-          endTime: endTime,
+          startTime: trimmedStart,
+          endTime: trimmedEnd,
           token: activeToken,
           status: "pending",
           createdAt: serverTimestamp()
