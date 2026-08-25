@@ -377,7 +377,7 @@
         errUsedToken: "This token has already been used once.",
         errShortVid: "Please select a video that is at least 5 seconds long.",
         errDurationRange: "Selected duration must be between 5 and 10 seconds.",
-        errFileTooLarge: "Video file is too large (max 500MB). Please select a shorter video.",
+        errFileTooLarge: "Video file is too large (max 95MB). Please trim the clip in your Photos app first.",
         uploading: "Uploading Memory...",
         uploadFailed: "Upload failed. Please try again."
       },
@@ -403,7 +403,7 @@
         errUsedToken: "此通行码已被使用过。",
         errShortVid: "请选择至少 5 秒长的视频。",
         errDurationRange: "选中的时长必须在 5 到 10 秒之间。",
-        errFileTooLarge: "视频文件过大（上限 500MB），请选择较短的视频。",
+        errFileTooLarge: "视频文件过大（上限 95MB），请先在相册中裁剪视频。",
         uploading: "正在上传视频...",
         uploadFailed: "上传失败，请重试。"
       }
@@ -741,8 +741,7 @@
       document.getElementById('editor-controls').classList.add('hidden');
     };
 
-    // Robust Chunked Uploader to handle large phone recordings (up to 500MB)
-    function uploadInChunks(file, onProgress) {
+    function uploadInChunks(file, startSec, endSec, onProgress) {
       return new Promise((resolve, reject) => {
         const chunkSize = 5 * 1024 * 1024; // 5MB per chunk
         const totalChunks = Math.ceil(file.size / chunkSize);
@@ -757,6 +756,7 @@
           const formData = new FormData();
           formData.append('file', chunk);
           formData.append('upload_preset', CLOUDINARY_PRESET);
+          formData.append('eager', `so_${startSec},eo_${endSec}`);
 
           const xhr = new XMLHttpRequest();
           xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`);
@@ -814,8 +814,8 @@
       }
 
       const fileSizeMB = (rawFile.size / (1024 * 1024)).toFixed(1);
-      if (rawFile.size > 500 * 1024 * 1024) {
-        err.textContent = `${translations[currentLang].errFileTooLarge} (${fileSizeMB}MB)`;
+      if (rawFile.size > 95 * 1024 * 1024) {
+        err.textContent = translations[currentLang].errFileTooLarge;
         return;
       }
 
@@ -824,8 +824,10 @@
       err.textContent = "";
 
       try {
-        // Upload video chunks to Cloudinary
-        const data = await uploadInChunks(rawFile, (percent) => {
+        const startSec = startTime.toFixed(1);
+        const endSec = endTime.toFixed(1);
+
+        const data = await uploadInChunks(rawFile, startSec, endSec, (percent) => {
           submitBtn.textContent = `${translations[currentLang].uploading} ${percent}% (${fileSizeMB}MB)`;
         });
 
@@ -833,12 +835,10 @@
           throw new Error("Missing video URL from Cloudinary.");
         }
 
-        // Apply Cloudinary server-side trim transformation to the final stored URL
-        const startSec = startTime.toFixed(1);
-        const endSec = endTime.toFixed(1);
-        const trimmedCloudinaryUrl = data.secure_url.replace('/upload/', `/upload/so_${startSec},eo_${endSec}/`);
+        const trimmedCloudinaryUrl = (data.eager && data.eager[0] && data.eager[0].secure_url) 
+          ? data.eager[0].secure_url 
+          : data.secure_url.replace('/upload/', `/upload/so_${startSec},eo_${endSec}/`);
 
-        // Save trimmed video reference in Firestore
         await addDoc(collection(db, "memories"), {
           videoUrl: trimmedCloudinaryUrl,
           rawUrl: data.secure_url,
