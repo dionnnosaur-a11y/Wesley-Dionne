@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wesley & Dionne | Live Memory Stream</title>
+  <style>
+    * { margin:0; padding:0; background:#000; overflow:hidden; }
+    body, html { width:100%; height:100%; display:flex; justify-content:center; align-items:center; }
+    video { max-width:100vw; max-height:100vh; object-fit:contain; }
+  </style>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAIwdjEi2hFRswmY5pGutEnPKes28onoVY",
+      authDomain: "wedding-wd0501.firebaseapp.com",
+      projectId: "wedding-wd0501",
+      storageBucket: "wedding-wd0501.firebasestorage.app",
+      messagingSenderId: "502415733371",
+      appId: "1:502415733371:web:77817b08a943d348ad68de",
+      measurementId: "G-HVEPN86J97"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let playlist = [];
+    let currentIndex = 0;
+    const player = document.getElementById("player");
+
+    onSnapshot(collection(db, "memories"), (snapshot) => {
+      const approved = [];
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        if (data.status === "approved") {
+          approved.push(data.videoUrl);
+        }
+      });
+      playlist = approved;
+      if (player.paused && playlist.length > 0) {
+        playNext();
+      }
+    });
+
+    function playNext() {
+      if (playlist.length === 0) return;
+      player.src = playlist[currentIndex % playlist.length];
+      player.play().catch(e => console.log("Autoplay waiting for interaction"));
+      currentIndex++;
+    }
+
+    window.onload = () => {
+      player.onended = playNext;
+      document.body.onclick = () => {
+        if (player.paused && playlist.length > 0) playNext();
+      };
+    };
+  </script>
+</head>
+<body>
+  <video id="player" autoplay muted playsinline></video>
+</body>
+</html>
