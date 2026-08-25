@@ -7,7 +7,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -34,7 +34,7 @@
     .token-section { margin-top: 20px; padding-top: 15px; border-top: 1px dashed var(--gold); }
     .input-field { width: 80%; padding: 10px; border: 1px solid var(--gold); border-radius: 8px; text-align: center; font-size: 1rem; text-transform: uppercase; margin-bottom: 10px; }
 
-    /* Video Stage & Draggable IG Caption */
+    /* Video Stage & Instagram Sticker Caption */
     .video-stage { 
       position: relative; 
       width: 100%; 
@@ -48,29 +48,37 @@
     
     .draggable-caption {
       position: absolute;
-      top: 75%;
+      top: 70%;
       left: 50%;
       transform: translate(-50%, -50%);
       cursor: move;
       z-index: 10;
       touch-action: none;
+      width: 80%;
+      display: flex;
+      justify-content: center;
     }
     
     .ig-caption-input {
-      background: rgba(0, 0, 0, 0.65);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      backdrop-filter: blur(4px);
+      background: #000000;
       color: #ffffff;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      padding: 10px 16px;
+      border-radius: 14px;
+      border: none;
       text-align: center;
       outline: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      width: 220px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+      width: 100%;
+      max-width: 280px;
+      resize: none;
+      overflow: hidden;
+      line-height: 1.35;
+      display: block;
     }
-    .ig-caption-input::placeholder { color: rgba(255, 255, 255, 0.75); font-weight: 400; }
+    .ig-caption-input::placeholder { color: rgba(255, 255, 255, 0.6); font-weight: 700; }
 
     /* Custom Dual-Handle Timeline Trimmer */
     .trimmer-track {
@@ -174,7 +182,7 @@
 
       const vid = document.getElementById('video-preview');
       vid.src = URL.createObjectURL(rawFile);
-      vid.muted = false; // Enable audio
+      vid.muted = false;
       
       vid.onloadedmetadata = () => {
         videoDuration = vid.duration;
@@ -189,7 +197,6 @@
         document.getElementById('editor-controls').classList.remove('hidden');
       };
 
-      // Loop video directly inside the main player bounded by trim points
       vid.ontimeupdate = () => {
         if (vid.currentTime >= endTime || vid.currentTime < startTime) {
           vid.currentTime = startTime;
@@ -327,26 +334,43 @@
       }
     };
 
-    // Make Instagram Caption Draggable across video stage
+    // Auto-grow text area height & Smooth Draggable sticker initialization
     window.addEventListener('DOMContentLoaded', () => {
       initTrimmerEvents();
+
+      const captionArea = document.getElementById('ig-caption');
+      captionArea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+      });
 
       const dragItem = document.getElementById("drag-caption");
       const container = document.getElementById("video-stage");
       let active = false, currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
 
       const dragStart = (e) => {
-        if (e.target.tagName === 'INPUT') return;
-        initialX = (e.type === "touchstart" ? e.touches[0].clientX : e.clientX) - xOffset;
-        initialY = (e.type === "touchstart" ? e.touches[0].clientY : e.clientY) - yOffset;
-        if (e.target === dragItem || dragItem.contains(e.target)) active = true;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        initialX = clientX - xOffset;
+        initialY = clientY - yOffset;
+
+        if (dragItem.contains(e.target)) {
+          active = true;
+        }
       };
 
       const drag = (e) => {
         if (!active) return;
-        e.preventDefault();
-        currentX = (e.type === "touchmove" ? e.touches[0].clientX : e.clientX) - initialX;
-        currentY = (e.type === "touchmove" ? e.touches[0].clientY : e.clientY) - initialY;
+        
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        currentX = clientX - initialX;
+        currentY = clientY - initialY;
+
+        // Prevent page scrolling while dragging caption sticker
+        if (e.type === "touchmove") e.preventDefault();
+
         xOffset = currentX;
         yOffset = currentY;
         dragItem.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
@@ -354,12 +378,12 @@
 
       const dragEnd = () => { active = false; };
 
-      container.addEventListener("touchstart", dragStart, false);
-      container.addEventListener("touchend", dragEnd, false);
-      container.addEventListener("touchmove", drag, false);
-      container.addEventListener("mousedown", dragStart, false);
-      container.addEventListener("mouseup", dragEnd, false);
-      container.addEventListener("mousemove", drag, false);
+      container.addEventListener("touchstart", dragStart, { passive: true });
+      container.addEventListener("touchend", dragEnd, { passive: true });
+      container.addEventListener("touchmove", drag, { passive: false });
+      container.addEventListener("mousedown", dragStart);
+      container.addEventListener("mouseup", dragEnd);
+      container.addEventListener("mousemove", drag);
     });
   </script>
 </head>
@@ -394,11 +418,11 @@
 
       <div id="editor-controls" class="hidden">
         
-        <!-- Video Stage with Draggable IG Caption -->
+        <!-- Video Stage with Solid IG Sticker Caption -->
         <div class="video-stage" id="video-stage">
           <video id="video-preview" playsinline autoplay loop></video>
           <div class="draggable-caption" id="drag-caption">
-            <input type="text" id="ig-caption" class="ig-caption-input" placeholder="Tap to add caption..." maxlength="80">
+            <textarea id="ig-caption" class="ig-caption-input" placeholder="Tap to add caption..." rows="1" maxlength="100"></textarea>
           </div>
         </div>
 
