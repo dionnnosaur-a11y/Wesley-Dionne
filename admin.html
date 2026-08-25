@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wesley & Dionne | Moderator Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; max-width: 500px; margin: 0 auto; }
+    h1 { color: #c5a059; text-align: center; margin-bottom: 20px; }
+    .card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: center; }
+    video { width: 100%; border-radius: 8px; margin-bottom: 10px; }
+    .btn { padding: 12px 20px; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; margin: 5px; font-size: 0.9rem; }
+    .btn-approve { background: #2e7d32; color: white; }
+    .btn-reject { background: #c62828; color: white; }
+    .caption-box { font-style: italic; color: #ddd; margin: 8px 0; background: #2a2a2a; padding: 8px; border-radius: 6px; }
+  </style>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAIwdjEi2hFRswmY5pGutEnPKes28onoVY",
+      authDomain: "wedding-wd0501.firebaseapp.com",
+      projectId: "wedding-wd0501",
+      storageBucket: "wedding-wd0501.firebasestorage.app",
+      messagingSenderId: "502415733371",
+      appId: "1:502415733371:web:77817b08a943d348ad68de",
+      measurementId: "G-HVEPN86J97"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const q = query(collection(db, "memories"), orderBy("createdAt", "desc"));
+
+    onSnapshot(q, (snapshot) => {
+      const feed = document.getElementById("feed");
+      feed.innerHTML = "";
+      let count = 0;
+      
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        if (data.status === "pending") {
+          count++;
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <video src="${data.videoUrl}" controls></video>
+            <div class="caption-box">"${data.caption || 'No caption'}"</div>
+            <div>
+              <button class="btn btn-approve" onclick="approve('${docSnap.id}')">Approve for Reception</button>
+              <button class="btn btn-reject" onclick="reject('${docSnap.id}')">Reject</button>
+            </div>
+          `;
+          feed.appendChild(card);
+        }
+      });
+
+      if (count === 0) {
+        feed.innerHTML = "<p style='text-align:center; color:#888;'>No pending guest videos right now!</p>";
+      }
+    });
+
+    window.approve = async (id) => {
+      await updateDoc(doc(db, "memories", id), { status: "approved" });
+    };
+
+    window.reject = async (id) => {
+      await deleteDoc(doc(db, "memories", id));
+    };
+  </script>
+</head>
+<body>
+  <h1>Moderator Queue</h1>
+  <div id="feed">Loading pending videos...</div>
+</body>
+</html>
