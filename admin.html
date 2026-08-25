@@ -1,78 +1,1945 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Wesley & Dionne | Moderator Panel</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; max-width: 500px; margin: 0 auto; }
-    h1 { color: #c5a059; text-align: center; margin-bottom: 20px; }
-    .card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: center; }
-    video { width: 100%; border-radius: 8px; margin-bottom: 10px; }
-    .btn { padding: 12px 20px; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; margin: 5px; font-size: 0.9rem; }
-    .btn-approve { background: #2e7d32; color: white; }
-    .btn-reject { background: #c62828; color: white; }
-    .caption-box { font-style: italic; color: #ddd; margin: 8px 0; background: #2a2a2a; padding: 8px; border-radius: 6px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#faf8f3">
+<title>Wesley & Dionne | Admin</title>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAIwdjEi2hFRswmY5pGutEnPKes28onoVY",
-      authDomain: "wedding-wd0501.firebaseapp.com",
-      projectId: "wedding-wd0501",
-      storageBucket: "wedding-wd0501.firebasestorage.app",
-      messagingSenderId: "502415733371",
-      appId: "1:502415733371:web:77817b08a943d348ad68de",
-      measurementId: "G-HVEPN86J97"
+<link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  /* ===== CHANGE COLOUR THEMES HERE ===== */
+  --gold:#c5a059;
+  --gold-dark:#9e7a37;
+  --cream:#faf8f3;
+  --white:#fff;
+  --text:#2c2925;
+  --muted:#6e675f;
+  --red:#b33a3a;
+  --green:#55795d;
+  --line:rgba(197,160,89,.28);
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0
+}
+
+body{
+  background:var(--cream);
+  color:var(--text);
+  font-family:Montserrat,sans-serif;
+  min-height:100vh;
+  padding:18px
+}
+
+.hidden{
+  display:none!important
+}
+
+button,input{
+  font:inherit
+}
+
+.shell{
+  max-width:1050px;
+  margin:auto
+}
+
+.login{
+  max-width:430px;
+  margin:8vh auto 0;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:30px;
+  text-align:center;
+  box-shadow:0 10px 30px rgba(0,0,0,.06)
+}
+
+.script{
+  font-family:'Alex Brush',cursive;
+  color:var(--gold-dark);
+  font-size:3rem
+}
+
+.label{
+  font-size:.7rem;
+  letter-spacing:.13em;
+  font-weight:800;
+  color:var(--muted)
+}
+
+.input{
+  width:100%;
+  border:1px solid rgba(158,122,55,.6);
+  border-radius:10px;
+  padding:12px;
+  text-align:center;
+  margin-top:16px;
+  outline:0
+}
+
+.btn{
+  border:0;
+  border-radius:999px;
+  padding:10px 17px;
+  min-height:41px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  color:#fff;
+  font-weight:700;
+  cursor:pointer
+}
+
+.btn.small{
+  font-size:.75rem;
+  padding:8px 12px;
+  min-height:35px
+}
+
+.btn.green{
+  background:var(--green)
+}
+
+.btn.red{
+  background:var(--red)
+}
+
+.btn.dark{
+  background:#292725
+}
+
+.btn.outline{
+  background:#fff;
+  color:var(--muted);
+  border:1px solid #aaa
+}
+
+.btn:disabled{
+  opacity:.45
+}
+
+.error{
+  color:var(--red);
+  font-size:.78rem;
+  margin-top:8px;
+  min-height:1em
+}
+
+.top{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:16px 18px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  box-shadow:0 7px 25px rgba(0,0,0,.05)
+}
+
+.brand{
+  display:flex;
+  gap:12px;
+  align-items:center
+}
+
+.mini-xi{
+  color:#8a1c1c;
+  font-size:1.7rem
+}
+
+.title{
+  font-weight:800
+}
+
+.sub{
+  font-size:.72rem;
+  color:var(--muted);
+  margin-top:3px
+}
+
+.actionsTop{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  justify-content:flex-end
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+  margin:12px 0
+}
+
+.stat{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:14px;
+  text-align:center
+}
+
+.stat strong{
+  display:block;
+  color:var(--gold-dark);
+  font-size:1.5rem
+}
+
+.stat span{
+  font-size:.7rem;
+  color:var(--muted);
+  font-weight:700
+}
+
+.tabs{
+  display:flex;
+  gap:7px;
+  overflow:auto;
+  margin:12px 0
+}
+
+.tab{
+  white-space:nowrap;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--muted);
+  border-radius:999px;
+  padding:9px 14px;
+  font-weight:700;
+  cursor:pointer
+}
+
+.tab.active{
+  background:var(--gold-dark);
+  color:#fff
+}
+
+.notice{
+  padding:11px 13px;
+  background:#fff9ea;
+  border:1px solid #ead9aa;
+  border-radius:11px;
+  color:#715f30;
+  font-size:.76rem;
+  line-height:1.45;
+  margin-bottom:12px
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:
+    repeat(auto-fill,minmax(260px,1fr));
+  gap:13px
+}
+
+.empty{
+  grid-column:1/-1;
+  background:#fff;
+  border:1px dashed var(--line);
+  border-radius:14px;
+  padding:35px;
+  text-align:center;
+  color:var(--muted)
+}
+
+.memory{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:15px;
+  overflow:hidden;
+  box-shadow:0 6px 20px rgba(0,0,0,.045)
+}
+
+.memory.dragging{
+  opacity:.45
+}
+
+.preview{
+  position:relative;
+  width:100%;
+  aspect-ratio:9/16;
+  background:#000;
+  overflow:hidden
+}
+
+.preview video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block
+}
+
+.cap{
+  position:absolute;
+  transform:translate(-50%,-50%);
+  max-width:88%;
+  background:#000;
+  color:#fff;
+  border-radius:13px;
+  padding:8px 13px;
+  font-weight:800;
+  font-size:1rem;
+  line-height:1.28;
+  text-align:center;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  pointer-events:none
+}
+
+.body{
+  padding:13px
+}
+
+.guestrow{
+  display:flex;
+  justify-content:space-between;
+  gap:8px
+}
+
+.guest{
+  font-weight:800
+}
+
+.token{
+  font-size:.7rem;
+  color:var(--gold-dark);
+  font-weight:800
+}
+
+.meta{
+  font-size:.7rem;
+  color:var(--muted);
+  line-height:1.5;
+  margin-top:5px
+}
+
+.captioncopy{
+  font-size:.75rem;
+  margin-top:8px;
+  padding:8px;
+  background:#f8f6f1;
+  border-radius:8px
+}
+
+.rowbtn{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:10px
+}
+
+.order{
+  display:flex;
+  gap:5px;
+  align-items:center;
+  margin-top:8px
+}
+
+.order span{
+  font-size:.68rem;
+  color:var(--muted)
+}
+
+.player{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:#000;
+  display:grid;
+  place-items:center
+}
+
+.playerStage{
+  position:relative;
+  width:100%;
+  height:100%;
+  display:grid;
+  place-items:center
+}
+
+.playerWrap{
+  position:relative;
+  height:min(94vh,900px);
+  aspect-ratio:9/16;
+  max-width:100vw;
+  background:#000;
+  overflow:hidden
+}
+
+.player video{
+  width:100%;
+  height:100%;
+  object-fit:cover
+}
+
+.player .cap{
+  font-size:clamp(1rem,2.5vh,2rem);
+  padding:10px 17px
+}
+
+.playerbar{
+  position:absolute;
+  z-index:120;
+  top:max(12px,env(safe-area-inset-top));
+  left:12px;
+  right:12px;
+  display:flex;
+  justify-content:space-between;
+  pointer-events:none
+}
+
+.counter,.close{
+  pointer-events:auto;
+  background:rgba(0,0,0,.58);
+  color:#fff;
+  border:0;
+  border-radius:999px
+}
+
+.counter{
+  padding:9px 13px;
+  font-size:.75rem;
+  font-weight:800
+}
+
+.close{
+  width:43px;
+  height:43px;
+  cursor:pointer;
+  font-size:1.1rem
+}
+
+@media(max-width:600px){
+  body{
+    padding:10px
+  }
+
+  .top{
+    align-items:flex-start;
+    flex-direction:column
+  }
+
+  .actionsTop{
+    justify-content:flex-start
+  }
+
+  .grid{
+    grid-template-columns:1fr
+  }
+
+  .stats{
+    gap:6px
+  }
+
+  .stat{
+    padding:11px
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="shell">
+
+<section id="login" class="login">
+
+  <div class="script">
+    Wesley & Dionne
+  </div>
+
+  <div class="label">
+    WEDDING ADMIN
+  </div>
+
+  <input
+    id="adminCode"
+    class="input"
+    type="password"
+    placeholder="ADMIN CODE"
+    autocomplete="off"
+  >
+
+  <button
+    id="loginBtn"
+    class="btn"
+    style="margin-top:12px"
+  >
+    Enter Admin
+  </button>
+
+  <div
+    id="loginError"
+    class="error"
+  ></div>
+
+  <p
+    class="sub"
+    style="margin-top:12px"
+  >
+    Prototype admin code:
+    <b>WD0501</b>
+  </p>
+
+</section>
+
+
+<section
+  id="app"
+  class="hidden"
+>
+
+<header class="top">
+
+  <div class="brand">
+
+    <div class="mini-xi">
+      囍
+    </div>
+
+    <div>
+      <div class="label">
+        ADMIN · VIDEO QUEUE
+      </div>
+
+      <div class="title">
+        Wesley & Dionne
+      </div>
+
+      <div class="sub">
+        Moderate what appears on screen
+      </div>
+    </div>
+
+  </div>
+
+  <div class="actionsTop">
+
+    <button
+      id="refresh"
+      class="btn outline small"
+    >
+      ↻ Refresh
+    </button>
+
+    <button
+      id="play"
+      class="btn dark small"
+    >
+      ▶ Play Approved Queue
+    </button>
+
+    <button
+      id="clear"
+      class="btn red small"
+    >
+      Clear Test Data
+    </button>
+
+  </div>
+
+</header>
+
+
+<div class="stats">
+
+  <div class="stat">
+    <strong id="pendingStat">0</strong>
+    <span>Pending</span>
+  </div>
+
+  <div class="stat">
+    <strong id="approvedStat">0</strong>
+    <span>Approved</span>
+  </div>
+
+  <div class="stat">
+    <strong id="totalStat">0</strong>
+    <span>Total</span>
+  </div>
+
+</div>
+
+
+<div class="tabs">
+
+  <button
+    class="tab active"
+    data-tab="pending"
+  >
+    Pending
+    <span id="pendingCount">0</span>
+  </button>
+
+  <button
+    class="tab"
+    data-tab="approved"
+  >
+    Approved
+    <span id="approvedCount">0</span>
+  </button>
+
+  <button
+    class="tab"
+    data-tab="all"
+  >
+    All
+    <span id="allCount">0</span>
+  </button>
+
+</div>
+
+
+<div class="notice">
+  <b>GitHub prototype:</b>
+  submissions live only in this browser's IndexedDB.
+  Use index.html and admin.html on the same GitHub Pages
+  address and same browser/device.
+</div>
+
+
+<main
+  id="grid"
+  class="grid"
+></main>
+
+</section>
+
+</div>
+
+
+<section
+  id="player"
+  class="player hidden"
+>
+
+  <div
+    id="playerStage"
+    class="playerStage"
+  >
+
+    <div class="playerbar">
+
+      <div
+        id="counter"
+        class="counter"
+      ></div>
+
+      <button
+        id="close"
+        class="close"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <div
+      id="playerWrap"
+      class="playerWrap"
+    >
+
+      <video
+        id="queueVideo"
+        playsinline
+        preload="metadata"
+      ></video>
+
+      <div
+        id="queueCap"
+        class="cap hidden"
+      ></div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<script>
+'use strict';
+
+const DB = 'wd0501-full-demo';
+const STORE = 'submissions';
+const ADMIN = 'WD0501';
+
+const $ = id =>
+  document.getElementById(id);
+
+const S = {
+  items:[],
+  tab:'pending',
+  urls:new Set(),
+  drag:null,
+  queue:[],
+  qi:0,
+  qurl:null
+};
+
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request =
+      indexedDB.open(DB, 1);
+
+    request.onupgradeneeded = () => {
+      const db = request.result;
+
+      if (
+        !db.objectStoreNames.contains(
+          STORE
+        )
+      ) {
+        const store =
+          db.createObjectStore(
+            STORE,
+            { keyPath:'id' }
+          );
+
+        store.createIndex(
+          'status',
+          'status'
+        );
+
+        store.createIndex(
+          'createdAt',
+          'createdAt'
+        );
+      }
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    request.onsuccess = () =>
+      resolve(request.result);
 
-    const q = query(collection(db, "memories"), orderBy("createdAt", "desc"));
+    request.onerror = () =>
+      reject(request.error);
+  });
+}
 
-    onSnapshot(q, (snapshot) => {
-      const feed = document.getElementById("feed");
-      feed.innerHTML = "";
-      let count = 0;
-      
-      snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        if (data.status === "pending") {
-          count++;
-          const card = document.createElement("div");
-          card.className = "card";
-          card.innerHTML = `
-            <video src="${data.videoUrl}" controls></video>
-            <div class="caption-box">"${data.caption || 'No caption'}"</div>
-            <div>
-              <button class="btn btn-approve" onclick="approve('${docSnap.id}')">Approve for Reception</button>
-              <button class="btn btn-reject" onclick="reject('${docSnap.id}')">Reject</button>
-            </div>
-          `;
-          feed.appendChild(card);
-        }
-      });
 
-      if (count === 0) {
-        feed.innerHTML = "<p style='text-align:center; color:#888;'>No pending guest videos right now!</p>";
+async function all() {
+  const db = await openDB();
+
+  try {
+    return await new Promise(
+      (resolve, reject) => {
+        const tx =
+          db.transaction(
+            STORE,
+            'readonly'
+          );
+
+        const request =
+          tx.objectStore(STORE)
+            .getAll();
+
+        request.onsuccess = () =>
+          resolve(
+            request.result || []
+          );
+
+        request.onerror = () =>
+          reject(request.error);
       }
+    );
+  }
+
+  finally {
+    db.close();
+  }
+}
+
+
+async function put(record) {
+  const db = await openDB();
+
+  try {
+    await new Promise(
+      (resolve, reject) => {
+        const tx =
+          db.transaction(
+            STORE,
+            'readwrite'
+          );
+
+        tx.objectStore(STORE)
+          .put(record);
+
+        tx.oncomplete =
+          resolve;
+
+        tx.onerror = () =>
+          reject(tx.error);
+      }
+    );
+  }
+
+  finally {
+    db.close();
+  }
+}
+
+
+async function del(id) {
+  const db = await openDB();
+
+  try {
+    await new Promise(
+      (resolve, reject) => {
+        const tx =
+          db.transaction(
+            STORE,
+            'readwrite'
+          );
+
+        tx.objectStore(STORE)
+          .delete(id);
+
+        tx.oncomplete =
+          resolve;
+
+        tx.onerror = () =>
+          reject(tx.error);
+      }
+    );
+  }
+
+  finally {
+    db.close();
+  }
+}
+
+
+async function clearDB() {
+  const db = await openDB();
+
+  try {
+    await new Promise(
+      (resolve, reject) => {
+        const tx =
+          db.transaction(
+            STORE,
+            'readwrite'
+          );
+
+        tx.objectStore(STORE)
+          .clear();
+
+        tx.oncomplete =
+          resolve;
+
+        tx.onerror = () =>
+          reject(tx.error);
+      }
+    );
+  }
+
+  finally {
+    db.close();
+  }
+}
+
+
+function revoke() {
+  for (const url of S.urls) {
+    URL.revokeObjectURL(url);
+  }
+
+  S.urls.clear();
+}
+
+
+function approved() {
+  return S.items
+    .filter(
+      item =>
+        item.status ===
+        'approved'
+    )
+    .sort(
+      (a,b) =>
+        (a.sortOrder ?? 99999) -
+        (b.sortOrder ?? 99999) ||
+        a.createdAt -
+        b.createdAt
+    );
+}
+
+
+async function normalize(
+  items = approved()
+) {
+  for (
+    let i = 0;
+    i < items.length;
+    i++
+  ) {
+    items[i].sortOrder = i;
+
+    await put(items[i]);
+  }
+}
+
+
+function bytes(n) {
+  if (!n) return '—';
+
+  const units =
+    ['B','KB','MB','GB'];
+
+  let i = 0;
+  let value = n;
+
+  while (
+    value >= 1024 &&
+    i < units.length - 1
+  ) {
+    value /= 1024;
+    i++;
+  }
+
+  return (
+    value.toFixed(i ? 1 : 0) +
+    ' ' +
+    units[i]
+  );
+}
+
+
+function date(n) {
+  return new Date(n)
+    .toLocaleString(
+      [],
+      {
+        dateStyle:'medium',
+        timeStyle:'short'
+      }
+    );
+}
+
+
+function duration(item) {
+  return Math.max(
+    0,
+    (+item.endTime || 0) -
+    (+item.startTime || 0)
+  );
+}
+
+
+async function load() {
+  revoke();
+
+  S.items =
+    await all();
+
+  render();
+}
+
+
+function stats() {
+  const pending =
+    S.items.filter(
+      x => x.status === 'pending'
+    ).length;
+
+  const approvedCount =
+    S.items.filter(
+      x => x.status === 'approved'
+    ).length;
+
+  $('pendingStat').textContent =
+    pending;
+
+  $('pendingCount').textContent =
+    pending;
+
+  $('approvedStat').textContent =
+    approvedCount;
+
+  $('approvedCount').textContent =
+    approvedCount;
+
+  $('totalStat').textContent =
+    S.items.length;
+
+  $('allCount').textContent =
+    S.items.length;
+
+  $('play').disabled =
+    !approvedCount;
+}
+
+
+function visible() {
+  if (S.tab === 'approved') {
+    return approved();
+  }
+
+  if (S.tab === 'pending') {
+    return S.items
+      .filter(
+        x =>
+          x.status ===
+          'pending'
+      )
+      .sort(
+        (a,b) =>
+          a.createdAt -
+          b.createdAt
+      );
+  }
+
+  return [...S.items]
+    .sort(
+      (a,b) =>
+        b.createdAt -
+        a.createdAt
+    );
+}
+
+
+function trimVideo(
+  video,
+  item
+) {
+  const start =
+    +item.startTime || 0;
+
+  const end =
+    +item.endTime || 0;
+
+  video.addEventListener(
+    'loadedmetadata',
+    () => {
+      try {
+        video.currentTime =
+          start;
+      }
+
+      catch {}
+    }
+  );
+
+  video.addEventListener(
+    'play',
+    () => {
+      if (
+        video.currentTime < start ||
+        video.currentTime >= end
+      ) {
+        video.currentTime =
+          start;
+      }
+    }
+  );
+
+  video.addEventListener(
+    'timeupdate',
+    () => {
+      if (
+        !video.paused &&
+        end > start &&
+        video.currentTime >=
+        end - .03
+      ) {
+        video.currentTime =
+          start;
+
+        video.pause();
+      }
+    }
+  );
+}
+
+
+function button(
+  text,
+  className,
+  fn
+) {
+  const button =
+    document.createElement(
+      'button'
+    );
+
+  button.type =
+    'button';
+
+  button.className =
+    className;
+
+  button.textContent =
+    text;
+
+  button.onclick =
+    fn;
+
+  return button;
+}
+
+
+function card(
+  item,
+  approvedIndex,
+  approvedTotal
+) {
+  const card =
+    document.createElement(
+      'article'
+    );
+
+  card.className =
+    'memory';
+
+  card.dataset.id =
+    item.id;
+
+
+  if (
+    S.tab === 'approved'
+  ) {
+    card.draggable =
+      true;
+
+    card.ondragstart = () => {
+      S.drag = item.id;
+
+      card.classList.add(
+        'dragging'
+      );
+    };
+
+    card.ondragend = () => {
+      S.drag = null;
+
+      card.classList.remove(
+        'dragging'
+      );
+    };
+
+    card.ondragover =
+      e =>
+        e.preventDefault();
+
+    card.ondrop =
+      async e => {
+        e.preventDefault();
+
+        if (
+          !S.drag ||
+          S.drag === item.id
+        ) return;
+
+        const arr =
+          approved();
+
+        const from =
+          arr.findIndex(
+            x =>
+              x.id === S.drag
+          );
+
+        const to =
+          arr.findIndex(
+            x =>
+              x.id === item.id
+          );
+
+        if (
+          from < 0 ||
+          to < 0
+        ) return;
+
+        const [moved] =
+          arr.splice(
+            from,
+            1
+          );
+
+        arr.splice(
+          to,
+          0,
+          moved
+        );
+
+        await normalize(arr);
+        await load();
+      };
+  }
+
+
+  const preview =
+    document.createElement(
+      'div'
+    );
+
+  preview.className =
+    'preview';
+
+
+  const video =
+    document.createElement(
+      'video'
+    );
+
+  video.controls =
+    true;
+
+  video.playsInline =
+    true;
+
+  video.preload =
+    'metadata';
+
+
+  if (
+    item.videoBlob
+    instanceof Blob
+  ) {
+    const url =
+      URL.createObjectURL(
+        item.videoBlob
+      );
+
+    S.urls.add(url);
+
+    video.src =
+      url;
+  }
+
+
+  trimVideo(
+    video,
+    item
+  );
+
+
+  preview.appendChild(
+    video
+  );
+
+
+  if (
+    item.captionText
+  ) {
+    const caption =
+      document.createElement(
+        'div'
+      );
+
+    caption.className =
+      'cap';
+
+    caption.textContent =
+      item.captionText;
+
+    caption.style.left =
+      (
+        Math.max(
+          0,
+          Math.min(
+            1,
+            +item.captionX || .5
+          )
+        ) *
+        100
+      ) +
+      '%';
+
+    caption.style.top =
+      (
+        Math.max(
+          0,
+          Math.min(
+            1,
+            +item.captionY || .65
+          )
+        ) *
+        100
+      ) +
+      '%';
+
+    preview.appendChild(
+      caption
+    );
+  }
+
+
+  const body =
+    document.createElement(
+      'div'
+    );
+
+  body.className =
+    'body';
+
+
+  const guestRow =
+    document.createElement(
+      'div'
+    );
+
+  guestRow.className =
+    'guestrow';
+
+
+  const guest =
+    document.createElement(
+      'div'
+    );
+
+  guest.className =
+    'guest';
+
+  guest.textContent =
+    item.guestName ||
+    'Guest';
+
+
+  const token =
+    document.createElement(
+      'div'
+    );
+
+  token.className =
+    'token';
+
+  token.textContent =
+    '#' +
+    (
+      item.token ||
+      '—'
+    );
+
+
+  guestRow.append(
+    guest,
+    token
+  );
+
+  body.appendChild(
+    guestRow
+  );
+
+
+  const meta =
+    document.createElement(
+      'div'
+    );
+
+  meta.className =
+    'meta';
+
+  meta.textContent =
+    `${duration(item).toFixed(1)}s selected · ${bytes(item.fileSize)} · ${date(item.createdAt)}`;
+
+  body.appendChild(
+    meta
+  );
+
+
+  if (
+    item.captionText
+  ) {
+    const captionCopy =
+      document.createElement(
+        'div'
+      );
+
+    captionCopy.className =
+      'captioncopy';
+
+    captionCopy.textContent =
+      'Caption: “' +
+      item.captionText +
+      '”';
+
+    body.appendChild(
+      captionCopy
+    );
+  }
+
+
+  const row =
+    document.createElement(
+      'div'
+    );
+
+  row.className =
+    'rowbtn';
+
+
+  if (
+    item.status ===
+    'pending'
+  ) {
+    row.appendChild(
+      button(
+        'Approve',
+        'btn green small',
+        async () => {
+          const arr =
+            approved();
+
+          item.status =
+            'approved';
+
+          item.sortOrder =
+            arr.length;
+
+          await put(item);
+          await load();
+        }
+      )
+    );
+  }
+
+  else {
+    row.appendChild(
+      button(
+        'Back to Pending',
+        'btn outline small',
+        async () => {
+          item.status =
+            'pending';
+
+          item.sortOrder =
+            null;
+
+          await put(item);
+
+          await normalize(
+            approved()
+              .filter(
+                x =>
+                  x.id !==
+                  item.id
+              )
+          );
+
+          await load();
+        }
+      )
+    );
+  }
+
+
+  row.appendChild(
+    button(
+      'Delete',
+      'btn red small',
+      async () => {
+        if (
+          !confirm(
+            'Delete ' +
+            (
+              item.guestName ||
+              'this submission'
+            ) +
+            '?'
+          )
+        ) return;
+
+        await del(
+          item.id
+        );
+
+        await normalize(
+          approved()
+            .filter(
+              x =>
+                x.id !==
+                item.id
+            )
+        );
+
+        await load();
+      }
+    )
+  );
+
+
+  body.appendChild(
+    row
+  );
+
+
+  if (
+    item.status ===
+      'approved' &&
+    S.tab ===
+      'approved'
+  ) {
+    const order =
+      document.createElement(
+        'div'
+      );
+
+    order.className =
+      'order';
+
+
+    const up =
+      button(
+        '↑',
+        'btn outline small',
+        () =>
+          move(
+            item.id,
+            -1
+          )
+      );
+
+
+    const down =
+      button(
+        '↓',
+        'btn outline small',
+        () =>
+          move(
+            item.id,
+            1
+          )
+      );
+
+
+    up.disabled =
+      approvedIndex <= 0;
+
+    down.disabled =
+      approvedIndex >=
+      approvedTotal - 1;
+
+
+    const label =
+      document.createElement(
+        'span'
+      );
+
+    label.textContent =
+      'Playback position ' +
+      (
+        approvedIndex + 1
+      );
+
+
+    order.append(
+      up,
+      down,
+      label
+    );
+
+
+    body.appendChild(
+      order
+    );
+  }
+
+
+  card.append(
+    preview,
+    body
+  );
+
+
+  return card;
+}
+
+
+async function move(
+  id,
+  delta
+) {
+  const arr =
+    approved();
+
+  const index =
+    arr.findIndex(
+      x =>
+        x.id === id
+    );
+
+  const next =
+    index + delta;
+
+  if (
+    index < 0 ||
+    next < 0 ||
+    next >= arr.length
+  ) return;
+
+  [
+    arr[index],
+    arr[next]
+  ] = [
+    arr[next],
+    arr[index]
+  ];
+
+  await normalize(arr);
+  await load();
+}
+
+
+function render() {
+  stats();
+
+  document
+    .querySelectorAll('.tab')
+    .forEach(tab => {
+      tab.classList.toggle(
+        'active',
+        tab.dataset.tab ===
+        S.tab
+      );
     });
 
-    window.approve = async (id) => {
-      await updateDoc(doc(db, "memories", id), { status: "approved" });
+
+  const grid =
+    $('grid');
+
+  const items =
+    visible();
+
+  grid.innerHTML =
+    '';
+
+
+  if (
+    !items.length
+  ) {
+    const empty =
+      document.createElement(
+        'div'
+      );
+
+    empty.className =
+      'empty';
+
+    empty.textContent =
+      S.tab === 'pending'
+        ? 'No pending submissions yet.'
+        : 'Nothing here yet.';
+
+    grid.appendChild(
+      empty
+    );
+
+    return;
+  }
+
+
+  const approvedItems =
+    approved();
+
+
+  items.forEach(
+    item => {
+      grid.appendChild(
+        card(
+          item,
+
+          item.status ===
+          'approved'
+            ? approvedItems
+                .findIndex(
+                  x =>
+                    x.id ===
+                    item.id
+                )
+            : -1,
+
+          approvedItems.length
+        )
+      );
+    }
+  );
+}
+
+
+function closeQueue() {
+  const video =
+    $('queueVideo');
+
+  video.pause();
+
+  video.removeAttribute(
+    'src'
+  );
+
+  video.load();
+
+
+  if (S.qurl) {
+    URL.revokeObjectURL(
+      S.qurl
+    );
+  }
+
+  S.qurl =
+    null;
+
+
+  $('player')
+    .classList
+    .add('hidden');
+}
+
+
+function playItem(index) {
+  if (
+    index >=
+    S.queue.length
+  ) {
+    closeQueue();
+    return;
+  }
+
+
+  S.qi =
+    index;
+
+
+  const item =
+    S.queue[index];
+
+  const video =
+    $('queueVideo');
+
+
+  if (S.qurl) {
+    URL.revokeObjectURL(
+      S.qurl
+    );
+  }
+
+
+  S.qurl =
+    item.videoBlob
+      instanceof Blob
+        ? URL.createObjectURL(
+            item.videoBlob
+          )
+        : null;
+
+
+  if (!S.qurl) {
+    playItem(
+      index + 1
+    );
+
+    return;
+  }
+
+
+  $('counter').textContent =
+    `${index + 1} / ${S.queue.length} · ${item.guestName || 'Guest'}`;
+
+
+  const caption =
+    $('queueCap');
+
+
+  if (
+    item.captionText
+  ) {
+    caption.textContent =
+      item.captionText;
+
+    caption.style.left =
+      (
+        +item.captionX *
+        100
+      ) +
+      '%';
+
+    caption.style.top =
+      (
+        +item.captionY *
+        100
+      ) +
+      '%';
+
+    caption.classList.remove(
+      'hidden'
+    );
+  }
+
+  else {
+    caption.classList.add(
+      'hidden'
+    );
+  }
+
+
+  video.onloadedmetadata =
+    () => {
+      video.currentTime =
+        +item.startTime || 0;
+
+      video
+        .play()
+        .catch(() => {});
     };
 
-    window.reject = async (id) => {
-      await deleteDoc(doc(db, "memories", id));
+
+  video.ontimeupdate =
+    () => {
+      if (
+        video.currentTime >=
+        (
+          +item.endTime ||
+          0
+        ) -
+        .03
+      ) {
+        playItem(
+          index + 1
+        );
+      }
     };
-  </script>
-</head>
-<body>
-  <h1>Moderator Queue</h1>
-  <div id="feed">Loading pending videos...</div>
+
+
+  video.onerror =
+    () =>
+      playItem(
+        index + 1
+      );
+
+
+  video.src =
+    S.qurl;
+
+  video.load();
+}
+
+
+function openQueue() {
+  S.queue =
+    approved();
+
+  if (
+    !S.queue.length
+  ) return;
+
+
+  $('player')
+    .classList
+    .remove('hidden');
+
+
+  playItem(0);
+
+
+  $('playerStage')
+    .requestFullscreen?.()
+    .catch(() => {});
+}
+
+
+$('loginBtn').onclick =
+  () => {
+    if (
+      $('adminCode').value !==
+      ADMIN
+    ) {
+      $('loginError').textContent =
+        'Incorrect admin code.';
+
+      return;
+    }
+
+
+    $('login')
+      .classList
+      .add('hidden');
+
+
+    $('app')
+      .classList
+      .remove('hidden');
+
+
+    load();
+  };
+
+
+$('adminCode').onkeydown =
+  e => {
+    if (
+      e.key ===
+      'Enter'
+    ) {
+      $('loginBtn').click();
+    }
+  };
+
+
+document
+  .querySelectorAll('.tab')
+  .forEach(
+    tab => {
+      tab.onclick =
+        () => {
+          S.tab =
+            tab.dataset.tab;
+
+          render();
+        };
+    }
+  );
+
+
+$('refresh').onclick =
+  load;
+
+
+$('play').onclick =
+  openQueue;
+
+
+$('close').onclick =
+  closeQueue;
+
+
+$('clear').onclick =
+  async () => {
+    if (
+      !confirm(
+        'Delete ALL prototype submissions from this browser?'
+      )
+    ) return;
+
+    await clearDB();
+    await load();
+  };
+
+
+document.addEventListener(
+  'keydown',
+  e => {
+    if (
+      e.key === 'Escape' &&
+      !$('player')
+        .classList
+        .contains('hidden')
+    ) {
+      closeQueue();
+    }
+  }
+);
+</script>
+
 </body>
 </html>
