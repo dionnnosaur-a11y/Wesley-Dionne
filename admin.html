@@ -10,6 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 
+  <script src="https://cdn.jsdelivr.net/npm/@mux/mux-player" defer></script>
+
   <style>
     :root{
       /* ======================================================
@@ -263,7 +265,15 @@
       background:#000;
       overflow:hidden;
     }
-    .player-wrap video{width:100%;height:100%;display:block;object-fit:cover;background:#000}
+     .player-wrap mux-player{
+      width:100%;
+      height:100%;
+      display:block;
+      background:#000;
+      --media-object-fit:cover;
+      --media-object-size:cover;
+      --media-object-position:center;
+    }
     .player-bar{
       position:fixed;
       z-index:220;
@@ -394,14 +404,18 @@
     <button id="player-close" class="player-close" type="button" aria-label="Close player">✕</button>
   </div>
   <div class="player-wrap">
-    <video id="queue-video" playsinline webkit-playsinline controls preload="metadata"></video>
+    <mux-player id="queue-player"
+      playsinline
+      preload="metadata"
+      stream-type="on-demand"
+      accent-color="#c5a059">
+    </mux-player>
   </div>
 </section>
 
 <div id="toast" class="toast"></div>
 
-<script type="module">
-  import Hls from "https://cdn.jsdelivr.net/npm/hls.js@1.6.13/+esm";
+<script>
 
   /* ==========================================================
      PUBLIC WORKER URL — SAFE TO KEEP IN GITHUB
@@ -419,7 +433,6 @@
     draggingId: null,
     queue: [],
     queueIndex: 0,
-    hls: null,
     refreshTimer: null,
     busy: false
   };
@@ -993,63 +1006,68 @@
   }
 
   /* ==========================================================
-     HLS PLAYER
+     MUX PLAYER
+     Use Mux's official player instead of manually wiring HLS.js.
+     This lets Mux handle HLS support across Safari, Chrome, Edge
+     and Firefox from the playback ID itself.
      ========================================================== */
-  function destroyHls(){
-    if (state.hls){
-      state.hls.destroy();
-      state.hls = null;
+  async function prepareMuxPlayer(item, onEnded){
+    await customElements.whenDefined('mux-player');
+
+    const player = $('queue-player');
+
+    try { player.pause(); } catch {}
+    player.onended = onEnded || null;
+    player.onerror = null;
+
+    /* Fully clear the previous Mux source before changing clips. */
+    player.removeAttribute('playback-id');
+    player.removeAttribute('src');
+
+    if (!item?.playbackId){
+      throw new Error('This submission has no Mux playback ID.');
     }
+
+    player.setAttribute('playback-id', item.playbackId);
+    player.setAttribute('metadata-video-id', item.id || item.playbackId);
+    player.setAttribute('metadata-video-title', `Wedding memory — ${item.guestName || 'Guest'}`);
+
+    return player;
   }
 
-  function attachHls(video, url){
-    destroyHls();
+  async function waitForMuxReady(player, timeoutMs = 15000){
+    if (Number(player.readyState) >= 1) return;
 
-    return new Promise((resolve,reject) => {
-      const fail = message => reject(new Error(message || 'Could not load this Mux video.'));
+    await new Promise((resolve,reject) => {
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        cleanup();
+        resolve();
+      };
+      const fail = () => {
+        if (done) return;
+        done = true;
+        cleanup();
+        reject(new Error('Mux could not load this video.'));
+      };
+      const timer = setTimeout(() => {
+        if (done) return;
+        done = true;
+        cleanup();
+        reject(new Error('Mux video took too long to load.'));
+      }, timeoutMs);
+      const cleanup = () => {
+        clearTimeout(timer);
+        player.removeEventListener('loadedmetadata', finish);
+        player.removeEventListener('canplay', finish);
+        player.removeEventListener('error', fail);
+      };
 
-      /* Safari / iOS can play HLS natively. Wait until the stream is actually ready. */
-      if (video.canPlayType('application/vnd.apple.mpegurl')){
-        const ready = () => { cleanup(); resolve(); };
-        const error = () => { cleanup(); fail('Could not load this Mux video.'); };
-        const cleanup = () => {
-          video.removeEventListener('loadedmetadata',ready);
-          video.removeEventListener('canplay',ready);
-          video.removeEventListener('error',error);
-        };
-        video.addEventListener('loadedmetadata',ready,{once:true});
-        video.addEventListener('canplay',ready,{once:true});
-        video.addEventListener('error',error,{once:true});
-        video.src = url;
-        video.load();
-        return;
-      }
-
-      /* Chrome/Edge/Firefox: HLS.js must finish parsing the manifest before play(). */
-      if (Hls.isSupported()){
-        const hls = new Hls({enableWorker:true});
-        state.hls = hls;
-
-        let settled = false;
-        const finish = () => {
-          if (settled) return;
-          settled = true;
-          resolve();
-        };
-        const fatal = (_event,data) => {
-          if (!data?.fatal || settled) return;
-          settled = true;
-          reject(new Error(data?.details || 'Could not load this Mux video.'));
-        };
-
-        hls.on(Hls.Events.MANIFEST_PARSED,finish);
-        hls.on(Hls.Events.ERROR,fatal);
-        hls.loadSource(url);
-        hls.attachMedia(video);
-        return;
-      }
-
-      fail('HLS playback is not supported in this browser.');
+      player.addEventListener('loadedmetadata', finish, {once:true});
+      player.addEventListener('canplay', finish, {once:true});
+      player.addEventListener('error', fail, {once:true});
     });
   }
 
@@ -1061,22 +1079,25 @@
   }
 
   async function showPlayer(item, index, total, onEnded){
-    const video = $('queue-video');
     $('player').classList.remove('hidden');
     $('player-counter').textContent = `${index+1} / ${total} · ${item.guestName || 'Guest'} · Loading…`;
 
-    video.pause();
-    video.onended = onEnded || null;
-    video.removeAttribute('src');
-    video.load();
-
     try{
-      await attachHls(video,item.hlsUrl);
-      video.currentTime = 0;
+      const player = await prepareMuxPlayer(item,onEnded);
+      await waitForMuxReady(player);
+      try { player.currentTime = 0; } catch {}
       $('player-counter').textContent = `${index+1} / ${total} · ${item.guestName || 'Guest'}`;
-      await video.play();
+
+      try{
+        await player.play();
+      }catch(playError){
+        /* Some browsers may require a second tap after asynchronous loading.
+           The native Mux controls remain visible so playback is still usable. */
+        console.warn('Autoplay after load was blocked:',playError);
+        $('player-counter').textContent = `${index+1} / ${total} · ${item.guestName || 'Guest'} · Tap Play`;
+      }
     }catch(error){
-      console.error('Player error:',error);
+      console.error('Mux Player error:',error);
       $('player-counter').textContent = `${index+1} / ${total} · Could not play`;
       toast(error.message || 'Could not play this clip');
     }
@@ -1117,12 +1138,12 @@
   }
 
   function closePlayer(){
-    const video = $('queue-video');
-    video.pause();
-    video.onended = null;
-    video.removeAttribute('src');
-    video.load();
-    destroyHls();
+    const player = $('queue-player');
+    try { player.pause(); } catch {}
+    player.onended = null;
+    player.onerror = null;
+    player.removeAttribute('playback-id');
+    player.removeAttribute('src');
     $('player').classList.add('hidden');
 
     if (document.fullscreenElement){
