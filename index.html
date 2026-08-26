@@ -217,6 +217,19 @@
       margin-top:8px;
     }
 
+    .media-choice{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
+    .media-choice .btn{
+      margin-top:0;
+      min-width:135px;
+    }
+
     .editor-head{
       font-family:'Alex Brush',cursive;
       color:var(--gold-dark);
@@ -649,9 +662,14 @@
         <span id="code-pill" class="pill"></span>
       </div>
 
-      <input id="video-file" type="file" accept="video/*,image/*" hidden>
+      <!-- Separate pickers are more reliable on iOS than a combined image/video picker. -->
+      <input id="photo-file" type="file" accept="image/*,.jpg,.jpeg,.png,.heic,.heif" hidden>
+      <input id="video-file" type="file" accept="video/*,.mp4,.mov,.m4v,.webm" hidden>
 
-      <button id="choose-btn" class="btn" type="button" data-i18n="chooseBtn">Select Photo or Video</button>
+      <div id="choose-actions" class="media-choice">
+        <button id="choose-photo-btn" class="btn" type="button" data-i18n="choosePhotoBtn">Choose Photo</button>
+        <button id="choose-video-btn" class="btn" type="button" data-i18n="chooseVideoBtn">Choose Video</button>
+      </div>
       <div id="choose-help" class="helper" data-i18n="chooseHelp">Choose a photo, or a video up to 5 minutes long.</div>
 
       <div id="offline-banner" class="offline hidden" data-i18n="offline">You are offline. Keep this page open and reconnect before submitting.</div>
@@ -765,14 +783,15 @@
       codeHelp: 'Enter the 4-character code from your invitation.',
       continueBtn: 'Continue',
       editorTitle: 'Trim & Caption',
-      chooseBtn: 'Select Photo or Video',
+      choosePhotoBtn: 'Choose Photo',
+      chooseVideoBtn: 'Choose Video',
       chooseHelp: 'Choose a photo, or a video up to 5 minutes long. Videos can be trimmed to 5–10 seconds.',
       offline: 'You are offline. Keep this page open and reconnect before submitting.',
       loadingVideo: 'Loading memory…',
       addCaption: '💬 + Add Caption',
       trash: '🗑️ Drag here to delete',
       captionPlaceholder: 'Type caption…',
-      captionHelp: 'Type here, then drag the caption on the video to place it.',
+      captionHelp: 'Type here. Drag with one finger to move; pinch with two fingers to resize.',
       selected: 'SELECTED:',
       clipLimit: '(5–10 seconds)',
       anotherBtn: 'Choose Another',
@@ -812,14 +831,15 @@
       codeHelp: '请输入邀请函上的4位宾客邀请码。',
       continueBtn: '继续',
       editorTitle: '剪辑与字幕',
-      chooseBtn: '选择照片或视频',
+      choosePhotoBtn: '选择照片',
+      chooseVideoBtn: '选择视频',
       chooseHelp: '请选择照片，或5分钟以内的视频。视频可剪辑为5至10秒。',
       offline: '目前没有网络。请保持此页面开启，恢复网络后再提交。',
       loadingVideo: '正在加载…',
       addCaption: '💬 + 添加字幕',
       trash: '🗑️ 拖到这里删除',
       captionPlaceholder: 'Type caption…',
-      captionHelp: '在这里输入文字，然后在视频上拖动字幕到想要的位置。',
+      captionHelp: '在这里输入文字。单指拖动字幕，双指捏合可调整大小。',
       selected: '已选：',
       clipLimit: '（5至10秒）',
       anotherBtn: '重新选择',
@@ -867,7 +887,12 @@
     captionActive: false,
     captionX: .5,
     captionY: .65,
-    captionPointer: null,
+    captionScale: 1,
+    captionPointers: new Map(),
+    captionDragPointer: null,
+    captionPinching: false,
+    pinchStartDistance: 0,
+    pinchStartScale: 1,
     grabX: 0,
     grabY: 0,
     submitting: false,
@@ -988,6 +1013,7 @@
     state.end = 10;
     revokeObjectUrl();
 
+    $('photo-file').value = '';
     $('video-file').value = '';
     $('video-preview').pause();
     $('video-preview').muted = false;
@@ -1003,7 +1029,7 @@
     $('filmstrip').innerHTML = '';
 
     $('editor-controls').classList.add('hidden');
-    $('choose-btn').classList.remove('hidden');
+    $('choose-actions').classList.remove('hidden');
     $('choose-help').classList.remove('hidden');
     $('editor-error').textContent = '';
     $('progress-box').classList.add('hidden');
@@ -1068,13 +1094,13 @@
       removeCaption();
       generateFilmstrip();
 
-      $('choose-btn').classList.add('hidden');
+      $('choose-actions').classList.add('hidden');
       $('choose-help').classList.add('hidden');
       $('video-loader').classList.add('hidden');
     }catch(error){
       $('video-loader').classList.add('hidden');
       $('editor-controls').classList.add('hidden');
-      $('choose-btn').classList.remove('hidden');
+      $('choose-actions').classList.remove('hidden');
       $('choose-help').classList.remove('hidden');
 
       if (error.message === 'short') $('editor-error').textContent = t('errShort');
@@ -1129,13 +1155,13 @@
       state.end = 5;
 
       removeCaption();
-      $('choose-btn').classList.add('hidden');
+      $('choose-actions').classList.add('hidden');
       $('choose-help').classList.add('hidden');
       $('video-loader').classList.add('hidden');
     }catch(error){
       $('video-loader').classList.add('hidden');
       $('editor-controls').classList.add('hidden');
-      $('choose-btn').classList.remove('hidden');
+      $('choose-actions').classList.remove('hidden');
       $('choose-help').classList.remove('hidden');
       $('editor-error').textContent = t('errPhoto');
     }
@@ -1315,17 +1341,22 @@
   function fitCaptionPreview(text){
     const preview = $('caption-preview');
     const stage = $('video-stage');
-    let size = captionFontCss(text);
-    preview.style.fontSize = size + 'px';
 
-    /* Also shrink by actual rendered height so a caption never dominates the frame. */
+    /* First determine the automatic size from text length + rendered height. */
+    let autoSize = captionFontCss(text);
+    preview.style.fontSize = autoSize + 'px';
+
     const maxHeight = Math.max(68, stage.clientHeight * .19);
     let attempts = 0;
-    while (preview.getBoundingClientRect().height > maxHeight && size > 11 && attempts < 12){
-      size -= 1;
-      preview.style.fontSize = size + 'px';
+    while (preview.getBoundingClientRect().height > maxHeight && autoSize > 10 && attempts < 14){
+      autoSize -= 1;
+      preview.style.fontSize = autoSize + 'px';
       attempts += 1;
     }
+
+    /* Then apply the guest's pinch scale on top of the automatic size. */
+    const finalSize = Math.max(9, Math.min(30, autoSize * state.captionScale));
+    preview.style.fontSize = finalSize + 'px';
   }
 
   function enableCaption(event){
@@ -1335,6 +1366,10 @@
     state.captionActive = true;
     state.captionX = .5;
     state.captionY = .65;
+    state.captionScale = 1;
+    state.captionPointers.clear();
+    state.captionDragPointer = null;
+    state.captionPinching = false;
     $('drag-caption').classList.remove('hidden');
     $('add-caption-btn').classList.add('hidden');
     $('caption-editor').classList.remove('hidden');
@@ -1346,6 +1381,10 @@
     state.captionActive = false;
     state.captionX = .5;
     state.captionY = .65;
+    state.captionScale = 1;
+    state.captionPointers.clear();
+    state.captionDragPointer = null;
+    state.captionPinching = false;
     $('caption-text').value = '';
     $('caption-preview').textContent = '';
     $('drag-caption').classList.add('hidden');
@@ -1387,24 +1426,53 @@
     requestAnimationFrame(clampCaption);
   }
 
+  function captionPointerDistance(){
+    const points = [...state.captionPointers.values()];
+    if (points.length < 2) return 0;
+    return Math.hypot(points[1].x - points[0].x, points[1].y - points[0].y);
+  }
+
   function startCaptionDrag(event){
     if (!state.captionActive || state.submitting) return;
     event.preventDefault();
     event.stopPropagation();
 
-    state.captionPointer = event.pointerId;
-    const rect = $('drag-caption').getBoundingClientRect();
-    state.grabX = event.clientX - (rect.left + rect.width/2);
-    state.grabY = event.clientY - (rect.top + rect.height/2);
-    $('drag-caption').classList.add('dragging');
-    $('trash').classList.remove('hidden');
-
+    state.captionPointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
     try { $('drag-caption').setPointerCapture(event.pointerId); } catch {}
+
+    if (state.captionPointers.size === 1){
+      state.captionDragPointer = event.pointerId;
+      state.captionPinching = false;
+      const rect = $('drag-caption').getBoundingClientRect();
+      state.grabX = event.clientX - (rect.left + rect.width/2);
+      state.grabY = event.clientY - (rect.top + rect.height/2);
+      $('drag-caption').classList.add('dragging');
+      $('trash').classList.remove('hidden');
+    }else if (state.captionPointers.size === 2){
+      /* Two fingers switch from drag mode to Instagram-style pinch resize. */
+      state.captionPinching = true;
+      state.captionDragPointer = null;
+      state.pinchStartDistance = captionPointerDistance() || 1;
+      state.pinchStartScale = state.captionScale;
+      $('trash').classList.add('hidden');
+      $('trash').classList.remove('hot');
+    }
   }
 
   function moveCaption(event){
-    if (event.pointerId !== state.captionPointer) return;
+    if (!state.captionPointers.has(event.pointerId)) return;
     event.preventDefault();
+    state.captionPointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
+
+    if (state.captionPinching && state.captionPointers.size >= 2){
+      const distance = captionPointerDistance();
+      const ratio = distance / Math.max(1,state.pinchStartDistance);
+      state.captionScale = Math.max(.55,Math.min(1.5,state.pinchStartScale * ratio));
+      updateCaptionPreview();
+      return;
+    }
+
+    if (state.captionPointers.size !== 1 || event.pointerId !== state.captionDragPointer) return;
 
     const stage = $('video-stage').getBoundingClientRect();
     const box = $('drag-caption').getBoundingClientRect();
@@ -1427,9 +1495,28 @@
   }
 
   function endCaptionDrag(event){
-    if (event.pointerId !== state.captionPointer) return;
-    state.captionPointer = null;
+    if (!state.captionPointers.has(event.pointerId)) return;
+
+    const wasPinching = state.captionPinching;
+    const wasDragPointer = event.pointerId === state.captionDragPointer;
+    state.captionPointers.delete(event.pointerId);
+
+    if (wasPinching){
+      if (state.captionPointers.size < 2){
+        state.captionPinching = false;
+        state.captionDragPointer = null;
+        state.pinchStartDistance = 0;
+        $('drag-caption').classList.remove('dragging');
+        $('trash').classList.add('hidden');
+        $('trash').classList.remove('hot');
+      }
+      return;
+    }
+
+    if (!wasDragPointer) return;
+
     const shouldDelete = $('trash').classList.contains('hot');
+    state.captionDragPointer = null;
     $('drag-caption').classList.remove('dragging');
     $('trash').classList.add('hidden');
     $('trash').classList.remove('hot');
@@ -1510,7 +1597,7 @@
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    const fontPx = captionFontCanvas(text);
+    const fontPx = Math.max(22, Math.min(98, captionFontCanvas(text) * state.captionScale));
     ctx.font = `800 ${fontPx}px Montserrat, Arial, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -1615,7 +1702,8 @@
     state.submitting = disabled;
     $('submit-btn').disabled = disabled;
     $('another-btn').disabled = disabled;
-    $('choose-btn').disabled = disabled;
+    $('choose-photo-btn').disabled = disabled;
+    $('choose-video-btn').disabled = disabled;
     $('caption-text').disabled = disabled;
     $('delete-caption-btn').disabled = disabled;
     $('add-caption-btn').disabled = disabled;
@@ -1831,7 +1919,9 @@
     });
 
     $('continue-btn').addEventListener('click',claimCode);
-    $('choose-btn').addEventListener('click',()=>$('video-file').click());
+    $('choose-photo-btn').addEventListener('click',()=>$('photo-file').click());
+    $('choose-video-btn').addEventListener('click',()=>$('video-file').click());
+    $('photo-file').addEventListener('change',event=>loadMedia(event.target.files?.[0]));
     $('video-file').addEventListener('change',event=>loadMedia(event.target.files?.[0]));
     $('another-btn').addEventListener('click',resetVideo);
     $('submit-btn').addEventListener('click',submitMemory);
