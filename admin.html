@@ -191,6 +191,25 @@
       transition:transform .15s ease,opacity .15s ease;
     }
     .memory.dragging{opacity:.45;transform:scale(.985)}
+    .memory.drop-target{outline:2px solid var(--gold);outline-offset:2px}
+    .drag-handle{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:7px;
+      padding:8px 10px;
+      background:#f8f5ed;
+      border-bottom:1px solid var(--line);
+      color:var(--gold-dark);
+      font-size:.68rem;
+      font-weight:800;
+      letter-spacing:.02em;
+      cursor:grab;
+      user-select:none;
+      -webkit-user-select:none;
+    }
+    .drag-handle:active{cursor:grabbing}
+    .drag-handle .grip{font-size:1rem;line-height:1}
     .thumb{
       position:relative;
       width:100%;
@@ -200,6 +219,15 @@
       cursor:pointer;
     }
     .thumb img{display:block;width:100%;height:100%;object-fit:cover}
+    .thumb.previewing{cursor:default}
+    .thumb mux-player{
+      display:block;
+      width:100%;
+      height:100%;
+      --media-object-fit:cover;
+      --media-object-position:center;
+      background:#000;
+    }
     .thumb-status{
       position:absolute;
       inset:0;
@@ -246,56 +274,6 @@
     .row-btn{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
     .order{display:flex;gap:5px;align-items:center;margin-top:8px}
     .order span{font-size:.67rem;color:var(--muted);margin-left:2px}
-
-    /* PLAYER */
-    .player-modal{
-      position:fixed;
-      inset:0;
-      z-index:200;
-      background:#000;
-      display:grid;
-      place-items:center;
-      padding:0;
-    }
-    .player-wrap{
-      position:relative;
-      height:min(100dvh,1000px);
-      width:min(100vw,calc(min(100dvh,1000px) * 9 / 16));
-      aspect-ratio:9/16;
-      background:#000;
-      overflow:hidden;
-    }
-     .player-wrap mux-player{
-      width:100%;
-      height:100%;
-      display:block;
-      background:#000;
-      --media-object-fit:cover;
-      --media-object-size:cover;
-      --media-object-position:center;
-    }
-    .player-bar{
-      position:fixed;
-      z-index:220;
-      top:max(12px,env(safe-area-inset-top));
-      left:12px;
-      right:12px;
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:center;
-      pointer-events:none;
-    }
-    .counter,.player-close{
-      pointer-events:auto;
-      border:0;
-      background:rgba(0,0,0,.62);
-      color:#fff;
-      border-radius:999px;
-      backdrop-filter:blur(5px);
-    }
-    .counter{padding:9px 13px;font-size:.73rem;font-weight:800;max-width:calc(100vw - 80px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .player-close{width:43px;height:43px;cursor:pointer;font-size:1.05rem;flex:0 0 auto}
 
     .toast{
       position:fixed;
@@ -362,7 +340,7 @@
 
       <div class="top-actions">
         <button id="refresh-btn" class="btn outline small" type="button">↻ Refresh</button>
-        <button id="play-approved-btn" class="btn dark small" type="button">▶ Play Approved Queue</button>
+        <button id="play-approved-btn" class="btn dark small" type="button">↗ Play Approved Queue</button>
         <button id="logout-btn" class="btn outline small" type="button">Log out</button>
       </div>
     </header>
@@ -395,24 +373,6 @@
   </section>
 </div>
 
-<!-- ==========================================================
-     FULL-SCREEN PLAYER
-     ========================================================== -->
-<section id="player" class="player-modal hidden" aria-modal="true" role="dialog">
-  <div class="player-bar">
-    <div id="player-counter" class="counter"></div>
-    <button id="player-close" class="player-close" type="button" aria-label="Close player">✕</button>
-  </div>
-  <div class="player-wrap">
-    <mux-player id="queue-player"
-      playsinline
-      preload="metadata"
-      stream-type="on-demand"
-      accent-color="#c5a059">
-    </mux-player>
-  </div>
-</section>
-
 <div id="toast" class="toast"></div>
 
 <script>
@@ -433,6 +393,7 @@
     draggingId: null,
     queue: [],
     queueIndex: 0,
+    inlinePreviewId: null,
     refreshTimer: null,
     busy: false
   };
@@ -476,7 +437,7 @@
   function setBusy(value){
     state.busy = value;
     document.querySelectorAll('button').forEach(button => {
-      if (button.id !== 'player-close') button.disabled = value;
+      button.disabled = value;
     });
     updateStats();
   }
@@ -577,7 +538,7 @@
   function startAutoRefresh(){
     stopAutoRefresh();
     state.refreshTimer = setInterval(() => {
-      if (document.visibilityState === 'visible' && $('player').classList.contains('hidden')){
+      if (document.visibilityState === 'visible' && $('player').classList.contains('hidden') && !state.inlinePreviewId){
         refreshAll(true).catch(()=>{});
       }
     }, 15000);
@@ -689,7 +650,7 @@
     $('processing-stat').textContent = processing;
     $('total-stat').textContent = state.submissions.length;
 
-    $('play-approved-btn').disabled = state.busy || !state.submissions.some(item => item.status === 'approved' && item.hlsUrl);
+    $('play-approved-btn').disabled = state.busy || !state.submissions.some(item => item.status === 'approved' && item.playbackId);
 
     const production = state.tokens.filter(token => token.code !== 'TEST');
     const counts = production.reduce((acc, token) => {
@@ -709,6 +670,7 @@
      RENDER
      ========================================================== */
   function render(){
+    pauseInlinePlayers();
     updateStats();
 
     document.querySelectorAll('.tab').forEach(tab => {
@@ -749,33 +711,59 @@
     card.className = 'memory';
     card.dataset.id = item.id;
 
-    /* Desktop drag/drop ordering. Mobile also gets ↑ ↓ controls. */
-    if (state.tab === 'approved'){
-      card.draggable = true;
+    /* Approved queue ordering.
+       Desktop: explicit drag handle so player/buttons never steal the drag gesture.
+       Mobile: ↑ ↓ controls below remain the reliable fallback. */
+    let dragHandle = null;
 
-      card.addEventListener('dragstart', () => {
+    if (state.tab === 'approved'){
+      dragHandle = document.createElement('div');
+      dragHandle.className = 'drag-handle';
+      dragHandle.draggable = true;
+      dragHandle.innerHTML = '<span class="grip">☰</span><span>Drag to reorder</span>';
+
+      dragHandle.addEventListener('dragstart', event => {
         state.draggingId = item.id;
         card.classList.add('dragging');
+        if (event.dataTransfer){
+          event.dataTransfer.effectAllowed = 'move';
+          event.dataTransfer.setData('text/plain', item.id);
+        }
       });
 
-      card.addEventListener('dragend', () => {
+      dragHandle.addEventListener('dragend', () => {
         state.draggingId = null;
-        card.classList.remove('dragging');
+        document.querySelectorAll('.memory.dragging,.memory.drop-target').forEach(el => {
+          el.classList.remove('dragging','drop-target');
+        });
       });
 
-      card.addEventListener('dragover', event => event.preventDefault());
+      card.addEventListener('dragover', event => {
+        if (!state.draggingId || state.draggingId === item.id) return;
+        event.preventDefault();
+        if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
+        card.classList.add('drop-target');
+      });
+
+      card.addEventListener('dragleave', event => {
+        if (!card.contains(event.relatedTarget)) card.classList.remove('drop-target');
+      });
 
       card.addEventListener('drop', async event => {
         event.preventDefault();
-        if (!state.draggingId || state.draggingId === item.id) return;
+        card.classList.remove('drop-target');
+
+        const draggedId = state.draggingId || event.dataTransfer?.getData('text/plain');
+        if (!draggedId || draggedId === item.id) return;
 
         const list = [...approved];
-        const from = list.findIndex(x => x.id === state.draggingId);
+        const from = list.findIndex(x => x.id === draggedId);
         const to = list.findIndex(x => x.id === item.id);
         if (from < 0 || to < 0) return;
 
         const [moved] = list.splice(from,1);
         list.splice(to,0,moved);
+        state.draggingId = null;
         await saveOrder(list);
       });
     }
@@ -783,19 +771,41 @@
     const thumb = document.createElement('div');
     thumb.className = 'thumb';
 
-    if (item.thumbnailUrl){
+    const previewingInline = state.inlinePreviewId === item.id && item.playbackId;
+
+    if (previewingInline){
+      thumb.classList.add('previewing');
+
+      const player = document.createElement('mux-player');
+      player.setAttribute('playback-id', item.playbackId);
+      player.setAttribute('stream-type', 'on-demand');
+      player.setAttribute('preload', 'metadata');
+      player.setAttribute('playsinline', '');
+      player.setAttribute('accent-color', '#c5a059');
+      player.setAttribute('metadata-video-id', item.id || item.playbackId);
+      player.setAttribute('metadata-video-title', `Wedding memory — ${item.guestName || 'Guest'}`);
+      player.dataset.inlinePreview = item.id;
+      thumb.appendChild(player);
+
+      /* Preview was explicitly requested by a click, so try to begin playback.
+         If a browser still blocks it, the normal Mux play control remains visible. */
+      customElements.whenDefined('mux-player').then(() => {
+        try { player.currentTime = 0; } catch {}
+        player.play().catch(()=>{});
+      });
+    }else if (item.thumbnailUrl){
       const image = document.createElement('img');
       image.src = item.thumbnailUrl;
       image.alt = `Memory from ${item.guestName || 'guest'}`;
       image.loading = 'lazy';
       thumb.appendChild(image);
 
-      if (item.hlsUrl){
+      if (item.playbackId){
         const play = document.createElement('div');
         play.className = 'play-badge';
         play.textContent = '▶';
         thumb.appendChild(play);
-        thumb.addEventListener('click', () => openSingle(item));
+        thumb.addEventListener('click', () => toggleInlinePreview(item));
       }
     }else{
       const status = document.createElement('div');
@@ -849,8 +859,9 @@
     const row = document.createElement('div');
     row.className = 'row-btn';
 
-    if (item.hlsUrl){
-      row.appendChild(makeButton('Preview','btn dark small',() => openSingle(item)));
+    if (item.playbackId){
+      const previewLabel = state.inlinePreviewId === item.id ? 'Close Preview' : 'Preview';
+      row.appendChild(makeButton(previewLabel,'btn dark small',() => toggleInlinePreview(item)));
     }
 
     if (item.status === 'pending'){
@@ -881,6 +892,7 @@
       body.appendChild(order);
     }
 
+    if (dragHandle) card.append(dragHandle);
     card.append(thumb,body);
     return card;
   }
@@ -889,6 +901,7 @@
      MODERATION
      ========================================================== */
   async function setStatus(item, status){
+    if (state.inlinePreviewId === item.id) state.inlinePreviewId = null;
     setBusy(true);
     try{
       await api(`/api/admin/submissions/${encodeURIComponent(item.id)}`, {
@@ -911,6 +924,7 @@
   }
 
   async function deleteSubmission(item, rejected = false){
+    if (state.inlinePreviewId === item.id) state.inlinePreviewId = null;
     if (!rejected){
       const ok = confirm(`Permanently delete ${item.guestName || 'this submission'}?\n\nThis also deletes its Mux video.`);
       if (!ok) return;
@@ -1006,149 +1020,159 @@
   }
 
   /* ==========================================================
-     MUX PLAYER
-     Use Mux's official player instead of manually wiring HLS.js.
-     This lets Mux handle HLS support across Safari, Chrome, Edge
-     and Firefox from the playback ID itself.
+     INLINE CARD PREVIEW
+     Individual moderation previews stay inside their submission
+     card so Approve / Reject remain visible. Full-screen is reserved
+     for the approved playback queue.
      ========================================================== */
-  async function prepareMuxPlayer(item, onEnded){
-    await customElements.whenDefined('mux-player');
-
-    const player = $('queue-player');
-
-    try { player.pause(); } catch {}
-    player.onended = onEnded || null;
-    player.onerror = null;
-
-    /* Fully clear the previous Mux source before changing clips. */
-    player.removeAttribute('playback-id');
-    player.removeAttribute('src');
-
-    if (!item?.playbackId){
-      throw new Error('This submission has no Mux playback ID.');
-    }
-
-    player.setAttribute('playback-id', item.playbackId);
-    player.setAttribute('metadata-video-id', item.id || item.playbackId);
-    player.setAttribute('metadata-video-title', `Wedding memory — ${item.guestName || 'Guest'}`);
-
-    return player;
-  }
-
-  async function waitForMuxReady(player, timeoutMs = 15000){
-    if (Number(player.readyState) >= 1) return;
-
-    await new Promise((resolve,reject) => {
-      let done = false;
-      const finish = () => {
-        if (done) return;
-        done = true;
-        cleanup();
-        resolve();
-      };
-      const fail = () => {
-        if (done) return;
-        done = true;
-        cleanup();
-        reject(new Error('Mux could not load this video.'));
-      };
-      const timer = setTimeout(() => {
-        if (done) return;
-        done = true;
-        cleanup();
-        reject(new Error('Mux video took too long to load.'));
-      }, timeoutMs);
-      const cleanup = () => {
-        clearTimeout(timer);
-        player.removeEventListener('loadedmetadata', finish);
-        player.removeEventListener('canplay', finish);
-        player.removeEventListener('error', fail);
-      };
-
-      player.addEventListener('loadedmetadata', finish, {once:true});
-      player.addEventListener('canplay', finish, {once:true});
-      player.addEventListener('error', fail, {once:true});
+  function pauseInlinePlayers(){
+    document.querySelectorAll('.thumb mux-player').forEach(player => {
+      try { player.pause(); } catch {}
     });
   }
 
-  function requestFullscreenIfPossible(){
-    const player = $('player');
-    if (player.requestFullscreen && !document.fullscreenElement){
-      player.requestFullscreen().catch(()=>{});
+  function toggleInlinePreview(item){
+    pauseInlinePlayers();
+    state.inlinePreviewId = state.inlinePreviewId === item.id ? null : item.id;
+    render();
+  }
+
+  /* ==========================================================
+     APPROVED QUEUE POPOUT
+     ========================================================== */
+  function queuePopoutHtml(queue){
+    const safeQueue = encodeURIComponent(JSON.stringify(queue.map(item => ({
+      id:item.id,
+      guestName:item.guestName || 'Guest',
+      playbackId:item.playbackId
+    }))));
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Wesley & Dionne · Approved Queue</title>
+<script src="https://cdn.jsdelivr.net/npm/@mux/mux-player" defer><\/script>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;width:100%;height:100%;background:#0d0d0d;color:#fff;font-family:Montserrat,Arial,sans-serif;overflow:hidden}
+  body{display:grid;grid-template-rows:auto 1fr auto;min-height:100dvh}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:#151515;border-bottom:1px solid #333}
+  .counter{font-size:.76rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .close{border:0;border-radius:999px;background:#2b2b2b;color:#fff;width:38px;height:38px;font-size:1rem;cursor:pointer}
+  .stage{min-height:0;display:grid;place-items:center;background:#000}
+  .frame{height:100%;max-height:calc(100dvh - 112px);max-width:100%;aspect-ratio:9/16;background:#000}
+  mux-player{display:block;width:100%;height:100%;background:#000;--media-object-fit:cover;--media-object-position:center;--media-object-size:cover}
+  .bottom{display:flex;justify-content:center;gap:8px;padding:10px 12px;background:#151515;border-top:1px solid #333}
+  button.nav{border:1px solid #555;border-radius:999px;background:#222;color:#fff;padding:9px 15px;font-weight:700;cursor:pointer}
+  button.nav:disabled{opacity:.35;cursor:not-allowed}
+  .finished{position:fixed;inset:0;display:none;place-items:center;background:#111;color:#fff;text-align:center;padding:30px;z-index:20}
+  .finished.show{display:grid}
+  .finished strong{display:block;font-size:1.2rem;margin-bottom:8px}
+</style>
+</head>
+<body>
+  <div class="top"><div id="counter" class="counter">Loading approved queue…</div><button class="close" id="close" aria-label="Close">✕</button></div>
+  <div class="stage"><div class="frame"><mux-player id="player" playsinline preload="metadata" stream-type="on-demand" accent-color="#c5a059"></mux-player></div></div>
+  <div class="bottom"><button class="nav" id="prev">← Previous</button><button class="nav" id="next">Next →</button></div>
+  <div id="finished" class="finished"><div><strong>Approved queue finished</strong><span>You can close this window or replay from the beginning.</span><br><button class="nav" id="replay" style="margin-top:14px">Replay Queue</button></div></div>
+<script>
+  const queue = JSON.parse(decodeURIComponent('${safeQueue}'));
+  let index = 0;
+  const player = document.getElementById('player');
+  const counter = document.getElementById('counter');
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+  const finished = document.getElementById('finished');
+
+  async function loadCurrent(autoplay=true){
+    if (!queue.length) return;
+    if (index >= queue.length){
+      try{ player.pause(); }catch{}
+      finished.classList.add('show');
+      return;
+    }
+
+    finished.classList.remove('show');
+    const item = queue[index];
+    try{ player.pause(); }catch{}
+    player.removeAttribute('playback-id');
+    player.setAttribute('playback-id', item.playbackId);
+    player.setAttribute('metadata-video-id', item.id || item.playbackId);
+    player.setAttribute('metadata-video-title', 'Wedding memory — ' + (item.guestName || 'Guest'));
+    counter.textContent = (index+1) + ' / ' + queue.length + ' · ' + (item.guestName || 'Guest');
+    prev.disabled = index <= 0;
+    next.disabled = index >= queue.length - 1;
+
+    if (autoplay){
+      const start = async () => {
+        try{ player.currentTime = 0; }catch{}
+        try{ await player.play(); }catch{}
+      };
+      if (Number(player.readyState) >= 1) start();
+      else player.addEventListener('loadedmetadata', start, {once:true});
     }
   }
 
-  async function showPlayer(item, index, total, onEnded){
-    $('player').classList.remove('hidden');
-    $('player-counter').textContent = `${index+1} / ${total} · ${item.guestName || 'Guest'} · Loading…`;
+  player.addEventListener('ended', () => {
+    index += 1;
+    loadCurrent(true);
+  });
 
-    try{
-      const player = await prepareMuxPlayer(item,onEnded);
-      await waitForMuxReady(player);
-      try { player.currentTime = 0; } catch {}
-      $('player-counter').textContent = `${index+1} / ${total} · ${item.guestName || 'Guest'}`;
+  prev.addEventListener('click', () => {
+    if (index <= 0) return;
+    index -= 1;
+    loadCurrent(true);
+  });
 
-      try{
-        await player.play();
-      }catch(playError){
-        /* Some browsers may require a second tap after asynchronous loading.
-           The native Mux controls remain visible so playback is still usable. */
-        console.warn('Autoplay after load was blocked:',playError);
-        $('player-counter').textContent = `${index+1} / ${total} · ${item.guestName || 'Guest'} · Tap Play`;
-      }
-    }catch(error){
-      console.error('Mux Player error:',error);
-      $('player-counter').textContent = `${index+1} / ${total} · Could not play`;
-      toast(error.message || 'Could not play this clip');
-    }
-  }
+  next.addEventListener('click', () => {
+    if (index >= queue.length - 1) return;
+    index += 1;
+    loadCurrent(true);
+  });
 
-  function openSingle(item){
-    if (!item.hlsUrl) return;
-    state.queue = [];
-    state.queueIndex = 0;
-    showPlayer(item,0,1,null);
+  document.getElementById('replay').addEventListener('click', () => {
+    index = 0;
+    loadCurrent(true);
+  });
+
+  document.getElementById('close').addEventListener('click', () => window.close());
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') window.close();
+    if (event.key === 'ArrowRight' && index < queue.length - 1){ index += 1; loadCurrent(true); }
+    if (event.key === 'ArrowLeft' && index > 0){ index -= 1; loadCurrent(true); }
+  });
+
+  customElements.whenDefined('mux-player').then(() => loadCurrent(true));
+<\/script>
+</body>
+</html>`;
   }
 
   function playApprovedQueue(){
-    state.queue = approvedSorted().filter(item => item.hlsUrl);
-    state.queueIndex = 0;
+    const queue = approvedSorted().filter(item => item.playbackId);
 
-    if (!state.queue.length){
+    if (!queue.length){
       alert('There are no approved clips ready to play.');
       return;
     }
 
-    playQueueItem();
-    requestFullscreenIfPossible();
-  }
+    const popup = window.open(
+      '',
+      'WD0501ApprovedQueue',
+      'popup=yes,width=520,height=900,resizable=yes,scrollbars=no'
+    );
 
-  function playQueueItem(){
-    if (state.queueIndex >= state.queue.length){
-      closePlayer();
-      toast('Approved queue finished');
+    if (!popup){
+      alert('The approved-queue pop-out was blocked. Please allow pop-ups for this admin page and try again.');
       return;
     }
 
-    const item = state.queue[state.queueIndex];
-    showPlayer(item,state.queueIndex,state.queue.length,() => {
-      state.queueIndex += 1;
-      playQueueItem();
-    });
-  }
-
-  function closePlayer(){
-    const player = $('queue-player');
-    try { player.pause(); } catch {}
-    player.onended = null;
-    player.onerror = null;
-    player.removeAttribute('playback-id');
-    player.removeAttribute('src');
-    $('player').classList.add('hidden');
-
-    if (document.fullscreenElement){
-      document.exitFullscreen().catch(()=>{});
-    }
+    popup.document.open();
+    popup.document.write(queuePopoutHtml(queue));
+    popup.document.close();
+    popup.focus();
   }
 
   /* ==========================================================
@@ -1166,23 +1190,17 @@
   $('download-all-codes-btn').addEventListener('click',downloadAllCodes);
 
   $('search').addEventListener('input',event => {
+    state.inlinePreviewId = null;
     state.query = event.target.value;
     render();
   });
 
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click',() => {
+      state.inlinePreviewId = null;
       state.tab = tab.dataset.tab;
       render();
     });
-  });
-
-  $('player-close').addEventListener('click',closePlayer);
-
-  document.addEventListener('keydown',event => {
-    if (event.key === 'Escape' && !$('player').classList.contains('hidden')){
-      closePlayer();
-    }
   });
 
   document.addEventListener('visibilitychange',() => {
