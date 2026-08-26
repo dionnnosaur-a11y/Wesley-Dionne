@@ -1579,9 +1579,18 @@
 
       setProgress(100,t('done'));
       await new Promise(resolve => setTimeout(resolve,450));
+      /* Stop preview/audio completely before showing Thank You */
+      const previewVideo = $('video-preview');
+      previewVideo.pause();
+      previewVideo.muted = true;
+      previewVideo.removeAttribute('src');
+      previewVideo.load();
 
+      revokeObjectUrl();
+      
       $('page-editor').classList.add('hidden');
       $('page-thanks').classList.remove('hidden');
+      
     }catch(error){
       console.error('Submission error:',error);
       $('editor-error').textContent = error.message || t('uploadFailed');
