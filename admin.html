@@ -258,7 +258,8 @@
     .player-wrap{
       position:relative;
       height:min(100dvh,1000px);
-      width:min(100vw,562px);
+      width:min(100vw,calc(min(100dvh,1000px) * 9 / 16));
+      aspect-ratio:9/16;
       background:#000;
       overflow:hidden;
     }
@@ -1004,19 +1005,52 @@
   function attachHls(video, url){
     destroyHls();
 
-    if (video.canPlayType('application/vnd.apple.mpegurl')){
-      video.src = url;
-      return;
-    }
+    return new Promise((resolve,reject) => {
+      const fail = message => reject(new Error(message || 'Could not load this Mux video.'));
 
-    if (Hls.isSupported()){
-      state.hls = new Hls({enableWorker:true});
-      state.hls.loadSource(url);
-      state.hls.attachMedia(video);
-      return;
-    }
+      /* Safari / iOS can play HLS natively. Wait until the stream is actually ready. */
+      if (video.canPlayType('application/vnd.apple.mpegurl')){
+        const ready = () => { cleanup(); resolve(); };
+        const error = () => { cleanup(); fail('Could not load this Mux video.'); };
+        const cleanup = () => {
+          video.removeEventListener('loadedmetadata',ready);
+          video.removeEventListener('canplay',ready);
+          video.removeEventListener('error',error);
+        };
+        video.addEventListener('loadedmetadata',ready,{once:true});
+        video.addEventListener('canplay',ready,{once:true});
+        video.addEventListener('error',error,{once:true});
+        video.src = url;
+        video.load();
+        return;
+      }
 
-    throw new Error('HLS playback is not supported in this browser.');
+      /* Chrome/Edge/Firefox: HLS.js must finish parsing the manifest before play(). */
+      if (Hls.isSupported()){
+        const hls = new Hls({enableWorker:true});
+        state.hls = hls;
+
+        let settled = false;
+        const finish = () => {
+          if (settled) return;
+          settled = true;
+          resolve();
+        };
+        const fatal = (_event,data) => {
+          if (!data?.fatal || settled) return;
+          settled = true;
+          reject(new Error(data?.details || 'Could not load this Mux video.'));
+        };
+
+        hls.on(Hls.Events.MANIFEST_PARSED,finish);
+        hls.on(Hls.Events.ERROR,fatal);
+        hls.loadSource(url);
+        hls.attachMedia(video);
+        return;
+      }
+
+      fail('HLS playback is not supported in this browser.');
+    });
   }
 
   function requestFullscreenIfPossible(){
@@ -1026,16 +1060,26 @@
     }
   }
 
-  function showPlayer(item, index, total, onEnded){
+  async function showPlayer(item, index, total, onEnded){
     const video = $('queue-video');
     $('player').classList.remove('hidden');
-    $('player-counter').textContent = `${index+1} / ${total} · ${item.guestName || 'Guest'}`;
+    $('player-counter').textContent = `${index+1} / ${total} · ${item.guestName || 'Guest'} · Loading…`;
 
-    attachHls(video,item.hlsUrl);
+    video.pause();
     video.onended = onEnded || null;
-    video.currentTime = 0;
+    video.removeAttribute('src');
+    video.load();
 
-    video.play().catch(()=>{});
+    try{
+      await attachHls(video,item.hlsUrl);
+      video.currentTime = 0;
+      $('player-counter').textContent = `${index+1} / ${total} · ${item.guestName || 'Guest'}`;
+      await video.play();
+    }catch(error){
+      console.error('Player error:',error);
+      $('player-counter').textContent = `${index+1} / ${total} · Could not play`;
+      toast(error.message || 'Could not play this clip');
+    }
   }
 
   function openSingle(item){
