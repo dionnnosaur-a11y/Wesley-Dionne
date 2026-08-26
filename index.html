@@ -23,1106 +23,227 @@ button{-webkit-tap-highlight-color:transparent}
 .card{position:relative;width:100%;max-width:480px;background:var(--white);border:1px solid rgba(197,160,89,.3);border-radius:18px;padding:35px 20px 30px;box-shadow:0 10px 30px rgba(0,0,0,.05);text-align:center;overflow:hidden}
 .hidden{display:none!important}
 .lang{position:absolute;right:18px;top:14px;display:flex;gap:7px;align-items:center;font-size:.75rem;font-weight:700;color:var(--muted);z-index:30}
-.lang button{border:0;background:none;color:var(--muted);cursor:pointer;padding:3px}
-.lang button.active{color:var(--gold-dark);font-weight:800;text-decoration:underline}
-.names{font-family:'Alex Brush',cursive;font-size:3rem;line-height:1;color:var(--gold-dark);padding-top:8px}
-.xi{font-size:2rem;color:var(--red);margin:10px 0}
-.subtitle{font-size:1rem;margin-bottom:16px}
-
-/* image_0.png is NEVER cropped */
-.hero{
-  display:block;
-  width:auto;
-  height:auto;
-  max-width:82%;
-  max-height:42vh;
-  object-fit:contain;
-  margin:0 auto 16px
-}
-
-.btn{border:0;border-radius:999px;min-height:44px;padding:11px 23px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#fff;font-weight:700;cursor:pointer;margin-top:10px}
-.btn:disabled{opacity:.55;cursor:not-allowed}
-.btn.outline{background:transparent;color:var(--muted);border:1px solid var(--muted)}
+.lang button{border:0;background:none;color:var(--muted);cursor:pointer;padding:3px}.lang button.active{color:var(--gold-dark);font-weight:800;text-decoration:underline}
+.names{font-family:'Alex Brush',cursive;font-size:3rem;line-height:1;color:var(--gold-dark);padding-top:8px}.xi{font-size:2rem;color:var(--red);margin:10px 0}.subtitle{font-size:1rem;margin-bottom:16px}
+/* IMPORTANT: image_0.png is NEVER cropped. */
+.hero{display:block;width:auto;height:auto;max-width:82%;max-height:42vh;object-fit:contain;margin:0 auto 16px}
+.btn{border:0;border-radius:999px;min-height:44px;padding:11px 23px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#fff;font-weight:700;cursor:pointer;margin-top:10px}.btn:disabled{opacity:.55;cursor:not-allowed}.btn.outline{background:transparent;color:var(--muted);border:1px solid var(--muted)}
 .token-area{margin-top:18px;padding-top:15px;border-top:1px dashed var(--gold)}
-.field{width:min(100%,330px);margin:11px auto;text-align:left}
-.field label{display:block;font-size:.76rem;color:var(--muted);font-weight:700;margin-bottom:6px}
-.input{width:100%;border:1px solid rgba(158,122,55,.65);border-radius:9px;padding:11px 12px;text-align:center;outline:0;background:#fff}
-.input:focus{border-color:var(--gold-dark);box-shadow:0 0 0 3px rgba(197,160,89,.12)}
-#token{letter-spacing:.25rem;font-weight:800;font-size:1.25rem;text-transform:uppercase;padding-left:calc(12px + .25rem)}
-.help{font-size:.72rem;color:var(--muted);line-height:1.5;margin-top:6px}
-.error{min-height:1.2em;color:var(--red);font-size:.78rem;line-height:1.45;margin-top:8px}
-.editor-head{font-family:'Alex Brush',cursive;color:var(--gold-dark);font-size:2.25rem}
-.pills{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:9px 0}
-.pill{font-size:.7rem;color:var(--muted);padding:5px 9px;border-radius:999px;border:1px solid rgba(197,160,89,.35);background:#fdfbf7}
+.field{width:min(100%,330px);margin:11px auto;text-align:left}.field label{display:block;font-size:.76rem;color:var(--muted);font-weight:700;margin-bottom:6px}.input{width:100%;border:1px solid rgba(158,122,55,.65);border-radius:9px;padding:11px 12px;text-align:center;outline:0;background:#fff}.input:focus{border-color:var(--gold-dark);box-shadow:0 0 0 3px rgba(197,160,89,.12)}#token{letter-spacing:.25rem;font-weight:800;font-size:1.25rem;text-transform:uppercase;padding-left:calc(12px + .25rem)}
+.help{font-size:.72rem;color:var(--muted);line-height:1.5;margin-top:6px}.error{min-height:1.2em;color:var(--red);font-size:.78rem;line-height:1.45;margin-top:8px}
+.editor-head{font-family:'Alex Brush',cursive;color:var(--gold-dark);font-size:2.25rem}.pills{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:9px 0}.pill{font-size:.7rem;color:var(--muted);padding:5px 9px;border-radius:999px;border:1px solid rgba(197,160,89,.35);background:#fdfbf7}
 .stage{position:relative;width:min(100%,330px);aspect-ratio:9/16;max-height:62vh;margin:14px auto;background:#000;border-radius:13px;overflow:hidden;box-shadow:0 7px 22px rgba(0,0,0,.15);touch-action:none;user-select:none}
-.stage video{width:100%;height:100%;object-fit:cover;display:block;background:#000}
-.loader{position:absolute;inset:0;background:rgba(0,0,0,.76);color:#fff;z-index:30;display:grid;place-content:center;gap:10px;font-size:.82rem}
-.spin{width:31px;height:31px;margin:auto;border:3px solid rgba(255,255,255,.3);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.playmark{position:absolute;z-index:7;left:50%;top:50%;transform:translate(-50%,-50%);width:54px;height:54px;background:rgba(0,0,0,.52);border-radius:50%;pointer-events:none;transition:.2s}
-.playmark:after{content:"";position:absolute;left:21px;top:17px;border-style:solid;border-width:10px 0 10px 17px;border-color:transparent transparent transparent #fff}
-.playmark.playing{opacity:0}
-.playmark.paused{opacity:1}
+.stage video{width:100%;height:100%;object-fit:cover;display:block;background:#000}.loader{position:absolute;inset:0;background:rgba(0,0,0,.76);color:#fff;z-index:30;display:grid;place-content:center;gap:10px;font-size:.82rem}.spin{width:31px;height:31px;margin:auto;border:3px solid rgba(255,255,255,.3);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.playmark{position:absolute;z-index:7;left:50%;top:50%;transform:translate(-50%,-50%);width:54px;height:54px;background:rgba(0,0,0,.52);border-radius:50%;pointer-events:none;transition:.2s}.playmark:after{content:"";position:absolute;left:21px;top:17px;border-style:solid;border-width:10px 0 10px 17px;border-color:transparent transparent transparent #fff}.playmark.playing{opacity:0}.playmark.paused{opacity:1}
 .addcap{position:absolute;z-index:10;bottom:18px;left:50%;transform:translateX(-50%);border:1px solid rgba(255,255,255,.45);background:rgba(0,0,0,.68);color:#fff;border-radius:999px;padding:8px 16px;font-weight:700;font-size:.8rem;cursor:pointer;white-space:nowrap}
-.dragcap{position:absolute;z-index:12;left:50%;top:65%;transform:translate(-50%,-50%);max-width:88%;padding:12px;touch-action:none;cursor:grab}
-.caption{display:inline-block;max-width:100%;background:#000;color:#fff;border-radius:13px;padding:9px 15px;font-weight:800;font-size:1.08rem;line-height:1.28;text-align:center;white-space:pre-wrap;overflow-wrap:anywhere;box-shadow:0 5px 15px rgba(0,0,0,.45)}
-.trash{position:absolute;z-index:20;bottom:17px;left:50%;transform:translateX(-50%);background:rgba(20,20,20,.88);color:#fff;border:2px solid rgba(255,255,255,.3);border-radius:999px;padding:9px 15px;font-size:.75rem;font-weight:700;pointer-events:none}
-.trash.hot{background:var(--danger);transform:translateX(-50%) scale(1.07)}
-.capedit{width:min(100%,360px);margin:-4px auto 12px;padding:10px;background:#fdfbf7;border:1px solid rgba(197,160,89,.3);border-radius:12px}
-.caprow{display:flex;gap:8px}
-.caprow textarea{flex:1;min-width:0;border:1px solid rgba(158,122,55,.55);border-radius:9px;padding:10px;resize:none;outline:0;font-weight:700}
-.iconbtn{width:44px;height:44px;border-radius:9px;border:1px solid rgba(138,28,28,.35);background:#fff;color:var(--red);cursor:pointer}
-.trim{position:relative;height:54px;width:100%;margin:14px 0 7px;background:#111;border:2px solid var(--gold);border-radius:8px;overflow:hidden;touch-action:none}
-.film{position:absolute;inset:0;display:flex;pointer-events:none}
-.film img{height:100%;width:12.5%;object-fit:cover}
-.dim{position:absolute;top:0;bottom:0;background:rgba(0,0,0,.68);z-index:2;pointer-events:none}
-#dl{left:0}
-#dr{right:0}
-.selection{position:absolute;top:0;bottom:0;border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);z-index:3;pointer-events:none}
-.handle{position:absolute;top:0;bottom:0;width:22px;background:var(--gold);z-index:5;cursor:ew-resize;touch-action:none}
-.handle:after{content:"||";color:#fff;font-weight:800;font-size:10px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
-.duration{font-size:.8rem;color:var(--muted);font-weight:600;margin-bottom:8px}
-.progressbox{width:min(100%,360px);margin:13px auto 0;padding:12px;border:1px solid rgba(197,160,89,.35);background:#fdfbf7;border-radius:11px;text-align:left}
-.progline{display:flex;justify-content:space-between;font-size:.74rem;font-weight:700;color:var(--muted);margin-bottom:7px}
-.progtrack{height:8px;background:rgba(197,160,89,.17);border-radius:999px;overflow:hidden}
-.prog{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-dark));transition:width .2s}
+.dragcap{position:absolute;z-index:12;left:50%;top:65%;transform:translate(-50%,-50%);width:max-content;max-width:84%;padding:12px;touch-action:none;cursor:grab}.caption{display:block;width:max-content;max-width:100%;background:#000;color:#fff;border-radius:13px;padding:9px 15px;font-weight:800;font-size:1.08rem;line-height:1.2;text-align:center;white-space:pre-wrap;word-break:break-word;overflow-wrap:break-word;box-shadow:0 5px 15px rgba(0,0,0,.45)}
+.trash{position:absolute;z-index:20;bottom:17px;left:50%;transform:translateX(-50%);background:rgba(20,20,20,.88);color:#fff;border:2px solid rgba(255,255,255,.3);border-radius:999px;padding:9px 15px;font-size:.75rem;font-weight:700;pointer-events:none}.trash.hot{background:var(--danger);transform:translateX(-50%) scale(1.07)}
+.capedit{width:min(100%,360px);margin:-4px auto 12px;padding:10px;background:#fdfbf7;border:1px solid rgba(197,160,89,.3);border-radius:12px}.caprow{display:flex;gap:8px}.caprow textarea{flex:1;min-width:0;border:1px solid rgba(158,122,55,.55);border-radius:9px;padding:10px;resize:none;outline:0;font-weight:700}.iconbtn{width:44px;height:44px;border-radius:9px;border:1px solid rgba(138,28,28,.35);background:#fff;color:var(--red);cursor:pointer}
+.trim{position:relative;height:54px;width:100%;margin:14px 0 7px;background:#111;border:2px solid var(--gold);border-radius:8px;overflow:hidden;touch-action:none}.film{position:absolute;inset:0;display:flex;pointer-events:none}.film img{height:100%;width:12.5%;object-fit:cover}.dim{position:absolute;top:0;bottom:0;background:rgba(0,0,0,.68);z-index:2;pointer-events:none}#dl{left:0}#dr{right:0}.selection{position:absolute;top:0;bottom:0;border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);z-index:3;pointer-events:none}.handle{position:absolute;top:0;bottom:0;width:22px;background:var(--gold);z-index:5;cursor:ew-resize;touch-action:none}.handle:after{content:"||";color:#fff;font-weight:800;font-size:10px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.duration{font-size:.8rem;color:var(--muted);font-weight:600;margin-bottom:8px}.progressbox{width:min(100%,360px);margin:13px auto 0;padding:12px;border:1px solid rgba(197,160,89,.35);background:#fdfbf7;border-radius:11px;text-align:left}.progline{display:flex;justify-content:space-between;font-size:.74rem;font-weight:700;color:var(--muted);margin-bottom:7px}.progtrack{height:8px;background:rgba(197,160,89,.17);border-radius:999px;overflow:hidden}.prog{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-dark));transition:width .2s}
 .thanks p{color:var(--muted);line-height:1.55;margin-top:10px}
-.testnote{margin:16px auto 0;padding:10px;border-radius:10px;background:#fdfbf7;border:1px dashed var(--gold);font-size:.73rem;color:var(--muted);line-height:1.45}
-@media(max-width:380px){
-  .card{padding-left:14px;padding-right:14px}
-  .names{font-size:2.7rem}
-  .hero{max-height:39vh}
-  .stage{max-height:58vh}
-}
+@media(max-width:380px){.card{padding-left:14px;padding-right:14px}.names{font-size:2.7rem}.hero{max-height:39vh}.stage{max-height:58vh}}
 </style>
 </head>
 <body>
 <main class="card">
+  <div class="lang"><button id="en" class="active">EN</button><span>|</span><button id="zh">中文</button></div>
 
-<div class="lang">
-  <button id="en" class="active">EN</button><span>|</span><button id="zh">中文</button>
-</div>
-
-<section id="welcome">
-  <div class="names">Wesley & Dionne</div>
-  <div class="xi">囍</div>
-  <p class="subtitle" data-t="subtitle">Our Wedding, Through Your Eyes</p>
-
-  <!-- KEEP THIS FILE NAME EXACTLY AS image_0.png -->
-  <img class="hero" src="image_0.png" alt="Wesley & Dionne">
-
-  <button id="share" class="btn" data-t="share">Share A Memory</button>
-
-  <div id="tokenArea" class="token-area hidden">
-    <div class="field">
-      <label data-t="name">Preferred name</label>
-      <input id="name" class="input" maxlength="32" placeholder="What should we call you?">
+  <section id="welcome">
+    <div class="names">Wesley & Dionne</div><div class="xi">囍</div>
+    <p class="subtitle" data-t="subtitle">Our Wedding, Through Your Eyes</p>
+    <!-- KEEP THIS FILE NAME EXACTLY AS image_0.png -->
+    <img class="hero" src="image_0.png" alt="Wesley & Dionne">
+    <button id="share" class="btn" data-t="share">Share A Memory</button>
+    <div id="tokenArea" class="token-area hidden">
+      <div class="field"><label data-t="name">Preferred name</label><input id="name" class="input" maxlength="32" placeholder="What should we call you?"></div>
+      <div class="field"><label data-t="code">4-character guest code</label><input id="token" class="input" maxlength="4" autocapitalize="characters" autocomplete="one-time-code" placeholder="CODE"><div class="help" data-t="testhelp">Use TEST for the first live test.</div></div>
+      <button id="continue" class="btn" data-t="continue">Continue</button><div id="tokenError" class="error"></div>
     </div>
+  </section>
 
-    <div class="field">
-      <label data-t="code">4-character guest code</label>
-      <input id="token" class="input" maxlength="4" autocapitalize="characters" autocomplete="one-time-code" placeholder="TEST">
-      <div class="help" data-t="testhelp">For this prototype, use TEST.</div>
-    </div>
+  <section id="editor" class="hidden">
+    <div class="editor-head" data-t="edit">Trim & Caption</div>
+    <div class="pills"><span id="guestPill" class="pill"></span><span id="codePill" class="pill"></span></div>
+    <input id="file" type="file" accept="video/*" hidden>
+    <button id="choose" class="btn" data-t="choose">Select Video</button>
+    <div class="help" data-t="choosehelp">Choose your favourite 5–10 second moment.</div>
 
-    <button id="continue" class="btn" data-t="continue">Continue</button>
-    <div id="tokenError" class="error"></div>
-  </div>
-</section>
-
-<section id="editor" class="hidden">
-  <div class="editor-head" data-t="edit">Trim & Caption</div>
-
-  <div class="pills">
-    <span id="guestPill" class="pill"></span>
-    <span id="codePill" class="pill"></span>
-  </div>
-
-  <input id="file" type="file" accept="video/*" hidden>
-
-  <button id="choose" class="btn" data-t="choose">Select Video</button>
-  <div class="help" data-t="choosehelp">Choose your favourite 5–10 second moment.</div>
-
-  <div id="controls" class="hidden">
-
-    <div id="stage" class="stage">
-
-      <div id="loader" class="loader hidden">
-        <div class="spin"></div>
-        <span data-t="loading">Loading video…</span>
+    <div id="controls" class="hidden">
+      <div id="stage" class="stage">
+        <div id="loader" class="loader hidden"><div class="spin"></div><span data-t="loading">Loading video…</span></div>
+        <video id="video" playsinline webkit-playsinline preload="metadata"></video>
+        <div id="playmark" class="playmark paused"></div>
+        <button id="addcap" class="addcap" data-t="addcap">💬 + Add Caption</button>
+        <div id="trash" class="trash hidden" data-t="trash">🗑️ Drag here to delete</div>
+        <div id="dragcap" class="dragcap hidden"><div id="caption" class="caption"></div></div>
       </div>
 
-      <video id="video" playsinline webkit-playsinline preload="metadata"></video>
-      <div id="playmark" class="playmark paused"></div>
+      <div id="capedit" class="capedit hidden"><div class="caprow"><textarea id="captext" rows="2" maxlength="80" placeholder="Type caption…"></textarea><button id="delcap" class="iconbtn">🗑️</button></div><div class="help" data-t="caphelp">Type here, then drag the caption on the video.</div></div>
 
-      <button id="addcap" class="addcap" data-t="addcap">
-        💬 + Add Caption
-      </button>
-
-      <div id="trash" class="trash hidden" data-t="trash">
-        🗑️ Drag here to delete
-      </div>
-
-      <div id="dragcap" class="dragcap hidden">
-        <div id="caption" class="caption"></div>
-      </div>
+      <div id="trim" class="trim"><div id="film" class="film"></div><div id="dl" class="dim"></div><div id="dr" class="dim"></div><div id="sel" class="selection"></div><div id="hs" class="handle"></div><div id="he" class="handle"></div></div>
+      <div class="duration"><span data-t="selected">SELECTED:</span> <strong><span id="dur">0.0</span>s</strong> <span data-t="limit">(5–10 seconds)</span></div>
+      <div><button id="another" class="btn outline" data-t="another">Choose Another</button> <button id="submit" class="btn" data-t="submit">Submit Clip</button></div>
+      <div id="progressbox" class="progressbox hidden"><div class="progline"><span id="proglabel">Saving submission…</span><span id="progpct">0%</span></div><div class="progtrack"><div id="prog" class="prog"></div></div></div>
     </div>
+    <div id="editorError" class="error"></div>
+  </section>
 
-    <div id="capedit" class="capedit hidden">
-      <div class="caprow">
-        <textarea id="captext" rows="2" maxlength="80" placeholder="Type caption…"></textarea>
-        <button id="delcap" class="iconbtn">🗑️</button>
-      </div>
-
-      <div class="help" data-t="caphelp">
-        Type here, then drag the caption on the video.
-      </div>
-    </div>
-
-    <div id="trim" class="trim">
-      <div id="film" class="film"></div>
-      <div id="dl" class="dim"></div>
-      <div id="dr" class="dim"></div>
-      <div id="sel" class="selection"></div>
-      <div id="hs" class="handle"></div>
-      <div id="he" class="handle"></div>
-    </div>
-
-    <div class="duration">
-      <span data-t="selected">SELECTED:</span>
-      <strong><span id="dur">0.0</span>s</strong>
-      <span data-t="limit">(5–10 seconds)</span>
-    </div>
-
-    <div>
-      <button id="another" class="btn outline" data-t="another">Choose Another</button>
-      <button id="submit" class="btn" data-t="submit">Submit Clip</button>
-    </div>
-
-    <div id="progressbox" class="progressbox hidden">
-      <div class="progline">
-        <span id="proglabel">Saving submission…</span>
-        <span id="progpct">0%</span>
-      </div>
-
-      <div class="progtrack">
-        <div id="prog" class="prog"></div>
-      </div>
-    </div>
-  </div>
-
-  <div id="editorError" class="error"></div>
-</section>
-
-<section id="thanks" class="thanks hidden">
-  <div class="xi" style="font-size:3rem">囍</div>
-  <div class="names" data-t="thankyou">Thank You!</div>
-
-  <p data-t="thanks">
-    Your test clip is now waiting in the moderator queue.
-  </p>
-
-  <button id="openAdmin" class="btn">Open Admin</button>
-
-  <div class="testnote">
-    Prototype only: the selected original video is stored in this browser,
-    so open <b>admin.html on this same browser/device</b>.
-    Production will use shared cloud storage.
-  </div>
-</section>
-
+  <section id="thanks" class="thanks hidden"><div class="xi" style="font-size:3rem">囍</div><div class="names" data-t="thankyou">Thank You!</div><p data-t="thanks">Your clip has been uploaded and sent to the moderator queue.</p></section>
 </main>
+<script type="module">
+import * as tus from "https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/+esm";
 
-<script>
 'use strict';
 
-const DB = 'wd0501-full-demo';
-const STORE = 'submissions';
-const MIN = 5;
-const MAX = 10;
+/* ==================================================================
+   LIVE BACKEND CONFIGURATION
+   Replace only this URL after your Cloudflare Worker is deployed.
+   No API secrets belong in this file.
+   ================================================================== */
+const API_BASE = 'https://YOUR-WORKER.workers.dev';
+const MIN=5, MAX=10;
 
-const T = {
-  en: {
-    subtitle:'Our Wedding, Through Your Eyes',
-    share:'Share A Memory',
-    name:'Preferred name',
-    code:'4-character guest code',
-    testhelp:'For this prototype, use TEST.',
-    continue:'Continue',
-    edit:'Trim & Caption',
-    choose:'Select Video',
-    choosehelp:'Choose your favourite 5–10 second moment.',
-    loading:'Loading video…',
-    addcap:'💬 + Add Caption',
-    trash:'🗑️ Drag here to delete',
-    caphelp:'Type here, then drag the caption on the video.',
-    selected:'SELECTED:',
-    limit:'(5–10 seconds)',
-    another:'Choose Another',
-    submit:'Submit Clip',
-    thankyou:'Thank You!',
-    thanks:'Your test clip is now waiting in the moderator queue.'
-  },
-
-  zh: {
-    subtitle:'用您的视角，记录我们的婚礼',
-    share:'分享温馨瞬间',
-    name:'称呼',
-    code:'4位宾客邀请码',
-    testhelp:'此测试版本请输入 TEST。',
-    continue:'继续',
-    edit:'剪辑与字幕',
-    choose:'选择视频',
-    choosehelp:'请选择您最喜欢的5至10秒片段。',
-    loading:'正在加载视频…',
-    addcap:'💬 + 添加字幕',
-    trash:'🗑️ 拖到这里删除',
-    caphelp:'在这里输入文字，然后在视频上拖动字幕。',
-    selected:'已选：',
-    limit:'（5至10秒）',
-    another:'重新选择',
-    submit:'提交视频',
-    thankyou:'谢谢您！',
-    thanks:'您的测试视频已进入审核队列。'
-  }
+const T={
+ en:{subtitle:'Our Wedding, Through Your Eyes',share:'Share A Memory',name:'Preferred name',code:'4-character guest code',testhelp:'Use TEST for the first live test.',continue:'Continue',edit:'Trim & Caption',choose:'Select Video',choosehelp:'Choose your favourite 5–10 second moment.',loading:'Loading video…',addcap:'💬 + Add Caption',trash:'🗑️ Drag here to delete',caphelp:'Type here, then drag the caption on the video.',selected:'SELECTED:',limit:'(5–10 seconds)',another:'Choose Another',submit:'Submit Clip',thankyou:'Thank You!',thanks:'Your clip has been uploaded and sent to the moderator queue.'},
+ zh:{subtitle:'用您的视角，记录我们的婚礼',share:'分享温馨瞬间',name:'称呼',code:'4位宾客邀请码',testhelp:'首次线上测试请输入 TEST。',continue:'继续',edit:'剪辑与字幕',choose:'选择视频',choosehelp:'请选择您最喜欢的5至10秒片段。',loading:'正在加载视频…',addcap:'💬 + 添加字幕',trash:'🗑️ 拖到这里删除',caphelp:'在这里输入文字，然后在视频上拖动字幕。',selected:'已选：',limit:'（5至10秒）',another:'重新选择',submit:'提交视频',thankyou:'谢谢您！',thanks:'您的视频已上传并进入审核队列。'}
 };
 
-const S = {
-  lang:'en',
-  name:'',
-  token:'',
-  file:null,
-  url:null,
-  duration:0,
-  start:0,
-  end:10,
-  cap:false,
-  x:.5,
-  y:.65,
-  handle:null,
-  capPointer:null,
-  grabX:0,
-  grabY:0,
-  saving:false
-};
+const S={lang:'en',name:'',token:'',guestTicket:'',file:null,url:null,duration:0,videoWidth:0,videoHeight:0,start:0,end:10,cap:false,x:.5,y:.65,handle:null,capPointer:null,grabX:0,grabY:0,saving:false,submissionId:null};
+const $=id=>document.getElementById(id);
 
-const $ = id => document.getElementById(id);
+function lang(l){S.lang=l;document.body.classList.toggle('zh',l==='zh');$('en').classList.toggle('active',l==='en');$('zh').classList.toggle('active',l==='zh');document.querySelectorAll('[data-t]').forEach(e=>{const k=e.dataset.t;if(T[l][k])e.textContent=T[l][k]})}
+function cleanCode(v){return String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,4)}
+async function api(path,options={}){const r=await fetch(API_BASE+path,options);let data={};try{data=await r.json()}catch{}if(!r.ok){const e=new Error(data.error||`Request failed (${r.status})`);e.status=r.status;throw e}return data}
+function ensureApiConfigured(){if(API_BASE.includes('YOUR-WORKER'))throw new Error('The live API URL has not been configured yet.');}
 
-function lang(l) {
-  S.lang = l;
+$('en').onclick=()=>lang('en');$('zh').onclick=()=>lang('zh');
+$('share').onclick=()=>{$('share').classList.add('hidden');$('tokenArea').classList.remove('hidden');$('name').focus()};
+$('token').oninput=e=>e.target.value=cleanCode(e.target.value);$('token').onkeydown=e=>{if(e.key==='Enter')enter()};$('continue').onclick=enter;
 
-  document.body.classList.toggle('zh', l === 'zh');
-
-  $('en').classList.toggle('active', l === 'en');
-  $('zh').classList.toggle('active', l === 'zh');
-
-  document.querySelectorAll('[data-t]').forEach(e => {
-    const k = e.dataset.t;
-    if (T[l][k]) e.textContent = T[l][k];
-  });
+async function enter(){
+ const n=$('name').value.trim(),c=cleanCode($('token').value);$('tokenError').textContent='';
+ if(!n)return $('tokenError').textContent=S.lang==='zh'?'请输入您的称呼。':'Please enter your preferred name.';
+ if(c.length!==4)return $('tokenError').textContent=S.lang==='zh'?'请输入4位邀请码。':'Please enter your 4-character guest code.';
+ $('continue').disabled=true;
+ try{ensureApiConfigured();const d=await api('/api/guest/session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({guestName:n,code:c})});S.name=d.guestName;S.token=d.code;S.guestTicket=d.ticket;$('guestPill').textContent=S.name;$('codePill').textContent='#'+S.token;$('welcome').classList.add('hidden');$('editor').classList.remove('hidden')}
+ catch(e){$('tokenError').textContent=e.message}
+ finally{$('continue').disabled=false}
 }
 
-function cleanCode(v) {
-  return String(v || '')
-    .toUpperCase()
-    .replace(/[^A-Z0-9]/g, '')
-    .slice(0, 4);
+$('choose').onclick=()=>$('file').click();$('another').onclick=resetVideo;$('file').onchange=e=>loadVideo(e.target.files?.[0]);
+function resetVideo(){if(S.url)URL.revokeObjectURL(S.url);S.file=null;S.url=null;S.duration=0;S.videoWidth=0;S.videoHeight=0;$('file').value='';$('video').removeAttribute('src');$('video').load();$('controls').classList.add('hidden');$('choose').classList.remove('hidden');$('editorError').textContent='';$('progressbox').classList.add('hidden');removeCaption()}
+async function loadVideo(file){if(!file)return;S.file=file;if(S.url)URL.revokeObjectURL(S.url);S.url=URL.createObjectURL(file);$('controls').classList.remove('hidden');$('choose').classList.add('hidden');$('loader').classList.remove('hidden');$('editorError').textContent='';const v=$('video');try{await new Promise((res,rej)=>{v.onloadedmetadata=res;v.onerror=rej;v.src=S.url;v.load()});S.duration=v.duration;S.videoWidth=v.videoWidth;S.videoHeight=v.videoHeight;if(!isFinite(S.duration)||S.duration<4.9)throw Error('short');if(S.duration>3600)throw Error('long');S.start=0;S.end=Math.min(10,S.duration);v.currentTime=0;updateTrim();removeCaption();makeFilmstrip();$('loader').classList.add('hidden')}catch(e){$('loader').classList.add('hidden');$('controls').classList.add('hidden');$('choose').classList.remove('hidden');$('editorError').textContent=e.message==='short'?'Please choose a video at least 5 seconds long.':e.message==='long'?'Please choose a video shorter than 60 minutes.':'This browser could not read that video.'}}
+
+$('stage').onclick=e=>{if(e.target.closest('#dragcap')||e.target.closest('#addcap'))return;if(!S.file)return;const v=$('video');if(v.paused){if(v.currentTime<S.start||v.currentTime>=S.end)v.currentTime=S.start;v.play().catch(()=>{})}else v.pause();playMark()};$('video').onplay=playMark;$('video').onpause=playMark;function playMark(){$('playmark').classList.toggle('playing',!$('video').paused);$('playmark').classList.toggle('paused',$('video').paused)}
+$('video').ontimeupdate=()=>{const v=$('video');if(!S.handle&&!v.paused&&(v.currentTime>=S.end-.03||v.currentTime<S.start-.05)){v.currentTime=S.start;v.play().catch(()=>{})}};
+function updateTrim(){if(!S.duration)return;const a=S.start/S.duration*100,b=S.end/S.duration*100;$('sel').style.left=a+'%';$('sel').style.width=(b-a)+'%';$('dl').style.width=a+'%';$('dr').style.width=(100-b)+'%';$('hs').style.left=`calc(${a}% - 11px)`;$('he').style.left=`calc(${b}% - 11px)`;$('dur').textContent=(S.end-S.start).toFixed(1)}
+function sec(e){const r=$('trim').getBoundingClientRect();return Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*S.duration}function startHandle(h,e){if(!S.file)return;e.preventDefault();S.handle=h;$('video').pause();moveHandle(e)}function moveHandle(e){if(!S.handle)return;e.preventDefault();let s=sec(e),v=$('video');if(S.handle==='s'){S.start=Math.max(Math.max(0,S.end-MAX),Math.min(S.end-MIN,s));v.currentTime=S.start}else{S.end=Math.max(Math.min(S.duration,S.start+MIN),Math.min(Math.min(S.duration,S.start+MAX),s));v.currentTime=Math.min(S.end,S.duration-.02)}updateTrim()}function endHandle(){if(!S.handle)return;S.handle=null;$('video').currentTime=S.start}
+$('hs').onpointerdown=e=>startHandle('s',e);$('he').onpointerdown=e=>startHandle('e',e);window.addEventListener('pointermove',moveHandle,{passive:false});window.addEventListener('pointerup',endHandle);
+
+async function makeFilmstrip(){const box=$('film');box.innerHTML='';const v=document.createElement('video');v.src=S.url;v.muted=true;v.playsInline=true;v.preload='metadata';v.style.cssText='position:fixed;left:-9999px;width:1px';document.body.appendChild(v);await new Promise(r=>{if(v.readyState>=1)r();else{v.onloadedmetadata=r;setTimeout(r,1000)}});const c=document.createElement('canvas'),ctx=c.getContext('2d');c.width=90;c.height=160;for(let i=0;i<8;i++){try{await seek(v,(i/7)*Math.max(0,(v.duration||S.duration)-.05));const sc=Math.max(c.width/v.videoWidth,c.height/v.videoHeight),w=v.videoWidth*sc,h=v.videoHeight*sc;ctx.clearRect(0,0,c.width,c.height);ctx.drawImage(v,(c.width-w)/2,(c.height-h)/2,w,h);const img=document.createElement('img');img.src=c.toDataURL('image/jpeg',.5);box.appendChild(img)}catch{}}v.remove()}
+function seek(v,t){return new Promise(r=>{let done=false;const f=()=>{if(done)return;done=true;v.removeEventListener('seeked',f);r()};v.addEventListener('seeked',f);try{v.currentTime=t}catch{}setTimeout(f,400)})}
+
+$('addcap').onclick=e=>{e.stopPropagation();S.cap=true;S.x=.5;S.y=.65;$('dragcap').classList.remove('hidden');$('addcap').classList.add('hidden');$('capedit').classList.remove('hidden');updateCap();$('captext').focus()};$('delcap').onclick=removeCaption;$('captext').oninput=updateCap;
+function removeCaption(){S.cap=false;S.x=.5;S.y=.65;$('captext').value='';$('caption').textContent='';$('dragcap').classList.add('hidden');$('addcap').classList.remove('hidden');$('capedit').classList.add('hidden');$('trash').classList.add('hidden')}
+function captionFontSize(text){const len=(text||'').trim().length;if(len>68)return '.68rem';if(len>54)return '.74rem';if(len>42)return '.82rem';if(len>30)return '.90rem';if(len>20)return '.98rem';return '1.08rem'}
+function captionCanvasFont(text){const len=(text||'').trim().length;if(len>68)return 32;if(len>54)return 36;if(len>42)return 42;if(len>30)return 47;if(len>20)return 52;return 58}
+function clampCaption(){if(!S.cap)return;const stage=$('stage').getBoundingClientRect(),box=$('dragcap').getBoundingClientRect();if(!stage.width||!stage.height)return;const hx=Math.min(.48,box.width/(2*stage.width)),hy=Math.min(.48,box.height/(2*stage.height));S.x=Math.max(hx,Math.min(1-hx,S.x));S.y=Math.max(hy,Math.min(1-hy,S.y));$('dragcap').style.left=(S.x*100)+'%';$('dragcap').style.top=(S.y*100)+'%'}
+function updateCap(){const text=$('captext').value||'';$('caption').textContent=text||(S.lang==='zh'?'输入字幕…':'Type caption…');$('caption').style.opacity=text?'1':'.6';$('caption').style.fontSize=captionFontSize(text);$('caption').style.padding=text.length>54?'7px 11px':text.length>30?'8px 13px':'9px 15px';$('dragcap').style.left=(S.x*100)+'%';$('dragcap').style.top=(S.y*100)+'%';requestAnimationFrame(clampCaption)}
+$('dragcap').onpointerdown=e=>{if(!S.cap)return;e.preventDefault();e.stopPropagation();S.capPointer=e.pointerId;const r=$('dragcap').getBoundingClientRect();S.grabX=e.clientX-(r.left+r.width/2);S.grabY=e.clientY-(r.top+r.height/2);$('trash').classList.remove('hidden');try{$('dragcap').setPointerCapture(e.pointerId)}catch{}};
+$('dragcap').onpointermove=e=>{if(e.pointerId!==S.capPointer)return;e.preventDefault();const st=$('stage').getBoundingClientRect(),cr=$('dragcap').getBoundingClientRect();const hx=cr.width/(2*st.width),hy=cr.height/(2*st.height);S.x=Math.max(hx,Math.min(1-hx,(e.clientX-S.grabX-st.left)/st.width));S.y=Math.max(hy,Math.min(1-hy,(e.clientY-S.grabY-st.top)/st.height));updateCap();const tr=$('trash').getBoundingClientRect(),nr=$('dragcap').getBoundingClientRect(),cx=nr.left+nr.width/2,cy=nr.top+nr.height/2;$('trash').classList.toggle('hot',cx>tr.left-25&&cx<tr.right+25&&cy>tr.top-25&&cy<tr.bottom+25)};
+function capEnd(e){if(e.pointerId!==S.capPointer)return;S.capPointer=null;const del=$('trash').classList.contains('hot');$('trash').classList.add('hidden');$('trash').classList.remove('hot');if(del)removeCaption()}$('dragcap').onpointerup=capEnd;$('dragcap').onpointercancel=capEnd;
+
+function progress(p,label){$('progressbox').classList.remove('hidden');$('prog').style.width=Math.max(0,Math.min(100,p))+'%';$('progpct').textContent=Math.round(p)+'%';$('proglabel').textContent=label}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+
+function wrapCanvasText(ctx,text,maxWidth){
+ const words=text.split(/\s+/).filter(Boolean),lines=[];let line='';
+ for(const word of words){
+   if(ctx.measureText(word).width>maxWidth){
+     if(line){lines.push(line);line=''}
+     let chunk='';
+     for(const ch of word){const test=chunk+ch;if(ctx.measureText(test).width>maxWidth&&chunk){lines.push(chunk);chunk=ch}else chunk=test}
+     if(chunk)line=chunk;
+   }else{
+     const test=line?line+' '+word:word;
+     if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word}else line=test;
+   }
+ }
+ if(line)lines.push(line);
+ return lines.slice(0,5);
 }
 
-$('en').onclick = () => lang('en');
-$('zh').onclick = () => lang('zh');
+async function makeOverlayPng(){
+ const text=S.cap?$('captext').value.trim():'';
+ if(!text)return null;
+ // Match the original source aspect ratio, then map the 9:16 editor crop into it.
+ const srcW=S.videoWidth||1080,srcH=S.videoHeight||1920;
+ const maxDim=1920,scaleDown=Math.min(1,maxDim/Math.max(srcW,srcH));
+ const W=Math.max(2,Math.round(srcW*scaleDown)),H=Math.max(2,Math.round(srcH*scaleDown));
+ const c=document.createElement('canvas');c.width=W;c.height=H;const ctx=c.getContext('2d');ctx.clearRect(0,0,W,H);
+ // Object-fit: cover mapping from source overlay into the 1080x1920 editor viewport.
+ const viewW=1080,viewH=1920,cover=Math.max(viewW/W,viewH/H),drawW=W*cover,drawH=H*cover,offX=(drawW-viewW)/2,offY=(drawH-viewH)/2;
+ const centerX=(S.x*viewW+offX)/cover,centerY=(S.y*viewH+offY)/cover;
+ const editorFont=captionCanvasFont(text),fontPx=editorFont/cover,maxEditorWidth=0.84*viewW,maxWidth=maxEditorWidth/cover;
+ ctx.font=`800 ${fontPx}px Montserrat, Arial, sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+ const lines=wrapCanvasText(ctx,text,maxWidth);const lineHeight=fontPx*1.2,padX=15*(1080/330)/cover,padY=9*(1080/330)/cover;
+ const widths=lines.map(line=>ctx.measureText(line).width);const boxW=Math.min(maxWidth+2*padX,Math.max(...widths,1)+2*padX),boxH=lines.length*lineHeight+2*padY;
+ const x=centerX-boxW/2,y=centerY-boxH/2,r=Math.min(13*(1080/330)/cover,boxH/3);
+ ctx.fillStyle='rgba(0,0,0,1)';roundRect(ctx,x,y,boxW,boxH,r);ctx.fill();ctx.fillStyle='#fff';
+ lines.forEach((line,i)=>ctx.fillText(line,centerX,centerY+(i-(lines.length-1)/2)*lineHeight));
+ return new Promise((resolve,reject)=>c.toBlob(b=>b?resolve(b):reject(new Error('Could not create caption overlay.')),'image/png'));
+}
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 
-$('share').onclick = () => {
-  $('share').classList.add('hidden');
-  $('tokenArea').classList.remove('hidden');
-  $('name').focus();
-};
-
-$('token').oninput = e => {
-  e.target.value = cleanCode(e.target.value);
-};
-
-$('token').onkeydown = e => {
-  if (e.key === 'Enter') enter();
-};
-
-$('continue').onclick = enter;
-
-function enter() {
-  const n = $('name').value.trim();
-  const c = cleanCode($('token').value);
-
-  $('tokenError').textContent = '';
-
-  if (!n) {
-    $('tokenError').textContent =
-      S.lang === 'zh'
-        ? '请输入您的称呼。'
-        : 'Please enter your preferred name.';
-    return;
-  }
-
-  if (c !== 'TEST') {
-    $('tokenError').textContent =
-      S.lang === 'zh'
-        ? '测试邀请码是 TEST。'
-        : 'The test guest code is TEST.';
-    return;
-  }
-
-  S.name = n;
-  S.token = c;
-
-  $('guestPill').textContent = n;
-  $('codePill').textContent = '#' + c;
-
-  $('welcome').classList.add('hidden');
-  $('editor').classList.remove('hidden');
+async function startServerSubmission(){
+ const overlay=await makeOverlayPng();
+ const form=new FormData();
+ form.append('metadata',JSON.stringify({startTime:+S.start.toFixed(3),endTime:+S.end.toFixed(3),sourceDuration:+S.duration.toFixed(3),captionText:S.cap?$('captext').value.trim():'',captionX:+S.x.toFixed(5),captionY:+S.y.toFixed(5),fileName:S.file.name,fileSize:S.file.size}));
+ if(overlay)form.append('overlay',overlay,'caption.png');
+ return api('/api/submissions/start',{method:'POST',headers:{Authorization:`Bearer ${S.guestTicket}`},body:form});
 }
 
-$('choose').onclick = () => $('file').click();
-$('another').onclick = resetVideo;
-
-$('file').onchange = e => {
-  loadVideo(e.target.files?.[0]);
-};
-
-function resetVideo() {
-  if (S.url) URL.revokeObjectURL(S.url);
-
-  S.file = null;
-  S.url = null;
-
-  $('file').value = '';
-
-  $('video').removeAttribute('src');
-  $('video').load();
-
-  $('controls').classList.add('hidden');
-  $('editorError').textContent = '';
-
-  removeCaption();
+function uploadTus(file,uploadTicket){
+ return new Promise((resolve,reject)=>{
+   const upload=new tus.Upload(file,{
+     endpoint:API_BASE+'/api/upload-url',
+     chunkSize:5*1024*1024,
+     retryDelays:[0,1000,3000,5000,10000],
+     metadata:{filename:file.name,filetype:file.type||'video/mp4',uploadTicket},
+     removeFingerprintOnSuccess:true,
+     onError:reject,
+     onProgress:(sent,total)=>progress(5+(sent/total)*78,`Uploading video… ${Math.round(sent/total*100)}%`),
+     onSuccess:()=>resolve(upload.url),
+   });
+   upload.findPreviousUploads().then(previous=>{if(previous.length)upload.resumeFromPreviousUpload(previous[0]);upload.start()}).catch(()=>upload.start());
+ });
 }
 
-async function loadVideo(file) {
-  if (!file) return;
-
-  S.file = file;
-
-  if (S.url) URL.revokeObjectURL(S.url);
-  S.url = URL.createObjectURL(file);
-
-  $('controls').classList.remove('hidden');
-  $('loader').classList.remove('hidden');
-  $('editorError').textContent = '';
-
-  const v = $('video');
-
-  try {
-    await new Promise((resolve, reject) => {
-      v.onloadedmetadata = resolve;
-      v.onerror = reject;
-      v.src = S.url;
-      v.load();
-    });
-
-    S.duration = v.duration;
-
-    if (!isFinite(S.duration) || S.duration < 4.9) {
-      throw Error('short');
-    }
-
-    S.start = 0;
-    S.end = Math.min(10, S.duration);
-
-    v.currentTime = 0;
-
-    updateTrim();
-    removeCaption();
-    makeFilmstrip();
-
-    $('loader').classList.add('hidden');
-  }
-
-  catch (e) {
-    $('loader').classList.add('hidden');
-    $('controls').classList.add('hidden');
-
-    $('editorError').textContent =
-      e.message === 'short'
-        ? S.lang === 'zh'
-          ? '视频至少需要5秒。'
-          : 'Please choose a video at least 5 seconds long.'
-        : S.lang === 'zh'
-          ? '无法读取此视频。'
-          : 'This browser could not read that video.';
-  }
+async function waitForFinalClip(id){
+ for(let attempt=0;attempt<120;attempt++){
+   const r=await fetch(API_BASE+`/api/submissions/${encodeURIComponent(id)}/finalize`,{method:'POST',headers:{Authorization:`Bearer ${S.guestTicket}`}});
+   let data={};try{data=await r.json()}catch{}
+   if(r.ok&&data.ready)return data;
+   if(!r.ok&&r.status!==202)throw new Error(data.error||'Video processing failed.');
+   progress(86+Math.min(13,attempt*.35),data.status==='processing_clip'?'Creating your final 5–10 second clip…':'Preparing your uploaded video…');
+   await sleep(3000);
+ }
+ throw new Error('The video is still processing. It will remain in the moderator queue; please check again shortly.');
 }
 
-$('stage').onclick = e => {
-  if (
-    e.target.closest('#dragcap') ||
-    e.target.closest('#addcap')
-  ) return;
-
-  if (!S.file) return;
-
-  const v = $('video');
-
-  if (v.paused) {
-    if (
-      v.currentTime < S.start ||
-      v.currentTime >= S.end
-    ) {
-      v.currentTime = S.start;
-    }
-
-    v.play().catch(() => {});
-  }
-
-  else {
-    v.pause();
-  }
-
-  playMark();
-};
-
-$('video').onplay = playMark;
-$('video').onpause = playMark;
-
-function playMark() {
-  $('playmark').classList.toggle(
-    'playing',
-    !$('video').paused
-  );
-
-  $('playmark').classList.toggle(
-    'paused',
-    $('video').paused
-  );
-}
-
-$('video').ontimeupdate = () => {
-  const v = $('video');
-
-  if (
-    !S.handle &&
-    !v.paused &&
-    (
-      v.currentTime >= S.end - .03 ||
-      v.currentTime < S.start - .05
-    )
-  ) {
-    v.currentTime = S.start;
-    v.play().catch(() => {});
-  }
-};
-
-function updateTrim() {
-  if (!S.duration) return;
-
-  const a = S.start / S.duration * 100;
-  const b = S.end / S.duration * 100;
-
-  $('sel').style.left = a + '%';
-  $('sel').style.width = (b - a) + '%';
-
-  $('dl').style.width = a + '%';
-  $('dr').style.width = (100 - b) + '%';
-
-  $('hs').style.left = `calc(${a}% - 11px)`;
-  $('he').style.left = `calc(${b}% - 11px)`;
-
-  $('dur').textContent = (S.end - S.start).toFixed(1);
-}
-
-function sec(e) {
-  const r = $('trim').getBoundingClientRect();
-
-  return Math.max(
-    0,
-    Math.min(
-      1,
-      (e.clientX - r.left) / r.width
-    )
-  ) * S.duration;
-}
-
-function startHandle(h, e) {
-  if (!S.file) return;
-
-  e.preventDefault();
-
-  S.handle = h;
-
-  $('video').pause();
-
-  moveHandle(e);
-}
-
-function moveHandle(e) {
-  if (!S.handle) return;
-
-  e.preventDefault();
-
-  let s = sec(e);
-  const v = $('video');
-
-  if (S.handle === 's') {
-    S.start = Math.max(
-      Math.max(0, S.end - MAX),
-      Math.min(S.end - MIN, s)
-    );
-
-    v.currentTime = S.start;
-  }
-
-  else {
-    S.end = Math.max(
-      Math.min(S.duration, S.start + MIN),
-      Math.min(
-        Math.min(S.duration, S.start + MAX),
-        s
-      )
-    );
-
-    v.currentTime = Math.min(
-      S.end,
-      S.duration - .02
-    );
-  }
-
-  updateTrim();
-}
-
-function endHandle() {
-  if (!S.handle) return;
-
-  S.handle = null;
-  $('video').currentTime = S.start;
-}
-
-$('hs').onpointerdown = e => startHandle('s', e);
-$('he').onpointerdown = e => startHandle('e', e);
-
-window.addEventListener(
-  'pointermove',
-  moveHandle,
-  { passive:false }
-);
-
-window.addEventListener(
-  'pointerup',
-  endHandle
-);
-
-async function makeFilmstrip() {
-  const box = $('film');
-
-  box.innerHTML = '';
-
-  const v = document.createElement('video');
-
-  v.src = S.url;
-  v.muted = true;
-  v.playsInline = true;
-  v.preload = 'metadata';
-
-  v.style.cssText =
-    'position:fixed;left:-9999px;width:1px';
-
-  document.body.appendChild(v);
-
-  await new Promise(resolve => {
-    if (v.readyState >= 1) {
-      resolve();
-    }
-
-    else {
-      v.onloadedmetadata = resolve;
-      setTimeout(resolve, 1000);
-    }
-  });
-
-  const c = document.createElement('canvas');
-  const ctx = c.getContext('2d');
-
-  c.width = 90;
-  c.height = 160;
-
-  for (let i = 0; i < 8; i++) {
-    try {
-      await seek(
-        v,
-        (i / 7) *
-        Math.max(
-          0,
-          (v.duration || S.duration) - .05
-        )
-      );
-
-      const scale = Math.max(
-        c.width / v.videoWidth,
-        c.height / v.videoHeight
-      );
-
-      const w = v.videoWidth * scale;
-      const h = v.videoHeight * scale;
-
-      ctx.clearRect(
-        0,
-        0,
-        c.width,
-        c.height
-      );
-
-      ctx.drawImage(
-        v,
-        (c.width - w) / 2,
-        (c.height - h) / 2,
-        w,
-        h
-      );
-
-      const img = document.createElement('img');
-
-      img.src = c.toDataURL(
-        'image/jpeg',
-        .5
-      );
-
-      box.appendChild(img);
-    }
-
-    catch {}
-  }
-
-  v.remove();
-}
-
-function seek(v, time) {
-  return new Promise(resolve => {
-    let done = false;
-
-    const finish = () => {
-      if (done) return;
-
-      done = true;
-
-      v.removeEventListener(
-        'seeked',
-        finish
-      );
-
-      resolve();
-    };
-
-    v.addEventListener(
-      'seeked',
-      finish
-    );
-
-    try {
-      v.currentTime = time;
-    }
-
-    catch {}
-
-    setTimeout(
-      finish,
-      400
-    );
-  });
-}
-
-$('addcap').onclick = e => {
-  e.stopPropagation();
-
-  S.cap = true;
-  S.x = .5;
-  S.y = .65;
-
-  $('dragcap').classList.remove('hidden');
-  $('addcap').classList.add('hidden');
-  $('capedit').classList.remove('hidden');
-
-  updateCap();
-
-  $('captext').focus();
-};
-
-$('delcap').onclick = removeCaption;
-$('captext').oninput = updateCap;
-
-function removeCaption() {
-  S.cap = false;
-  S.x = .5;
-  S.y = .65;
-
-  $('captext').value = '';
-  $('caption').textContent = '';
-
-  $('dragcap').classList.add('hidden');
-  $('addcap').classList.remove('hidden');
-  $('capedit').classList.add('hidden');
-
-  $('trash').classList.add('hidden');
-}
-
-function updateCap() {
-  $('caption').textContent =
-    $('captext').value ||
-    (
-      S.lang === 'zh'
-        ? '输入字幕…'
-        : 'Type caption…'
-    );
-
-  $('caption').style.opacity =
-    $('captext').value
-      ? '1'
-      : '.6';
-
-  $('dragcap').style.left =
-    (S.x * 100) + '%';
-
-  $('dragcap').style.top =
-    (S.y * 100) + '%';
-}
-
-$('dragcap').onpointerdown = e => {
-  if (!S.cap) return;
-
-  e.preventDefault();
-  e.stopPropagation();
-
-  S.capPointer = e.pointerId;
-
-  const r =
-    $('dragcap').getBoundingClientRect();
-
-  S.grabX =
-    e.clientX -
-    (
-      r.left +
-      r.width / 2
-    );
-
-  S.grabY =
-    e.clientY -
-    (
-      r.top +
-      r.height / 2
-    );
-
-  $('trash').classList.remove('hidden');
-
-  try {
-    $('dragcap').setPointerCapture(
-      e.pointerId
-    );
-  }
-
-  catch {}
-};
-
-$('dragcap').onpointermove = e => {
-  if (
-    e.pointerId !==
-    S.capPointer
-  ) return;
-
-  e.preventDefault();
-
-  const stage =
-    $('stage').getBoundingClientRect();
-
-  const cr =
-    $('dragcap').getBoundingClientRect();
-
-  const hx =
-    cr.width /
-    (2 * stage.width);
-
-  const hy =
-    cr.height /
-    (2 * stage.height);
-
-  S.x = Math.max(
-    hx,
-    Math.min(
-      1 - hx,
-      (
-        e.clientX -
-        S.grabX -
-        stage.left
-      ) /
-      stage.width
-    )
-  );
-
-  S.y = Math.max(
-    hy,
-    Math.min(
-      1 - hy,
-      (
-        e.clientY -
-        S.grabY -
-        stage.top
-      ) /
-      stage.height
-    )
-  );
-
-  updateCap();
-
-  const tr =
-    $('trash').getBoundingClientRect();
-
-  const nr =
-    $('dragcap').getBoundingClientRect();
-
-  const cx =
-    nr.left +
-    nr.width / 2;
-
-  const cy =
-    nr.top +
-    nr.height / 2;
-
-  $('trash').classList.toggle(
-    'hot',
-    cx > tr.left - 25 &&
-    cx < tr.right + 25 &&
-    cy > tr.top - 25 &&
-    cy < tr.bottom + 25
-  );
-};
-
-function capEnd(e) {
-  if (
-    e.pointerId !==
-    S.capPointer
-  ) return;
-
-  S.capPointer = null;
-
-  const shouldDelete =
-    $('trash').classList.contains('hot');
-
-  $('trash').classList.add('hidden');
-  $('trash').classList.remove('hot');
-
-  if (shouldDelete) {
-    removeCaption();
-  }
-}
-
-$('dragcap').onpointerup = capEnd;
-$('dragcap').onpointercancel = capEnd;
-
-function openDB() {
-  return new Promise((resolve, reject) => {
-    const request =
-      indexedDB.open(DB, 1);
-
-    request.onupgradeneeded = () => {
-      const db = request.result;
-
-      if (
-        !db.objectStoreNames.contains(
-          STORE
-        )
-      ) {
-        const store =
-          db.createObjectStore(
-            STORE,
-            { keyPath:'id' }
-          );
-
-        store.createIndex(
-          'status',
-          'status'
-        );
-
-        store.createIndex(
-          'createdAt',
-          'createdAt'
-        );
-      }
-    };
-
-    request.onsuccess = () =>
-      resolve(request.result);
-
-    request.onerror = () =>
-      reject(request.error);
-  });
-}
-
-async function save(record) {
-  const db = await openDB();
-
-  try {
-    await new Promise((resolve, reject) => {
-      const tx =
-        db.transaction(
-          STORE,
-          'readwrite'
-        );
-
-      tx.objectStore(STORE)
-        .put(record);
-
-      tx.oncomplete = resolve;
-
-      tx.onerror = () =>
-        reject(tx.error);
-
-      tx.onabort = () =>
-        reject(tx.error);
-    });
-  }
-
-  finally {
-    db.close();
-  }
-}
-
-function progress(p, label) {
-  $('progressbox')
-    .classList
-    .remove('hidden');
-
-  $('prog').style.width =
-    p + '%';
-
-  $('progpct').textContent =
-    p + '%';
-
-  $('proglabel').textContent =
-    label;
-}
-
-$('submit').onclick = async () => {
-  if (S.saving) return;
-
-  $('editorError').textContent = '';
-
-  if (!S.file) {
-    $('editorError').textContent =
-      'Please select a video first.';
-    return;
-  }
-
-  const duration =
-    S.end - S.start;
-
-  if (
-    duration < 4.9 ||
-    duration > 10.1
-  ) {
-    $('editorError').textContent =
-      'Please select between 5 and 10 seconds.';
-    return;
-  }
-
-  S.saving = true;
-
-  $('submit').disabled = true;
-  $('another').disabled = true;
-  $('choose').disabled = true;
-
-  try {
-    progress(
-      25,
-      'Saving video to this browser…'
-    );
-
-    await new Promise(
-      resolve =>
-        setTimeout(resolve, 200)
-    );
-
-    const id =
-      crypto.randomUUID
-        ? crypto.randomUUID()
-        : 'm' +
-          Date.now() +
-          Math.random()
-            .toString(36)
-            .slice(2);
-
-    progress(
-      70,
-      'Saving your trim & caption…'
-    );
-
-    await save({
-      id,
-      createdAt:Date.now(),
-      guestName:S.name,
-      token:S.token,
-      status:'pending',
-      sortOrder:null,
-
-      videoBlob:S.file,
-
-      fileName:S.file.name,
-      fileSize:S.file.size,
-
-      startTime:+S.start.toFixed(3),
-      endTime:+S.end.toFixed(3),
-
-      captionText:
-        S.cap
-          ? $('captext')
-              .value
-              .trim()
-          : '',
-
-      captionX:
-        +S.x.toFixed(5),
-
-      captionY:
-        +S.y.toFixed(5)
-    });
-
-    progress(
-      100,
-      'Saved to moderator queue'
-    );
-
-    await new Promise(
-      resolve =>
-        setTimeout(resolve, 350)
-    );
-
-    $('editor')
-      .classList
-      .add('hidden');
-
-    $('thanks')
-      .classList
-      .remove('hidden');
-  }
-
-  catch (e) {
-    console.error(e);
-
-    $('editorError').textContent =
-      'This browser could not save the video. Try a smaller test video.';
-
-    $('submit').disabled = false;
-    $('another').disabled = false;
-    $('choose').disabled = false;
-
-    S.saving = false;
-  }
-};
-
-$('openAdmin').onclick = () => {
-  location.href = 'admin.html';
+$('submit').onclick=async()=>{
+ if(S.saving)return;$('editorError').textContent='';
+ if(!S.file)return $('editorError').textContent='Please select a video first.';
+ const d=S.end-S.start;if(d<4.9||d>10.1)return $('editorError').textContent='Please select between 5 and 10 seconds.';
+ S.saving=true;$('submit').disabled=$('another').disabled=$('choose').disabled=true;
+ try{
+   ensureApiConfigured();progress(2,'Preparing your caption and secure upload…');
+   const started=await startServerSubmission();S.submissionId=started.submissionId;
+   progress(5,'Starting resumable upload…');await uploadTus(S.file,started.uploadTicket);
+   progress(84,'Upload complete. Processing selected clip…');await waitForFinalClip(S.submissionId);
+   progress(100,'Sent to moderator queue');await sleep(350);$('editor').classList.add('hidden');$('thanks').classList.remove('hidden');
+ }catch(e){console.error(e);$('editorError').textContent=e.message;$('submit').disabled=$('another').disabled=$('choose').disabled=false;S.saving=false}
 };
 
 lang('en');
