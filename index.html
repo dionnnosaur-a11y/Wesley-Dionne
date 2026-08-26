@@ -1,252 +1,1665 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#faf8f3">
-<title>Wesley & Dionne | Wedding Memories</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Klee+One:wght@400;600&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{
-  /* ===== CHANGE COLOUR THEMES HERE ===== */
-  --gold:#c5a059;--gold-dark:#9e7a37;--cream:#faf8f3;--white:#fff;
-  --text:#2c2925;--muted:#6e675f;--red:#8a1c1c;--danger:#e74c3c;--green:#5d7c65;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{min-height:100%}
-body{background:var(--cream);color:var(--text);font-family:Montserrat,sans-serif;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:max(15px,env(safe-area-inset-top)) 15px max(28px,env(safe-area-inset-bottom))}
-body.zh{font-family:'Klee One',sans-serif}
-button,input,textarea{font:inherit}
-button{-webkit-tap-highlight-color:transparent}
-.card{position:relative;width:100%;max-width:480px;background:var(--white);border:1px solid rgba(197,160,89,.3);border-radius:18px;padding:35px 20px 30px;box-shadow:0 10px 30px rgba(0,0,0,.05);text-align:center;overflow:hidden}
-.hidden{display:none!important}
-.lang{position:absolute;right:18px;top:14px;display:flex;gap:7px;align-items:center;font-size:.75rem;font-weight:700;color:var(--muted);z-index:30}
-.lang button{border:0;background:none;color:var(--muted);cursor:pointer;padding:3px}.lang button.active{color:var(--gold-dark);font-weight:800;text-decoration:underline}
-.names{font-family:'Alex Brush',cursive;font-size:3rem;line-height:1;color:var(--gold-dark);padding-top:8px}.xi{font-size:2rem;color:var(--red);margin:10px 0}.subtitle{font-size:1rem;margin-bottom:16px}
-/* IMPORTANT: image_0.png is NEVER cropped. */
-.hero{display:block;width:auto;height:auto;max-width:82%;max-height:42vh;object-fit:contain;margin:0 auto 16px}
-.btn{border:0;border-radius:999px;min-height:44px;padding:11px 23px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#fff;font-weight:700;cursor:pointer;margin-top:10px}.btn:disabled{opacity:.55;cursor:not-allowed}.btn.outline{background:transparent;color:var(--muted);border:1px solid var(--muted)}
-.token-area{margin-top:18px;padding-top:15px;border-top:1px dashed var(--gold)}
-.field{width:min(100%,330px);margin:11px auto;text-align:left}.field label{display:block;font-size:.76rem;color:var(--muted);font-weight:700;margin-bottom:6px}.input{width:100%;border:1px solid rgba(158,122,55,.65);border-radius:9px;padding:11px 12px;text-align:center;outline:0;background:#fff}.input:focus{border-color:var(--gold-dark);box-shadow:0 0 0 3px rgba(197,160,89,.12)}#token{letter-spacing:.25rem;font-weight:800;font-size:1.25rem;text-transform:uppercase;padding-left:calc(12px + .25rem)}
-.help{font-size:.72rem;color:var(--muted);line-height:1.5;margin-top:6px}.error{min-height:1.2em;color:var(--red);font-size:.78rem;line-height:1.45;margin-top:8px}
-.editor-head{font-family:'Alex Brush',cursive;color:var(--gold-dark);font-size:2.25rem}.pills{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:9px 0}.pill{font-size:.7rem;color:var(--muted);padding:5px 9px;border-radius:999px;border:1px solid rgba(197,160,89,.35);background:#fdfbf7}
-.stage{position:relative;width:min(100%,330px);aspect-ratio:9/16;max-height:62vh;margin:14px auto;background:#000;border-radius:13px;overflow:hidden;box-shadow:0 7px 22px rgba(0,0,0,.15);touch-action:none;user-select:none}
-.stage video{width:100%;height:100%;object-fit:cover;display:block;background:#000}.loader{position:absolute;inset:0;background:rgba(0,0,0,.76);color:#fff;z-index:30;display:grid;place-content:center;gap:10px;font-size:.82rem}.spin{width:31px;height:31px;margin:auto;border:3px solid rgba(255,255,255,.3);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
-.playmark{position:absolute;z-index:7;left:50%;top:50%;transform:translate(-50%,-50%);width:54px;height:54px;background:rgba(0,0,0,.52);border-radius:50%;pointer-events:none;transition:.2s}.playmark:after{content:"";position:absolute;left:21px;top:17px;border-style:solid;border-width:10px 0 10px 17px;border-color:transparent transparent transparent #fff}.playmark.playing{opacity:0}.playmark.paused{opacity:1}
-.addcap{position:absolute;z-index:10;bottom:18px;left:50%;transform:translateX(-50%);border:1px solid rgba(255,255,255,.45);background:rgba(0,0,0,.68);color:#fff;border-radius:999px;padding:8px 16px;font-weight:700;font-size:.8rem;cursor:pointer;white-space:nowrap}
-.dragcap{position:absolute;z-index:12;left:50%;top:65%;transform:translate(-50%,-50%);width:max-content;max-width:84%;padding:12px;touch-action:none;cursor:grab}.caption{display:block;width:max-content;max-width:100%;background:#000;color:#fff;border-radius:13px;padding:9px 15px;font-weight:800;font-size:1.08rem;line-height:1.2;text-align:center;white-space:pre-wrap;word-break:break-word;overflow-wrap:break-word;box-shadow:0 5px 15px rgba(0,0,0,.45)}
-.trash{position:absolute;z-index:20;bottom:17px;left:50%;transform:translateX(-50%);background:rgba(20,20,20,.88);color:#fff;border:2px solid rgba(255,255,255,.3);border-radius:999px;padding:9px 15px;font-size:.75rem;font-weight:700;pointer-events:none}.trash.hot{background:var(--danger);transform:translateX(-50%) scale(1.07)}
-.capedit{width:min(100%,360px);margin:-4px auto 12px;padding:10px;background:#fdfbf7;border:1px solid rgba(197,160,89,.3);border-radius:12px}.caprow{display:flex;gap:8px}.caprow textarea{flex:1;min-width:0;border:1px solid rgba(158,122,55,.55);border-radius:9px;padding:10px;resize:none;outline:0;font-weight:700}.iconbtn{width:44px;height:44px;border-radius:9px;border:1px solid rgba(138,28,28,.35);background:#fff;color:var(--red);cursor:pointer}
-.trim{position:relative;height:54px;width:100%;margin:14px 0 7px;background:#111;border:2px solid var(--gold);border-radius:8px;overflow:hidden;touch-action:none}.film{position:absolute;inset:0;display:flex;pointer-events:none}.film img{height:100%;width:12.5%;object-fit:cover}.dim{position:absolute;top:0;bottom:0;background:rgba(0,0,0,.68);z-index:2;pointer-events:none}#dl{left:0}#dr{right:0}.selection{position:absolute;top:0;bottom:0;border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);z-index:3;pointer-events:none}.handle{position:absolute;top:0;bottom:0;width:22px;background:var(--gold);z-index:5;cursor:ew-resize;touch-action:none}.handle:after{content:"||";color:#fff;font-weight:800;font-size:10px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
-.duration{font-size:.8rem;color:var(--muted);font-weight:600;margin-bottom:8px}.progressbox{width:min(100%,360px);margin:13px auto 0;padding:12px;border:1px solid rgba(197,160,89,.35);background:#fdfbf7;border-radius:11px;text-align:left}.progline{display:flex;justify-content:space-between;font-size:.74rem;font-weight:700;color:var(--muted);margin-bottom:7px}.progtrack{height:8px;background:rgba(197,160,89,.17);border-radius:999px;overflow:hidden}.prog{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-dark));transition:width .2s}
-.thanks p{color:var(--muted);line-height:1.55;margin-top:10px}
-@media(max-width:380px){.card{padding-left:14px;padding-right:14px}.names{font-size:2.7rem}.hero{max-height:39vh}.stage{max-height:58vh}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#faf8f3">
+  <title>Wesley & Dionne | Wedding Memories</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Klee+One:wght@400;600&family=Montserrat:wght@400;600;700;800&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+
+  <!-- Mux's official resumable/chunked browser uploader -->
+  <script src="https://cdn.jsdelivr.net/npm/@mux/upchunk@2"></script>
+
+  <style>
+    :root{
+      /* ======================================================
+         CHANGE COLOUR THEMES HERE
+         ====================================================== */
+      --gold:#c5a059;
+      --gold-dark:#9e7a37;
+      --cream:#faf8f3;
+      --white:#ffffff;
+      --text:#2c2925;
+      --muted:#6e675f;
+      --red:#8a1c1c;
+      --danger:#e74c3c;
+      --green:#5d7c65;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{min-height:100%}
+
+    body{
+      background:var(--cream);
+      color:var(--text);
+      font-family:'Montserrat',sans-serif;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      min-height:100vh;
+      padding:max(15px,env(safe-area-inset-top)) 15px max(28px,env(safe-area-inset-bottom));
+    }
+
+    body.lang-zh{
+      font-family:'Klee One',sans-serif;
+    }
+
+    button,input,textarea{font:inherit}
+    button{-webkit-tap-highlight-color:transparent}
+    .hidden{display:none!important}
+
+    .card{
+      position:relative;
+      width:100%;
+      max-width:480px;
+      background:var(--white);
+      border:1px solid rgba(197,160,89,.30);
+      border-radius:18px;
+      padding:35px 20px 30px;
+      box-shadow:0 10px 30px rgba(0,0,0,.05);
+      text-align:center;
+      overflow:hidden;
+    }
+
+    .lang-switcher{
+      position:absolute;
+      right:18px;
+      top:14px;
+      display:flex;
+      gap:7px;
+      align-items:center;
+      font-size:.75rem;
+      font-weight:700;
+      color:var(--muted);
+      z-index:30;
+    }
+
+    .lang-switcher button{
+      border:0;
+      background:none;
+      color:var(--muted);
+      cursor:pointer;
+      padding:3px;
+      font-family:'Montserrat',sans-serif!important;
+    }
+
+    .lang-switcher button.active{
+      color:var(--gold-dark);
+      font-weight:800;
+      text-decoration:underline;
+    }
+
+    .names{
+      font-family:'Alex Brush',cursive;
+      font-size:3rem;
+      line-height:1;
+      color:var(--gold-dark);
+      padding-top:8px;
+    }
+
+    .xi{
+      font-size:2rem;
+      color:var(--red);
+      margin:10px 0;
+    }
+
+    .subtitle{
+      font-size:1rem;
+      margin-bottom:16px;
+    }
+
+    /* image_0.png is intentionally never cropped */
+    .hero{
+      display:block;
+      width:auto;
+      height:auto;
+      max-width:82%;
+      max-height:42vh;
+      object-fit:contain;
+      margin:0 auto 16px;
+    }
+
+    .btn{
+      border:0;
+      border-radius:999px;
+      min-height:44px;
+      padding:11px 23px;
+      background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+      margin-top:10px;
+    }
+
+    body.lang-zh .btn{
+      font-family:'Klee One',sans-serif;
+      font-weight:600;
+    }
+
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+
+    .btn.outline{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid var(--muted);
+    }
+
+    .token-area{
+      margin-top:18px;
+      padding-top:15px;
+      border-top:1px dashed var(--gold);
+    }
+
+    .field{
+      width:min(100%,330px);
+      margin:11px auto;
+      text-align:left;
+    }
+
+    .field label{
+      display:block;
+      font-size:.76rem;
+      color:var(--muted);
+      font-weight:700;
+      margin-bottom:6px;
+    }
+
+    body.lang-zh .field label{
+      font-family:'Klee One',sans-serif;
+      font-weight:600;
+    }
+
+    .input{
+      width:100%;
+      border:1px solid rgba(158,122,55,.65);
+      border-radius:9px;
+      padding:11px 12px;
+      text-align:center;
+      outline:0;
+      background:#fff;
+      font-family:'Montserrat',sans-serif;
+      font-size:16px;
+    }
+
+    .input:focus{
+      border-color:var(--gold-dark);
+      box-shadow:0 0 0 3px rgba(197,160,89,.12);
+    }
+
+    #token-input{
+      letter-spacing:.25rem;
+      font-weight:800;
+      font-size:1.25rem;
+      text-transform:uppercase;
+      padding-left:calc(12px + .25rem);
+    }
+
+    .helper{
+      font-size:.72rem;
+      color:var(--muted);
+      line-height:1.5;
+      margin-top:6px;
+    }
+
+    body.lang-zh .helper{
+      font-family:'Klee One',sans-serif;
+      font-weight:600;
+    }
+
+    .error{
+      min-height:1.2em;
+      color:var(--red);
+      font-size:.78rem;
+      line-height:1.45;
+      margin-top:8px;
+    }
+
+    .editor-head{
+      font-family:'Alex Brush',cursive;
+      color:var(--gold-dark);
+      font-size:2.35rem;
+      line-height:1.05;
+    }
+
+    /* Only the Chinese Trim & Caption title uses Zhi Mang Xing */
+    body.lang-zh .editor-head{
+      font-family:'Zhi Mang Xing',cursive;
+      font-size:2.8rem;
+      font-weight:400;
+    }
+
+    .pills{
+      display:flex;
+      justify-content:center;
+      gap:7px;
+      flex-wrap:wrap;
+      margin:9px 0;
+    }
+
+    .pill{
+      font-size:.7rem;
+      color:var(--muted);
+      padding:5px 9px;
+      border-radius:999px;
+      border:1px solid rgba(197,160,89,.35);
+      background:#fdfbf7;
+    }
+
+    .stage{
+      position:relative;
+      width:min(100%,330px);
+      aspect-ratio:9/16;
+      max-height:62vh;
+      margin:14px auto;
+      background:#000;
+      border-radius:13px;
+      overflow:hidden;
+      box-shadow:0 7px 22px rgba(0,0,0,.15);
+      touch-action:none;
+      user-select:none;
+      -webkit-user-select:none;
+    }
+
+    .stage video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center;
+      display:block;
+      background:#000;
+    }
+
+    .loader{
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,.76);
+      color:#fff;
+      z-index:30;
+      display:grid;
+      place-content:center;
+      gap:10px;
+      font-size:.82rem;
+      padding:22px;
+    }
+
+    .spin{
+      width:31px;
+      height:31px;
+      margin:auto;
+      border:3px solid rgba(255,255,255,.3);
+      border-top-color:var(--gold);
+      border-radius:50%;
+      animation:spin .8s linear infinite;
+    }
+
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .playmark{
+      position:absolute;
+      z-index:7;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:54px;
+      height:54px;
+      background:rgba(0,0,0,.52);
+      border-radius:50%;
+      pointer-events:none;
+      transition:.2s;
+    }
+
+    .playmark:after{
+      content:"";
+      position:absolute;
+      left:21px;
+      top:17px;
+      border-style:solid;
+      border-width:10px 0 10px 17px;
+      border-color:transparent transparent transparent #fff;
+    }
+
+    .playmark.playing{opacity:0}
+    .playmark.paused{opacity:1}
+
+    .add-caption{
+      position:absolute;
+      z-index:10;
+      bottom:18px;
+      left:50%;
+      transform:translateX(-50%);
+      border:1px solid rgba(255,255,255,.45);
+      background:rgba(0,0,0,.68);
+      color:#fff;
+      border-radius:999px;
+      padding:8px 16px;
+      font-weight:700;
+      font-size:.8rem;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+
+    body.lang-zh .add-caption{
+      font-family:'Klee One',sans-serif;
+      font-weight:600;
+    }
+
+    .drag-caption{
+      position:absolute;
+      z-index:12;
+      left:50%;
+      top:65%;
+      transform:translate(-50%,-50%);
+      width:max-content;
+      max-width:84%;
+      padding:12px;
+      touch-action:none;
+      cursor:grab;
+    }
+
+    .drag-caption.dragging{cursor:grabbing}
+
+    .caption-preview{
+      display:block;
+      width:max-content;
+      max-width:100%;
+      min-width:70px;
+      background:#000;
+      color:#fff;
+      border-radius:13px;
+      padding:9px 15px;
+      font-family:'Montserrat',sans-serif!important;
+      font-weight:800;
+      font-size:1.08rem;
+      line-height:1.2;
+      text-align:center;
+      white-space:pre-wrap;
+      word-break:break-word;
+      overflow-wrap:break-word;
+      box-shadow:0 5px 15px rgba(0,0,0,.45);
+    }
+
+    .trash{
+      position:absolute;
+      z-index:20;
+      bottom:17px;
+      left:50%;
+      transform:translateX(-50%);
+      background:rgba(20,20,20,.88);
+      color:#fff;
+      border:2px solid rgba(255,255,255,.3);
+      border-radius:999px;
+      padding:9px 15px;
+      font-size:.75rem;
+      font-weight:700;
+      pointer-events:none;
+    }
+
+    .trash.hot{
+      background:var(--danger);
+      transform:translateX(-50%) scale(1.07);
+    }
+
+    .caption-editor{
+      width:min(100%,360px);
+      margin:-4px auto 12px;
+      padding:10px;
+      background:#fdfbf7;
+      border:1px solid rgba(197,160,89,.3);
+      border-radius:12px;
+    }
+
+    .caption-row{
+      display:flex;
+      gap:8px;
+    }
+
+    /* Intentionally Montserrat in BOTH English and Chinese */
+    .caption-row textarea,
+    body.lang-zh .caption-row textarea{
+      flex:1;
+      min-width:0;
+      border:1px solid rgba(158,122,55,.55);
+      border-radius:9px;
+      padding:10px;
+      resize:none;
+      outline:0;
+      font-family:'Montserrat',sans-serif!important;
+      font-weight:700;
+      font-size:16px;
+      line-height:1.35;
+    }
+
+    .icon-btn{
+      width:44px;
+      height:44px;
+      flex:0 0 44px;
+      border-radius:9px;
+      border:1px solid rgba(138,28,28,.35);
+      background:#fff;
+      color:var(--red);
+      cursor:pointer;
+    }
+
+    .trim{
+      position:relative;
+      height:54px;
+      width:100%;
+      margin:14px 0 7px;
+      background:#111;
+      border:2px solid var(--gold);
+      border-radius:8px;
+      overflow:hidden;
+      touch-action:none;
+    }
+
+    .film{
+      position:absolute;
+      inset:0;
+      display:flex;
+      pointer-events:none;
+    }
+
+    .film img{
+      height:100%;
+      width:12.5%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .dim{
+      position:absolute;
+      top:0;
+      bottom:0;
+      background:rgba(0,0,0,.68);
+      z-index:2;
+      pointer-events:none;
+    }
+
+    #dimmer-left{left:0}
+    #dimmer-right{right:0}
+
+    .selection{
+      position:absolute;
+      top:0;
+      bottom:0;
+      border-top:2px solid var(--gold);
+      border-bottom:2px solid var(--gold);
+      z-index:3;
+      pointer-events:none;
+    }
+
+    .handle{
+      position:absolute;
+      top:0;
+      bottom:0;
+      width:22px;
+      background:var(--gold);
+      z-index:5;
+      cursor:ew-resize;
+      touch-action:none;
+    }
+
+    .handle:after{
+      content:"||";
+      color:#fff;
+      font-weight:800;
+      font-size:10px;
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+    }
+
+    .duration{
+      font-size:.8rem;
+      color:var(--muted);
+      font-weight:600;
+      margin-bottom:8px;
+    }
+
+    body.lang-zh .duration{
+      font-family:'Klee One',sans-serif;
+    }
+
+    .progress-box{
+      width:min(100%,360px);
+      margin:13px auto 0;
+      padding:13px;
+      border:1px solid rgba(197,160,89,.35);
+      background:#fdfbf7;
+      border-radius:11px;
+      text-align:left;
+    }
+
+    .progress-line{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      font-size:.74rem;
+      font-weight:700;
+      color:var(--muted);
+      margin-bottom:7px;
+    }
+
+    .progress-track{
+      height:8px;
+      background:rgba(197,160,89,.17);
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .progress-bar{
+      height:100%;
+      width:0;
+      background:linear-gradient(90deg,var(--gold),var(--gold-dark));
+      transition:width .18s linear;
+    }
+
+    .stage-note{
+      margin-top:8px;
+      font-size:.71rem;
+      color:var(--muted);
+      line-height:1.45;
+    }
+
+    .offline{
+      width:min(100%,360px);
+      margin:10px auto 0;
+      padding:9px 10px;
+      border:1px solid #ead39b;
+      border-radius:9px;
+      background:#fff6df;
+      color:#775f26;
+      font-size:.74rem;
+      line-height:1.4;
+    }
+
+    .thanks p{
+      color:var(--muted);
+      line-height:1.55;
+      margin-top:10px;
+    }
+
+    @media(max-width:380px){
+      .card{padding-left:14px;padding-right:14px}
+      .names{font-size:2.7rem}
+      .hero{max-height:39vh}
+      .stage{max-height:58vh}
+    }
+  </style>
 </head>
+
 <body>
-<main class="card">
-  <div class="lang"><button id="en" class="active">EN</button><span>|</span><button id="zh">中文</button></div>
+  <main class="card">
 
-  <section id="welcome">
-    <div class="names">Wesley & Dionne</div><div class="xi">囍</div>
-    <p class="subtitle" data-t="subtitle">Our Wedding, Through Your Eyes</p>
-    <!-- KEEP THIS FILE NAME EXACTLY AS image_0.png -->
-    <img class="hero" src="image_0.png" alt="Wesley & Dionne">
-    <button id="share" class="btn" data-t="share">Share A Memory</button>
-    <div id="tokenArea" class="token-area hidden">
-      <div class="field"><label data-t="name">Preferred name</label><input id="name" class="input" maxlength="32" placeholder="What should we call you?"></div>
-      <div class="field"><label data-t="code">4-character guest code</label><input id="token" class="input" maxlength="4" autocapitalize="characters" autocomplete="one-time-code" placeholder="CODE"><div class="help" data-t="testhelp">Use TEST for the first live test.</div></div>
-      <button id="continue" class="btn" data-t="continue">Continue</button><div id="tokenError" class="error"></div>
+    <div class="lang-switcher">
+      <button id="lang-en" class="active" type="button">EN</button>
+      <span>|</span>
+      <button id="lang-zh" type="button">中文</button>
     </div>
-  </section>
 
-  <section id="editor" class="hidden">
-    <div class="editor-head" data-t="edit">Trim & Caption</div>
-    <div class="pills"><span id="guestPill" class="pill"></span><span id="codePill" class="pill"></span></div>
-    <input id="file" type="file" accept="video/*" hidden>
-    <button id="choose" class="btn" data-t="choose">Select Video</button>
-    <div class="help" data-t="choosehelp">Choose your favourite 5–10 second moment.</div>
+    <!-- ======================================================
+         WELCOME / TOKEN
+         ====================================================== -->
+    <section id="page-welcome">
+      <div class="names">Wesley & Dionne</div>
+      <div class="xi">囍</div>
+      <p class="subtitle" data-i18n="subtitle">Our Wedding, Through Your Eyes</p>
 
-    <div id="controls" class="hidden">
-      <div id="stage" class="stage">
-        <div id="loader" class="loader hidden"><div class="spin"></div><span data-t="loading">Loading video…</span></div>
-        <video id="video" playsinline webkit-playsinline preload="metadata"></video>
-        <div id="playmark" class="playmark paused"></div>
-        <button id="addcap" class="addcap" data-t="addcap">💬 + Add Caption</button>
-        <div id="trash" class="trash hidden" data-t="trash">🗑️ Drag here to delete</div>
-        <div id="dragcap" class="dragcap hidden"><div id="caption" class="caption"></div></div>
+      <!-- KEEP THIS FILE NAME EXACTLY AS image_0.png -->
+      <img class="hero" src="image_0.png" alt="Wesley & Dionne">
+
+      <button id="share-btn" class="btn" type="button" data-i18n="shareBtn">Share A Memory</button>
+
+      <div id="token-area" class="token-area hidden">
+        <div class="field">
+          <label for="guest-name" data-i18n="nameLabel">Preferred name</label>
+          <input id="guest-name" class="input" maxlength="32" autocomplete="name" placeholder="What should we call you?" data-i18n-placeholder="namePlaceholder">
+        </div>
+
+        <div class="field">
+          <label for="token-input" data-i18n="codeLabel">4-character guest code</label>
+          <input id="token-input" class="input" maxlength="4" autocapitalize="characters" autocomplete="one-time-code" spellcheck="false" enterkeyhint="go" placeholder="TEST" data-i18n-placeholder="codePlaceholder">
+          <div class="helper" data-i18n="codeHelp">Enter the 4-character code from your invitation.</div>
+        </div>
+
+        <button id="continue-btn" class="btn" type="button" data-i18n="continueBtn">Continue</button>
+        <div id="token-error" class="error" role="alert"></div>
+      </div>
+    </section>
+
+    <!-- ======================================================
+         EDITOR
+         ====================================================== -->
+    <section id="page-editor" class="hidden">
+      <div class="editor-head" data-i18n="editorTitle">Trim & Caption</div>
+
+      <div class="pills">
+        <span id="guest-pill" class="pill"></span>
+        <span id="code-pill" class="pill"></span>
       </div>
 
-      <div id="capedit" class="capedit hidden"><div class="caprow"><textarea id="captext" rows="2" maxlength="80" placeholder="Type caption…"></textarea><button id="delcap" class="iconbtn">🗑️</button></div><div class="help" data-t="caphelp">Type here, then drag the caption on the video.</div></div>
+      <input id="video-file" type="file" accept="video/*" hidden>
 
-      <div id="trim" class="trim"><div id="film" class="film"></div><div id="dl" class="dim"></div><div id="dr" class="dim"></div><div id="sel" class="selection"></div><div id="hs" class="handle"></div><div id="he" class="handle"></div></div>
-      <div class="duration"><span data-t="selected">SELECTED:</span> <strong><span id="dur">0.0</span>s</strong> <span data-t="limit">(5–10 seconds)</span></div>
-      <div><button id="another" class="btn outline" data-t="another">Choose Another</button> <button id="submit" class="btn" data-t="submit">Submit Clip</button></div>
-      <div id="progressbox" class="progressbox hidden"><div class="progline"><span id="proglabel">Saving submission…</span><span id="progpct">0%</span></div><div class="progtrack"><div id="prog" class="prog"></div></div></div>
-    </div>
-    <div id="editorError" class="error"></div>
-  </section>
+      <button id="choose-btn" class="btn" type="button" data-i18n="chooseBtn">Select Video</button>
+      <div id="choose-help" class="helper" data-i18n="chooseHelp">Choose a video up to 5 minutes long, then select your favourite 5–10 seconds.</div>
 
-  <section id="thanks" class="thanks hidden"><div class="xi" style="font-size:3rem">囍</div><div class="names" data-t="thankyou">Thank You!</div><p data-t="thanks">Your clip has been uploaded and sent to the moderator queue.</p></section>
-</main>
-<script type="module">
-import * as tus from "https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/+esm";
+      <div id="offline-banner" class="offline hidden" data-i18n="offline">You are offline. Keep this page open and reconnect before submitting.</div>
 
-'use strict';
+      <div id="editor-controls" class="hidden">
+        <div id="video-stage" class="stage">
+          <div id="video-loader" class="loader hidden">
+            <div class="spin"></div>
+            <span id="loader-text" data-i18n="loadingVideo">Loading video…</span>
+          </div>
 
-/* ==================================================================
-   LIVE BACKEND CONFIGURATION
-   Replace only this URL after your Cloudflare Worker is deployed.
-   No API secrets belong in this file.
-   ================================================================== */
-const API_BASE = 'https://YOUR-WORKER.workers.dev';
-const MIN=5, MAX=10;
+          <video id="video-preview" playsinline webkit-playsinline preload="metadata"></video>
+          <div id="playmark" class="playmark paused"></div>
 
-const T={
- en:{subtitle:'Our Wedding, Through Your Eyes',share:'Share A Memory',name:'Preferred name',code:'4-character guest code',testhelp:'Use TEST for the first live test.',continue:'Continue',edit:'Trim & Caption',choose:'Select Video',choosehelp:'Choose your favourite 5–10 second moment.',loading:'Loading video…',addcap:'💬 + Add Caption',trash:'🗑️ Drag here to delete',caphelp:'Type here, then drag the caption on the video.',selected:'SELECTED:',limit:'(5–10 seconds)',another:'Choose Another',submit:'Submit Clip',thankyou:'Thank You!',thanks:'Your clip has been uploaded and sent to the moderator queue.'},
- zh:{subtitle:'用您的视角，记录我们的婚礼',share:'分享温馨瞬间',name:'称呼',code:'4位宾客邀请码',testhelp:'首次线上测试请输入 TEST。',continue:'继续',edit:'剪辑与字幕',choose:'选择视频',choosehelp:'请选择您最喜欢的5至10秒片段。',loading:'正在加载视频…',addcap:'💬 + 添加字幕',trash:'🗑️ 拖到这里删除',caphelp:'在这里输入文字，然后在视频上拖动字幕。',selected:'已选：',limit:'（5至10秒）',another:'重新选择',submit:'提交视频',thankyou:'谢谢您！',thanks:'您的视频已上传并进入审核队列。'}
-};
+          <button id="add-caption-btn" class="add-caption" type="button" data-i18n="addCaption">💬 + Add Caption</button>
 
-const S={lang:'en',name:'',token:'',guestTicket:'',file:null,url:null,duration:0,videoWidth:0,videoHeight:0,start:0,end:10,cap:false,x:.5,y:.65,handle:null,capPointer:null,grabX:0,grabY:0,saving:false,submissionId:null};
-const $=id=>document.getElementById(id);
+          <div id="trash" class="trash hidden" data-i18n="trash">🗑️ Drag here to delete</div>
 
-function lang(l){S.lang=l;document.body.classList.toggle('zh',l==='zh');$('en').classList.toggle('active',l==='en');$('zh').classList.toggle('active',l==='zh');document.querySelectorAll('[data-t]').forEach(e=>{const k=e.dataset.t;if(T[l][k])e.textContent=T[l][k]})}
-function cleanCode(v){return String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,4)}
-async function api(path,options={}){const r=await fetch(API_BASE+path,options);let data={};try{data=await r.json()}catch{}if(!r.ok){const e=new Error(data.error||`Request failed (${r.status})`);e.status=r.status;throw e}return data}
-function ensureApiConfigured(){if(API_BASE.includes('YOUR-WORKER'))throw new Error('The live API URL has not been configured yet.');}
+          <div id="drag-caption" class="drag-caption hidden">
+            <div id="caption-preview" class="caption-preview"></div>
+          </div>
+        </div>
 
-$('en').onclick=()=>lang('en');$('zh').onclick=()=>lang('zh');
-$('share').onclick=()=>{$('share').classList.add('hidden');$('tokenArea').classList.remove('hidden');$('name').focus()};
-$('token').oninput=e=>e.target.value=cleanCode(e.target.value);$('token').onkeydown=e=>{if(e.key==='Enter')enter()};$('continue').onclick=enter;
+        <div id="caption-editor" class="caption-editor hidden">
+          <div class="caption-row">
+            <textarea id="caption-text" rows="2" maxlength="80" placeholder="Type caption…" data-i18n-placeholder="captionPlaceholder"></textarea>
+            <button id="delete-caption-btn" class="icon-btn" type="button" aria-label="Delete caption">🗑️</button>
+          </div>
+          <div class="helper" data-i18n="captionHelp">Type here, then drag the caption on the video to place it.</div>
+        </div>
 
-async function enter(){
- const n=$('name').value.trim(),c=cleanCode($('token').value);$('tokenError').textContent='';
- if(!n)return $('tokenError').textContent=S.lang==='zh'?'请输入您的称呼。':'Please enter your preferred name.';
- if(c.length!==4)return $('tokenError').textContent=S.lang==='zh'?'请输入4位邀请码。':'Please enter your 4-character guest code.';
- $('continue').disabled=true;
- try{ensureApiConfigured();const d=await api('/api/guest/session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({guestName:n,code:c})});S.name=d.guestName;S.token=d.code;S.guestTicket=d.ticket;$('guestPill').textContent=S.name;$('codePill').textContent='#'+S.token;$('welcome').classList.add('hidden');$('editor').classList.remove('hidden')}
- catch(e){$('tokenError').textContent=e.message}
- finally{$('continue').disabled=false}
-}
+        <div id="trim-track" class="trim">
+          <div id="filmstrip" class="film"></div>
+          <div id="dimmer-left" class="dim"></div>
+          <div id="dimmer-right" class="dim"></div>
+          <div id="selection" class="selection"></div>
+          <div id="handle-start" class="handle"></div>
+          <div id="handle-end" class="handle"></div>
+        </div>
 
-$('choose').onclick=()=>$('file').click();$('another').onclick=resetVideo;$('file').onchange=e=>loadVideo(e.target.files?.[0]);
-function resetVideo(){if(S.url)URL.revokeObjectURL(S.url);S.file=null;S.url=null;S.duration=0;S.videoWidth=0;S.videoHeight=0;$('file').value='';$('video').removeAttribute('src');$('video').load();$('controls').classList.add('hidden');$('choose').classList.remove('hidden');$('editorError').textContent='';$('progressbox').classList.add('hidden');removeCaption()}
-async function loadVideo(file){if(!file)return;S.file=file;if(S.url)URL.revokeObjectURL(S.url);S.url=URL.createObjectURL(file);$('controls').classList.remove('hidden');$('choose').classList.add('hidden');$('loader').classList.remove('hidden');$('editorError').textContent='';const v=$('video');try{await new Promise((res,rej)=>{v.onloadedmetadata=res;v.onerror=rej;v.src=S.url;v.load()});S.duration=v.duration;S.videoWidth=v.videoWidth;S.videoHeight=v.videoHeight;if(!isFinite(S.duration)||S.duration<4.9)throw Error('short');if(S.duration>3600)throw Error('long');S.start=0;S.end=Math.min(10,S.duration);v.currentTime=0;updateTrim();removeCaption();makeFilmstrip();$('loader').classList.add('hidden')}catch(e){$('loader').classList.add('hidden');$('controls').classList.add('hidden');$('choose').classList.remove('hidden');$('editorError').textContent=e.message==='short'?'Please choose a video at least 5 seconds long.':e.message==='long'?'Please choose a video shorter than 60 minutes.':'This browser could not read that video.'}}
+        <div class="duration">
+          <span data-i18n="selected">SELECTED:</span>
+          <strong><span id="duration-display">0.0</span>s</strong>
+          <span data-i18n="clipLimit">(5–10 seconds)</span>
+        </div>
 
-$('stage').onclick=e=>{if(e.target.closest('#dragcap')||e.target.closest('#addcap'))return;if(!S.file)return;const v=$('video');if(v.paused){if(v.currentTime<S.start||v.currentTime>=S.end)v.currentTime=S.start;v.play().catch(()=>{})}else v.pause();playMark()};$('video').onplay=playMark;$('video').onpause=playMark;function playMark(){$('playmark').classList.toggle('playing',!$('video').paused);$('playmark').classList.toggle('paused',$('video').paused)}
-$('video').ontimeupdate=()=>{const v=$('video');if(!S.handle&&!v.paused&&(v.currentTime>=S.end-.03||v.currentTime<S.start-.05)){v.currentTime=S.start;v.play().catch(()=>{})}};
-function updateTrim(){if(!S.duration)return;const a=S.start/S.duration*100,b=S.end/S.duration*100;$('sel').style.left=a+'%';$('sel').style.width=(b-a)+'%';$('dl').style.width=a+'%';$('dr').style.width=(100-b)+'%';$('hs').style.left=`calc(${a}% - 11px)`;$('he').style.left=`calc(${b}% - 11px)`;$('dur').textContent=(S.end-S.start).toFixed(1)}
-function sec(e){const r=$('trim').getBoundingClientRect();return Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*S.duration}function startHandle(h,e){if(!S.file)return;e.preventDefault();S.handle=h;$('video').pause();moveHandle(e)}function moveHandle(e){if(!S.handle)return;e.preventDefault();let s=sec(e),v=$('video');if(S.handle==='s'){S.start=Math.max(Math.max(0,S.end-MAX),Math.min(S.end-MIN,s));v.currentTime=S.start}else{S.end=Math.max(Math.min(S.duration,S.start+MIN),Math.min(Math.min(S.duration,S.start+MAX),s));v.currentTime=Math.min(S.end,S.duration-.02)}updateTrim()}function endHandle(){if(!S.handle)return;S.handle=null;$('video').currentTime=S.start}
-$('hs').onpointerdown=e=>startHandle('s',e);$('he').onpointerdown=e=>startHandle('e',e);window.addEventListener('pointermove',moveHandle,{passive:false});window.addEventListener('pointerup',endHandle);
+        <div>
+          <button id="another-btn" class="btn outline" type="button" data-i18n="anotherBtn">Choose Another</button>
+          <button id="submit-btn" class="btn" type="button" data-i18n="submitBtn">Submit Clip</button>
+        </div>
 
-async function makeFilmstrip(){const box=$('film');box.innerHTML='';const v=document.createElement('video');v.src=S.url;v.muted=true;v.playsInline=true;v.preload='metadata';v.style.cssText='position:fixed;left:-9999px;width:1px';document.body.appendChild(v);await new Promise(r=>{if(v.readyState>=1)r();else{v.onloadedmetadata=r;setTimeout(r,1000)}});const c=document.createElement('canvas'),ctx=c.getContext('2d');c.width=90;c.height=160;for(let i=0;i<8;i++){try{await seek(v,(i/7)*Math.max(0,(v.duration||S.duration)-.05));const sc=Math.max(c.width/v.videoWidth,c.height/v.videoHeight),w=v.videoWidth*sc,h=v.videoHeight*sc;ctx.clearRect(0,0,c.width,c.height);ctx.drawImage(v,(c.width-w)/2,(c.height-h)/2,w,h);const img=document.createElement('img');img.src=c.toDataURL('image/jpeg',.5);box.appendChild(img)}catch{}}v.remove()}
-function seek(v,t){return new Promise(r=>{let done=false;const f=()=>{if(done)return;done=true;v.removeEventListener('seeked',f);r()};v.addEventListener('seeked',f);try{v.currentTime=t}catch{}setTimeout(f,400)})}
+        <div id="progress-box" class="progress-box hidden" aria-live="polite">
+          <div class="progress-line">
+            <span id="progress-label">Preparing…</span>
+            <span id="progress-percent">0%</span>
+          </div>
+          <div class="progress-track">
+            <div id="progress-bar" class="progress-bar"></div>
+          </div>
+          <div id="progress-note" class="stage-note"></div>
+        </div>
+      </div>
 
-$('addcap').onclick=e=>{e.stopPropagation();S.cap=true;S.x=.5;S.y=.65;$('dragcap').classList.remove('hidden');$('addcap').classList.add('hidden');$('capedit').classList.remove('hidden');updateCap();$('captext').focus()};$('delcap').onclick=removeCaption;$('captext').oninput=updateCap;
-function removeCaption(){S.cap=false;S.x=.5;S.y=.65;$('captext').value='';$('caption').textContent='';$('dragcap').classList.add('hidden');$('addcap').classList.remove('hidden');$('capedit').classList.add('hidden');$('trash').classList.add('hidden')}
-function captionFontSize(text){const len=(text||'').trim().length;if(len>68)return '.68rem';if(len>54)return '.74rem';if(len>42)return '.82rem';if(len>30)return '.90rem';if(len>20)return '.98rem';return '1.08rem'}
-function captionCanvasFont(text){const len=(text||'').trim().length;if(len>68)return 32;if(len>54)return 36;if(len>42)return 42;if(len>30)return 47;if(len>20)return 52;return 58}
-function clampCaption(){if(!S.cap)return;const stage=$('stage').getBoundingClientRect(),box=$('dragcap').getBoundingClientRect();if(!stage.width||!stage.height)return;const hx=Math.min(.48,box.width/(2*stage.width)),hy=Math.min(.48,box.height/(2*stage.height));S.x=Math.max(hx,Math.min(1-hx,S.x));S.y=Math.max(hy,Math.min(1-hy,S.y));$('dragcap').style.left=(S.x*100)+'%';$('dragcap').style.top=(S.y*100)+'%'}
-function updateCap(){const text=$('captext').value||'';$('caption').textContent=text||(S.lang==='zh'?'输入字幕…':'Type caption…');$('caption').style.opacity=text?'1':'.6';$('caption').style.fontSize=captionFontSize(text);$('caption').style.padding=text.length>54?'7px 11px':text.length>30?'8px 13px':'9px 15px';$('dragcap').style.left=(S.x*100)+'%';$('dragcap').style.top=(S.y*100)+'%';requestAnimationFrame(clampCaption)}
-$('dragcap').onpointerdown=e=>{if(!S.cap)return;e.preventDefault();e.stopPropagation();S.capPointer=e.pointerId;const r=$('dragcap').getBoundingClientRect();S.grabX=e.clientX-(r.left+r.width/2);S.grabY=e.clientY-(r.top+r.height/2);$('trash').classList.remove('hidden');try{$('dragcap').setPointerCapture(e.pointerId)}catch{}};
-$('dragcap').onpointermove=e=>{if(e.pointerId!==S.capPointer)return;e.preventDefault();const st=$('stage').getBoundingClientRect(),cr=$('dragcap').getBoundingClientRect();const hx=cr.width/(2*st.width),hy=cr.height/(2*st.height);S.x=Math.max(hx,Math.min(1-hx,(e.clientX-S.grabX-st.left)/st.width));S.y=Math.max(hy,Math.min(1-hy,(e.clientY-S.grabY-st.top)/st.height));updateCap();const tr=$('trash').getBoundingClientRect(),nr=$('dragcap').getBoundingClientRect(),cx=nr.left+nr.width/2,cy=nr.top+nr.height/2;$('trash').classList.toggle('hot',cx>tr.left-25&&cx<tr.right+25&&cy>tr.top-25&&cy<tr.bottom+25)};
-function capEnd(e){if(e.pointerId!==S.capPointer)return;S.capPointer=null;const del=$('trash').classList.contains('hot');$('trash').classList.add('hidden');$('trash').classList.remove('hot');if(del)removeCaption()}$('dragcap').onpointerup=capEnd;$('dragcap').onpointercancel=capEnd;
+      <div id="editor-error" class="error" role="alert"></div>
+    </section>
 
-function progress(p,label){$('progressbox').classList.remove('hidden');$('prog').style.width=Math.max(0,Math.min(100,p))+'%';$('progpct').textContent=Math.round(p)+'%';$('proglabel').textContent=label}
-function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+    <!-- ======================================================
+         THANK YOU
+         ====================================================== -->
+    <section id="page-thanks" class="thanks hidden">
+      <div class="xi" style="font-size:3rem">囍</div>
+      <div class="names" data-i18n="thanksTitle">Thank You!</div>
+      <p data-i18n="thanksMessage">Your memory is in the moderation queue.</p>
+    </section>
 
-function wrapCanvasText(ctx,text,maxWidth){
- const words=text.split(/\s+/).filter(Boolean),lines=[];let line='';
- for(const word of words){
-   if(ctx.measureText(word).width>maxWidth){
-     if(line){lines.push(line);line=''}
-     let chunk='';
-     for(const ch of word){const test=chunk+ch;if(ctx.measureText(test).width>maxWidth&&chunk){lines.push(chunk);chunk=ch}else chunk=test}
-     if(chunk)line=chunk;
-   }else{
-     const test=line?line+' '+word:word;
-     if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word}else line=test;
-   }
- }
- if(line)lines.push(line);
- return lines.slice(0,5);
-}
+  </main>
 
-async function makeOverlayPng(){
- const text=S.cap?$('captext').value.trim():'';
- if(!text)return null;
- // Match the original source aspect ratio, then map the 9:16 editor crop into it.
- const srcW=S.videoWidth||1080,srcH=S.videoHeight||1920;
- const maxDim=1920,scaleDown=Math.min(1,maxDim/Math.max(srcW,srcH));
- const W=Math.max(2,Math.round(srcW*scaleDown)),H=Math.max(2,Math.round(srcH*scaleDown));
- const c=document.createElement('canvas');c.width=W;c.height=H;const ctx=c.getContext('2d');ctx.clearRect(0,0,W,H);
- // Object-fit: cover mapping from source overlay into the 1080x1920 editor viewport.
- const viewW=1080,viewH=1920,cover=Math.max(viewW/W,viewH/H),drawW=W*cover,drawH=H*cover,offX=(drawW-viewW)/2,offY=(drawH-viewH)/2;
- const centerX=(S.x*viewW+offX)/cover,centerY=(S.y*viewH+offY)/cover;
- const editorFont=captionCanvasFont(text),fontPx=editorFont/cover,maxEditorWidth=0.84*viewW,maxWidth=maxEditorWidth/cover;
- ctx.font=`800 ${fontPx}px Montserrat, Arial, sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
- const lines=wrapCanvasText(ctx,text,maxWidth);const lineHeight=fontPx*1.2,padX=15*(1080/330)/cover,padY=9*(1080/330)/cover;
- const widths=lines.map(line=>ctx.measureText(line).width);const boxW=Math.min(maxWidth+2*padX,Math.max(...widths,1)+2*padX),boxH=lines.length*lineHeight+2*padY;
- const x=centerX-boxW/2,y=centerY-boxH/2,r=Math.min(13*(1080/330)/cover,boxH/3);
- ctx.fillStyle='rgba(0,0,0,1)';roundRect(ctx,x,y,boxW,boxH,r);ctx.fill();ctx.fillStyle='#fff';
- lines.forEach((line,i)=>ctx.fillText(line,centerX,centerY+(i-(lines.length-1)/2)*lineHeight));
- return new Promise((resolve,reject)=>c.toBlob(b=>b?resolve(b):reject(new Error('Could not create caption overlay.')),'image/png'));
-}
-function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+  <script>
+  'use strict';
 
-async function startServerSubmission(){
- const overlay=await makeOverlayPng();
- const form=new FormData();
- form.append('metadata',JSON.stringify({startTime:+S.start.toFixed(3),endTime:+S.end.toFixed(3),sourceDuration:+S.duration.toFixed(3),captionText:S.cap?$('captext').value.trim():'',captionX:+S.x.toFixed(5),captionY:+S.y.toFixed(5),fileName:S.file.name,fileSize:S.file.size}));
- if(overlay)form.append('overlay',overlay,'caption.png');
- return api('/api/submissions/start',{method:'POST',headers:{Authorization:`Bearer ${S.guestTicket}`},body:form});
-}
+  /* ==========================================================
+     PUBLIC BACKEND URL — SAFE TO KEEP IN GITHUB
+     Secrets remain inside Cloudflare.
+     ========================================================== */
+  const API_BASE = 'https://wd0501-wedding-api.dionnnosaur.workers.dev';
 
-function uploadTus(file,uploadTicket){
- return new Promise((resolve,reject)=>{
-   const upload=new tus.Upload(file,{
-     endpoint:API_BASE+'/api/upload-url',
-     chunkSize:5*1024*1024,
-     retryDelays:[0,1000,3000,5000,10000],
-     metadata:{filename:file.name,filetype:file.type||'video/mp4',uploadTicket},
-     removeFingerprintOnSuccess:true,
-     onError:reject,
-     onProgress:(sent,total)=>progress(5+(sent/total)*78,`Uploading video… ${Math.round(sent/total*100)}%`),
-     onSuccess:()=>resolve(upload.url),
-   });
-   upload.findPreviousUploads().then(previous=>{if(previous.length)upload.resumeFromPreviousUpload(previous[0]);upload.start()}).catch(()=>upload.start());
- });
-}
+  const CONFIG = {
+    MIN_SOURCE_SECONDS: 5,
+    MAX_SOURCE_SECONDS: 300, // 5 minutes
+    MIN_CLIP_SECONDS: 5,
+    MAX_CLIP_SECONDS: 10,
+    MAX_CAPTION_CHARS: 80,
+    STORY_WIDTH: 1080,
+    STORY_HEIGHT: 1920,
+    UPCHUNK_KB: 5120,
+    STATUS_POLL_MS: 1800,
+    STATUS_TIMEOUT_MS: 12 * 60 * 1000
+  };
 
-async function waitForFinalClip(id){
- for(let attempt=0;attempt<120;attempt++){
-   const r=await fetch(API_BASE+`/api/submissions/${encodeURIComponent(id)}/finalize`,{method:'POST',headers:{Authorization:`Bearer ${S.guestTicket}`}});
-   let data={};try{data=await r.json()}catch{}
-   if(r.ok&&data.ready)return data;
-   if(!r.ok&&r.status!==202)throw new Error(data.error||'Video processing failed.');
-   progress(86+Math.min(13,attempt*.35),data.status==='processing_clip'?'Creating your final 5–10 second clip…':'Preparing your uploaded video…');
-   await sleep(3000);
- }
- throw new Error('The video is still processing. It will remain in the moderator queue; please check again shortly.');
-}
+  const translations = {
+    en: {
+      subtitle: 'Our Wedding, Through Your Eyes',
+      shareBtn: 'Share A Memory',
+      nameLabel: 'Preferred name',
+      namePlaceholder: 'What should we call you?',
+      codeLabel: '4-character guest code',
+      codePlaceholder: 'TEST',
+      codeHelp: 'Enter the 4-character code from your invitation.',
+      continueBtn: 'Continue',
+      editorTitle: 'Trim & Caption',
+      chooseBtn: 'Select Video',
+      chooseHelp: 'Choose a video up to 5 minutes long, then select your favourite 5–10 seconds.',
+      offline: 'You are offline. Keep this page open and reconnect before submitting.',
+      loadingVideo: 'Loading video…',
+      addCaption: '💬 + Add Caption',
+      trash: '🗑️ Drag here to delete',
+      captionPlaceholder: 'Type caption…',
+      captionHelp: 'Type here, then drag the caption on the video to place it.',
+      selected: 'SELECTED:',
+      clipLimit: '(5–10 seconds)',
+      anotherBtn: 'Choose Another',
+      submitBtn: 'Submit Clip',
+      thanksTitle: 'Thank You!',
+      thanksMessage: 'Your memory is in the moderation queue.',
+      errName: 'Please enter your preferred name.',
+      errCode: 'Please enter a 4-character guest code.',
+      errShort: 'Please choose a video that is at least 5 seconds long.',
+      errLong: 'Please choose a video that is 5 minutes or shorter.',
+      errVideo: 'This browser could not read that video. Please choose another video.',
+      errClip: 'Please select between 5 and 10 seconds.',
+      errNoVideo: 'Please select a video first.',
+      errOffline: 'You are offline. Reconnect before submitting.',
+      claiming: 'Checking guest code…',
+      preparing: 'Preparing your clip…',
+      uploading: 'Uploading video…',
+      uploaded: 'Upload complete',
+      muxPreparing: 'Creating your final clip…',
+      finalizing: 'Finishing your clip…',
+      done: 'Complete',
+      keepOpen: 'Please keep this page open until the clip is ready.',
+      processingWait: 'The upload is complete. Mux is now trimming the selected section and applying your caption.',
+      uploadFailed: 'Upload failed. Please check your connection and try again.',
+      processingFailed: 'We could not process this video. Please choose another video and try again.'
+    },
+    zh: {
+      subtitle: '用您的视角，记录我们的婚礼',
+      shareBtn: '分享温馨瞬间',
+      nameLabel: '称呼',
+      namePlaceholder: '我们应该怎么称呼您？',
+      codeLabel: '4位宾客邀请码',
+      codePlaceholder: 'TEST',
+      codeHelp: '请输入邀请函上的4位宾客邀请码。',
+      continueBtn: '继续',
+      editorTitle: '剪辑与字幕',
+      chooseBtn: '选择视频',
+      chooseHelp: '请选择5分钟以内的视频，再选出您最喜欢的5至10秒。',
+      offline: '目前没有网络。请保持此页面开启，恢复网络后再提交。',
+      loadingVideo: '正在加载视频…',
+      addCaption: '💬 + 添加字幕',
+      trash: '🗑️ 拖到这里删除',
+      captionPlaceholder: 'Type caption…',
+      captionHelp: '在这里输入文字，然后在视频上拖动字幕到想要的位置。',
+      selected: '已选：',
+      clipLimit: '（5至10秒）',
+      anotherBtn: '重新选择',
+      submitBtn: '提交视频',
+      thanksTitle: '谢谢您！',
+      thanksMessage: '您的视频已进入审核队列。',
+      errName: '请输入您的称呼。',
+      errCode: '请输入4位宾客邀请码。',
+      errShort: '请选择至少5秒长的视频。',
+      errLong: '请选择5分钟或更短的视频。',
+      errVideo: '此浏览器无法读取该视频，请选择其他视频。',
+      errClip: '请选择5至10秒的片段。',
+      errNoVideo: '请先选择视频。',
+      errOffline: '目前没有网络，请恢复网络后再提交。',
+      claiming: '正在验证邀请码…',
+      preparing: '正在准备视频…',
+      uploading: '正在上传视频…',
+      uploaded: '上传完成',
+      muxPreparing: '正在制作最终视频…',
+      finalizing: '正在完成视频…',
+      done: '完成',
+      keepOpen: '请保持此页面开启，直到视频处理完成。',
+      processingWait: '上传已经完成。系统正在剪辑所选片段并加入字幕。',
+      uploadFailed: '上传失败，请检查网络后重试。',
+      processingFailed: '无法处理该视频，请选择其他视频后重试。'
+    }
+  };
 
-$('submit').onclick=async()=>{
- if(S.saving)return;$('editorError').textContent='';
- if(!S.file)return $('editorError').textContent='Please select a video first.';
- const d=S.end-S.start;if(d<4.9||d>10.1)return $('editorError').textContent='Please select between 5 and 10 seconds.';
- S.saving=true;$('submit').disabled=$('another').disabled=$('choose').disabled=true;
- try{
-   ensureApiConfigured();progress(2,'Preparing your caption and secure upload…');
-   const started=await startServerSubmission();S.submissionId=started.submissionId;
-   progress(5,'Starting resumable upload…');await uploadTus(S.file,started.uploadTicket);
-   progress(84,'Upload complete. Processing selected clip…');await waitForFinalClip(S.submissionId);
-   progress(100,'Sent to moderator queue');await sleep(350);$('editor').classList.add('hidden');$('thanks').classList.remove('hidden');
- }catch(e){console.error(e);$('editorError').textContent=e.message;$('submit').disabled=$('another').disabled=$('choose').disabled=false;S.saving=false}
-};
+  const state = {
+    lang: localStorage.getItem('wd_lang') || 'en',
+    guestName: '',
+    token: '',
+    session: '',
+    submissionId: '',
+    file: null,
+    objectUrl: null,
+    sourceDuration: 0,
+    start: 0,
+    end: 10,
+    handle: null,
+    captionActive: false,
+    captionX: .5,
+    captionY: .65,
+    captionPointer: null,
+    grabX: 0,
+    grabY: 0,
+    submitting: false,
+    activeUpload: null,
+    pollAbort: false
+  };
 
-lang('en');
-</script>
+  const $ = id => document.getElementById(id);
+  const t = key => translations[state.lang][key] || translations.en[key] || key;
+
+  function setLanguage(lang){
+    state.lang = lang;
+    localStorage.setItem('wd_lang', lang);
+    document.body.classList.toggle('lang-zh', lang === 'zh');
+    $('lang-en').classList.toggle('active', lang === 'en');
+    $('lang-zh').classList.toggle('active', lang === 'zh');
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (translations[lang][key]) el.textContent = translations[lang][key];
+    });
+
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.dataset.i18nPlaceholder;
+      if (translations[lang][key]) el.placeholder = translations[lang][key];
+    });
+
+    updateCaptionPreview();
+  }
+
+  function cleanCode(value){
+    return String(value || '').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,4);
+  }
+
+  async function api(path, options = {}){
+    const response = await fetch(API_BASE + path, {
+      ...options,
+      headers: {
+        ...(options.body ? {'Content-Type':'application/json'} : {}),
+        ...(options.headers || {})
+      }
+    });
+
+    let body = null;
+    try { body = await response.json(); } catch { body = null; }
+
+    if (!response.ok){
+      const error = new Error(body?.error || `Request failed (${response.status})`);
+      error.status = response.status;
+      error.payload = body;
+      throw error;
+    }
+
+    return body;
+  }
+
+  function showEditor(){
+    $('page-welcome').classList.add('hidden');
+    $('page-editor').classList.remove('hidden');
+    $('guest-pill').textContent = state.guestName;
+    $('code-pill').textContent = '#' + state.token;
+  }
+
+  async function claimCode(){
+    if (state.submitting) return;
+
+    const guestName = $('guest-name').value.trim();
+    const code = cleanCode($('token-input').value);
+    $('token-input').value = code;
+    $('token-error').textContent = '';
+
+    if (!guestName){
+      $('token-error').textContent = t('errName');
+      return;
+    }
+    if (code.length !== 4){
+      $('token-error').textContent = t('errCode');
+      return;
+    }
+
+    const btn = $('continue-btn');
+    btn.disabled = true;
+    const old = btn.textContent;
+    btn.textContent = t('claiming');
+
+    try{
+      const result = await api('/api/guest/claim', {
+        method:'POST',
+        body:JSON.stringify({guestName, code})
+      });
+
+      state.guestName = guestName;
+      state.token = code;
+      state.session = result.session;
+      state.submissionId = result.submissionId;
+
+      showEditor();
+    }catch(error){
+      $('token-error').textContent = error.message;
+    }finally{
+      btn.disabled = false;
+      btn.textContent = old;
+    }
+  }
+
+  function revokeObjectUrl(){
+    if (state.objectUrl) URL.revokeObjectURL(state.objectUrl);
+    state.objectUrl = null;
+  }
+
+  function resetVideo(){
+    if (state.submitting) return;
+
+    state.file = null;
+    state.sourceDuration = 0;
+    state.start = 0;
+    state.end = 10;
+    revokeObjectUrl();
+
+    $('video-file').value = '';
+    $('video-preview').pause();
+    $('video-preview').removeAttribute('src');
+    $('video-preview').load();
+    $('editor-controls').classList.add('hidden');
+    $('choose-btn').classList.remove('hidden');
+    $('choose-help').classList.remove('hidden');
+    $('editor-error').textContent = '';
+    $('progress-box').classList.add('hidden');
+    setProgress(0,'');
+    removeCaption();
+  }
+
+  async function loadVideo(file){
+    if (!file || state.submitting) return;
+
+    state.file = file;
+    revokeObjectUrl();
+    state.objectUrl = URL.createObjectURL(file);
+
+    const video = $('video-preview');
+    $('editor-error').textContent = '';
+    $('editor-controls').classList.remove('hidden');
+    $('video-loader').classList.remove('hidden');
+
+    try{
+      await new Promise((resolve,reject) => {
+        const loaded = () => { cleanup(); resolve(); };
+        const failed = () => { cleanup(); reject(new Error('video')); };
+        const cleanup = () => {
+          video.removeEventListener('loadedmetadata', loaded);
+          video.removeEventListener('error', failed);
+        };
+        video.addEventListener('loadedmetadata', loaded, {once:true});
+        video.addEventListener('error', failed, {once:true});
+        video.src = state.objectUrl;
+        video.load();
+      });
+
+      const duration = Number(video.duration);
+      if (!Number.isFinite(duration)) throw new Error('video');
+      if (duration < CONFIG.MIN_SOURCE_SECONDS - .1) throw new Error('short');
+      if (duration > CONFIG.MAX_SOURCE_SECONDS + .25) throw new Error('long');
+
+      state.sourceDuration = duration;
+      state.start = 0;
+      state.end = Math.min(CONFIG.MAX_CLIP_SECONDS, duration);
+      video.currentTime = 0;
+
+      updateTrimUI();
+      removeCaption();
+      generateFilmstrip();
+
+      /* User specifically asked not to show Select Video after selection */
+      $('choose-btn').classList.add('hidden');
+      $('choose-help').classList.add('hidden');
+      $('video-loader').classList.add('hidden');
+    }catch(error){
+      $('video-loader').classList.add('hidden');
+      $('editor-controls').classList.add('hidden');
+      $('choose-btn').classList.remove('hidden');
+      $('choose-help').classList.remove('hidden');
+
+      if (error.message === 'short') $('editor-error').textContent = t('errShort');
+      else if (error.message === 'long') $('editor-error').textContent = t('errLong');
+      else $('editor-error').textContent = t('errVideo');
+    }
+  }
+
+  function updatePlaymark(){
+    const paused = $('video-preview').paused;
+    $('playmark').classList.toggle('paused', paused);
+    $('playmark').classList.toggle('playing', !paused);
+  }
+
+  function togglePlay(event){
+    if (event.target.closest('#drag-caption') || event.target.closest('#add-caption-btn')) return;
+    if (!state.file) return;
+
+    const video = $('video-preview');
+    if (video.paused){
+      if (video.currentTime < state.start || video.currentTime >= state.end){
+        video.currentTime = state.start;
+      }
+      video.play().catch(()=>{});
+    }else{
+      video.pause();
+    }
+  }
+
+  function updateTrimUI(){
+    if (!state.sourceDuration) return;
+
+    const startPct = state.start / state.sourceDuration * 100;
+    const endPct = state.end / state.sourceDuration * 100;
+
+    $('selection').style.left = startPct + '%';
+    $('selection').style.width = (endPct - startPct) + '%';
+    $('dimmer-left').style.width = startPct + '%';
+    $('dimmer-right').style.width = (100 - endPct) + '%';
+    $('handle-start').style.left = `calc(${startPct}% - 11px)`;
+    $('handle-end').style.left = `calc(${endPct}% - 11px)`;
+    $('duration-display').textContent = (state.end - state.start).toFixed(1);
+  }
+
+  function secondsFromPointer(event){
+    const rect = $('trim-track').getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+    return ratio * state.sourceDuration;
+  }
+
+  function startHandle(which,event){
+    if (!state.file || state.submitting) return;
+    event.preventDefault();
+    event.stopPropagation();
+    state.handle = which;
+    $('video-preview').pause();
+    moveHandle(event);
+  }
+
+  function moveHandle(event){
+    if (!state.handle) return;
+    event.preventDefault();
+
+    let sec = secondsFromPointer(event);
+    const video = $('video-preview');
+
+    if (state.handle === 'start'){
+      const min = Math.max(0, state.end - CONFIG.MAX_CLIP_SECONDS);
+      const max = Math.max(0, state.end - CONFIG.MIN_CLIP_SECONDS);
+      state.start = Math.max(min, Math.min(max, sec));
+      video.currentTime = state.start;
+    }else{
+      const min = Math.min(state.sourceDuration, state.start + CONFIG.MIN_CLIP_SECONDS);
+      const max = Math.min(state.sourceDuration, state.start + CONFIG.MAX_CLIP_SECONDS);
+      state.end = Math.max(min, Math.min(max, sec));
+      video.currentTime = Math.min(state.end, state.sourceDuration - .02);
+    }
+
+    updateTrimUI();
+  }
+
+  function endHandle(){
+    if (!state.handle) return;
+    state.handle = null;
+    $('video-preview').currentTime = state.start;
+  }
+
+  async function seek(video,time){
+    return new Promise(resolve => {
+      let finished = false;
+      const done = () => {
+        if (finished) return;
+        finished = true;
+        video.removeEventListener('seeked', done);
+        resolve();
+      };
+      video.addEventListener('seeked', done, {once:true});
+      try { video.currentTime = time; } catch { done(); }
+      setTimeout(done, 550);
+    });
+  }
+
+  async function generateFilmstrip(){
+    const container = $('filmstrip');
+    container.innerHTML = '';
+    if (!state.objectUrl) return;
+
+    const video = document.createElement('video');
+    video.src = state.objectUrl;
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = 'metadata';
+    video.style.cssText = 'position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:.01';
+    document.body.appendChild(video);
+
+    try{
+      await new Promise(resolve => {
+        if (video.readyState >= 1) resolve();
+        else {
+          video.addEventListener('loadedmetadata', resolve, {once:true});
+          setTimeout(resolve,1000);
+        }
+      });
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 90;
+      canvas.height = 160;
+      const ctx = canvas.getContext('2d');
+
+      for (let i=0;i<8;i++){
+        const target = (i/7) * Math.max(0,(video.duration || state.sourceDuration)-.05);
+        await seek(video,target);
+        try{
+          const vw = video.videoWidth || 1;
+          const vh = video.videoHeight || 1;
+          const scale = Math.max(canvas.width/vw, canvas.height/vh);
+          const dw = vw*scale;
+          const dh = vh*scale;
+          ctx.clearRect(0,0,canvas.width,canvas.height);
+          ctx.drawImage(video,(canvas.width-dw)/2,(canvas.height-dh)/2,dw,dh);
+          const img = document.createElement('img');
+          img.src = canvas.toDataURL('image/jpeg',.5);
+          container.appendChild(img);
+        }catch{
+          /* Filmstrip is cosmetic; trimmer still works if iOS blocks a frame. */
+        }
+      }
+    }finally{
+      video.remove();
+    }
+  }
+
+  function captionFontCss(text){
+    const len = (text || '').trim().length;
+    if (len > 68) return '.68rem';
+    if (len > 54) return '.74rem';
+    if (len > 42) return '.82rem';
+    if (len > 30) return '.90rem';
+    if (len > 20) return '.98rem';
+    return '1.08rem';
+  }
+
+  function captionFontCanvas(text){
+    const len = (text || '').trim().length;
+    if (len > 68) return 36;
+    if (len > 54) return 40;
+    if (len > 42) return 44;
+    if (len > 30) return 49;
+    if (len > 20) return 54;
+    return 59;
+  }
+
+  function enableCaption(event){
+    event.stopPropagation();
+    if (state.submitting) return;
+
+    state.captionActive = true;
+    state.captionX = .5;
+    state.captionY = .65;
+    $('drag-caption').classList.remove('hidden');
+    $('add-caption-btn').classList.add('hidden');
+    $('caption-editor').classList.remove('hidden');
+    updateCaptionPreview();
+    $('caption-text').focus();
+  }
+
+  function removeCaption(){
+    state.captionActive = false;
+    state.captionX = .5;
+    state.captionY = .65;
+    $('caption-text').value = '';
+    $('caption-preview').textContent = '';
+    $('drag-caption').classList.add('hidden');
+    $('add-caption-btn').classList.remove('hidden');
+    $('caption-editor').classList.add('hidden');
+    $('trash').classList.add('hidden');
+  }
+
+  function clampCaption(){
+    if (!state.captionActive) return;
+
+    const stage = $('video-stage').getBoundingClientRect();
+    const box = $('drag-caption').getBoundingClientRect();
+    if (!stage.width || !stage.height) return;
+
+    const halfW = Math.min(.48, box.width / (2*stage.width));
+    const halfH = Math.min(.48, box.height / (2*stage.height));
+    state.captionX = Math.max(halfW, Math.min(1-halfW, state.captionX));
+    state.captionY = Math.max(halfH, Math.min(1-halfH, state.captionY));
+    $('drag-caption').style.left = (state.captionX*100) + '%';
+    $('drag-caption').style.top = (state.captionY*100) + '%';
+  }
+
+  function updateCaptionPreview(){
+    if (!state.captionActive) return;
+
+    const text = $('caption-text').value.slice(0,CONFIG.MAX_CAPTION_CHARS);
+    $('caption-text').value = text;
+    $('caption-preview').textContent = text || t('captionPlaceholder');
+    $('caption-preview').style.opacity = text ? '1' : '.6';
+    $('caption-preview').style.fontSize = captionFontCss(text);
+
+    if (text.length > 54) $('caption-preview').style.padding = '7px 11px';
+    else if (text.length > 30) $('caption-preview').style.padding = '8px 13px';
+    else $('caption-preview').style.padding = '9px 15px';
+
+    $('drag-caption').style.left = (state.captionX*100) + '%';
+    $('drag-caption').style.top = (state.captionY*100) + '%';
+    requestAnimationFrame(clampCaption);
+  }
+
+  function startCaptionDrag(event){
+    if (!state.captionActive || state.submitting) return;
+    event.preventDefault();
+    event.stopPropagation();
+
+    state.captionPointer = event.pointerId;
+    const rect = $('drag-caption').getBoundingClientRect();
+    state.grabX = event.clientX - (rect.left + rect.width/2);
+    state.grabY = event.clientY - (rect.top + rect.height/2);
+    $('drag-caption').classList.add('dragging');
+    $('trash').classList.remove('hidden');
+
+    try { $('drag-caption').setPointerCapture(event.pointerId); } catch {}
+  }
+
+  function moveCaption(event){
+    if (event.pointerId !== state.captionPointer) return;
+    event.preventDefault();
+
+    const stage = $('video-stage').getBoundingClientRect();
+    const box = $('drag-caption').getBoundingClientRect();
+    const halfW = Math.min(.48,box.width/(2*stage.width));
+    const halfH = Math.min(.48,box.height/(2*stage.height));
+
+    const x = (event.clientX - state.grabX - stage.left) / stage.width;
+    const y = (event.clientY - state.grabY - stage.top) / stage.height;
+
+    state.captionX = Math.max(halfW,Math.min(1-halfW,x));
+    state.captionY = Math.max(halfH,Math.min(1-halfH,y));
+    updateCaptionPreview();
+
+    const tr = $('trash').getBoundingClientRect();
+    const cr = $('drag-caption').getBoundingClientRect();
+    const cx = cr.left + cr.width/2;
+    const cy = cr.top + cr.height/2;
+    const hot = cx >= tr.left-25 && cx <= tr.right+25 && cy >= tr.top-25 && cy <= tr.bottom+25;
+    $('trash').classList.toggle('hot',hot);
+  }
+
+  function endCaptionDrag(event){
+    if (event.pointerId !== state.captionPointer) return;
+    state.captionPointer = null;
+    const shouldDelete = $('trash').classList.contains('hot');
+    $('drag-caption').classList.remove('dragging');
+    $('trash').classList.add('hidden');
+    $('trash').classList.remove('hot');
+    if (shouldDelete) removeCaption();
+  }
+
+  function roundedRect(ctx,x,y,w,h,r){
+    const radius = Math.min(r,w/2,h/2);
+    ctx.beginPath();
+    ctx.moveTo(x+radius,y);
+    ctx.arcTo(x+w,y,x+w,y+h,radius);
+    ctx.arcTo(x+w,y+h,x,y+h,radius);
+    ctx.arcTo(x,y+h,x,y,radius);
+    ctx.arcTo(x,y,x+w,y,radius);
+    ctx.closePath();
+  }
+
+  function wrapCaptionLines(ctx,text,maxWidth){
+    const paragraphs = String(text).split(/\n/);
+    const lines = [];
+
+    for (const paragraph of paragraphs){
+      if (!paragraph){ lines.push(''); continue; }
+
+      /* For text with spaces, wrap on words first. */
+      const words = paragraph.split(/\s+/);
+      if (words.length > 1){
+        let line = '';
+        for (const word of words){
+          const candidate = line ? line + ' ' + word : word;
+          if (ctx.measureText(candidate).width <= maxWidth){
+            line = candidate;
+          }else{
+            if (line) lines.push(line);
+            if (ctx.measureText(word).width <= maxWidth){
+              line = word;
+            }else{
+              /* Extremely long word: wrap characters rather than a vertical column. */
+              let piece = '';
+              for (const ch of Array.from(word)){
+                const test = piece + ch;
+                if (ctx.measureText(test).width <= maxWidth || !piece) piece = test;
+                else { lines.push(piece); piece = ch; }
+              }
+              line = piece;
+            }
+          }
+        }
+        if (line) lines.push(line);
+      }else{
+        /* Chinese / no-space text: wrap by characters. */
+        let line = '';
+        for (const ch of Array.from(paragraph)){
+          const candidate = line + ch;
+          if (ctx.measureText(candidate).width <= maxWidth || !line) line = candidate;
+          else { lines.push(line); line = ch; }
+        }
+        if (line) lines.push(line);
+      }
+    }
+
+    return lines.slice(0,5);
+  }
+
+  async function buildCaptionPng(){
+    if (!state.captionActive) return '';
+    const text = $('caption-text').value.trim();
+    if (!text) return '';
+
+    try{
+      await document.fonts.load('800 59px Montserrat');
+      await document.fonts.ready;
+    }catch{}
+
+    const canvas = document.createElement('canvas');
+    canvas.width = CONFIG.STORY_WIDTH;
+    canvas.height = CONFIG.STORY_HEIGHT;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    const fontPx = captionFontCanvas(text);
+    ctx.font = `800 ${fontPx}px Montserrat, Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    const maxTextWidth = canvas.width * .73;
+    const lines = wrapCaptionLines(ctx,text,maxTextWidth);
+    const lineHeight = fontPx * 1.20;
+    const horizontalPad = text.length > 54 ? 34 : text.length > 30 ? 40 : 46;
+    const verticalPad = text.length > 54 ? 20 : 26;
+
+    let measuredWidth = 0;
+    for (const line of lines) measuredWidth = Math.max(measuredWidth,ctx.measureText(line || ' ').width);
+
+    const boxWidth = Math.min(canvas.width*.84, Math.max(230, measuredWidth + horizontalPad*2));
+    const boxHeight = Math.max(94, lines.length*lineHeight + verticalPad*2);
+
+    let centerX = state.captionX * canvas.width;
+    let centerY = state.captionY * canvas.height;
+    centerX = Math.max(boxWidth/2+10, Math.min(canvas.width-boxWidth/2-10, centerX));
+    centerY = Math.max(boxHeight/2+10, Math.min(canvas.height-boxHeight/2-10, centerY));
+
+    const x = centerX - boxWidth/2;
+    const y = centerY - boxHeight/2;
+
+    ctx.fillStyle = '#000000';
+    roundedRect(ctx,x,y,boxWidth,boxHeight,38);
+    ctx.fill();
+
+    ctx.fillStyle = '#ffffff';
+    const totalTextHeight = (lines.length-1)*lineHeight;
+    const firstY = centerY - totalTextHeight/2;
+    lines.forEach((line,index) => ctx.fillText(line,centerX,firstY + index*lineHeight));
+
+    return canvas.toDataURL('image/png');
+  }
+
+  function setProgress(percent,label,note=''){
+    const p = Math.max(0,Math.min(100,Number(percent)||0));
+    $('progress-box').classList.remove('hidden');
+    $('progress-bar').style.width = p + '%';
+    $('progress-percent').textContent = Math.round(p) + '%';
+    if (label) $('progress-label').textContent = label;
+    $('progress-note').textContent = note;
+  }
+
+  function setSubmitting(disabled){
+    state.submitting = disabled;
+    $('submit-btn').disabled = disabled;
+    $('another-btn').disabled = disabled;
+    $('choose-btn').disabled = disabled;
+    $('caption-text').disabled = disabled;
+    $('delete-caption-btn').disabled = disabled;
+    $('add-caption-btn').disabled = disabled;
+  }
+
+  function upchunkUpload(uploadUrl,file){
+    return new Promise((resolve,reject) => {
+      if (!window.UpChunk || typeof window.UpChunk.createUpload !== 'function'){
+        reject(new Error('Upload library failed to load. Please refresh the page.'));
+        return;
+      }
+
+      const upload = window.UpChunk.createUpload({
+        endpoint: uploadUrl,
+        file,
+        chunkSize: CONFIG.UPCHUNK_KB
+      });
+      state.activeUpload = upload;
+
+      upload.on('progress', event => {
+        const pct = Number(event.detail) || 0;
+        /* Reserve 0–88% for network upload, 88–100% for processing. */
+        setProgress(pct*.88,t('uploading'),t('keepOpen'));
+      });
+
+      upload.on('error', event => {
+        state.activeUpload = null;
+        const detail = event?.detail?.message || event?.detail || t('uploadFailed');
+        reject(new Error(typeof detail === 'string' ? detail : t('uploadFailed')));
+      });
+
+      upload.on('success', () => {
+        state.activeUpload = null;
+        setProgress(88,t('uploaded'),t('processingWait'));
+        resolve();
+      });
+    });
+  }
+
+  function processingLabel(status){
+    switch(status){
+      case 'creating_upload':
+      case 'waiting_upload': return t('uploading');
+      case 'source_processing': return t('muxPreparing');
+      case 'creating_clip':
+      case 'clip_processing': return t('finalizing');
+      case 'pending':
+      case 'approved': return t('done');
+      default: return t('muxPreparing');
+    }
+  }
+
+  function processingPercent(status){
+    switch(status){
+      case 'creating_upload': return 88;
+      case 'waiting_upload': return 89;
+      case 'source_processing': return 92;
+      case 'creating_clip': return 95;
+      case 'clip_processing': return 98;
+      case 'pending':
+      case 'approved': return 100;
+      default: return 91;
+    }
+  }
+
+  async function pollUntilReady(){
+    const started = Date.now();
+    state.pollAbort = false;
+
+    while (!state.pollAbort && Date.now()-started < CONFIG.STATUS_TIMEOUT_MS){
+      const result = await api(`/api/submission/${encodeURIComponent(state.submissionId)}/status`, {
+        method:'GET',
+        headers:{Authorization:`Bearer ${state.session}`}
+      });
+
+      const submission = result.submission;
+      const status = submission.status;
+
+      if (status === 'error'){
+        throw new Error(submission.error || t('processingFailed'));
+      }
+
+      setProgress(processingPercent(status),processingLabel(status), status === 'pending' || status === 'approved' ? '' : t('keepOpen'));
+
+      if (status === 'pending' || status === 'approved') return submission;
+      await new Promise(resolve => setTimeout(resolve,CONFIG.STATUS_POLL_MS));
+    }
+
+    throw new Error('Processing is taking longer than expected. Please keep the page open and try checking again shortly.');
+  }
+
+  async function submitMemory(){
+    if (state.submitting) return;
+    $('editor-error').textContent = '';
+
+    if (!navigator.onLine){
+      $('editor-error').textContent = t('errOffline');
+      return;
+    }
+    if (!state.file){
+      $('editor-error').textContent = t('errNoVideo');
+      return;
+    }
+
+    const clipDuration = state.end-state.start;
+    if (clipDuration < CONFIG.MIN_CLIP_SECONDS-.1 || clipDuration > CONFIG.MAX_CLIP_SECONDS+.1){
+      $('editor-error').textContent = t('errClip');
+      return;
+    }
+
+    setSubmitting(true);
+    setProgress(1,t('preparing'),t('keepOpen'));
+
+    try{
+      const captionText = state.captionActive ? $('caption-text').value.trim().slice(0,CONFIG.MAX_CAPTION_CHARS) : '';
+      const captionPng = captionText ? await buildCaptionPng() : '';
+      setProgress(4,t('preparing'),t('keepOpen'));
+
+      const create = await api('/api/upload/create', {
+        method:'POST',
+        headers:{Authorization:`Bearer ${state.session}`},
+        body:JSON.stringify({
+          sourceDuration:+state.sourceDuration.toFixed(3),
+          startTime:+state.start.toFixed(3),
+          endTime:+state.end.toFixed(3),
+          captionText,
+          captionX:+state.captionX.toFixed(5),
+          captionY:+state.captionY.toFixed(5),
+          captionPng,
+          fileName:state.file.name,
+          fileSize:state.file.size
+        })
+      });
+
+      /* Keep backend IDs from the response in case the backend ever changes them. */
+      if (create.submissionId) state.submissionId = create.submissionId;
+
+      setProgress(5,t('uploading'),t('keepOpen'));
+      await upchunkUpload(create.uploadUrl,state.file);
+      await pollUntilReady();
+
+      setProgress(100,t('done'));
+      await new Promise(resolve => setTimeout(resolve,450));
+
+      $('page-editor').classList.add('hidden');
+      $('page-thanks').classList.remove('hidden');
+    }catch(error){
+      console.error('Submission error:',error);
+      $('editor-error').textContent = error.message || t('uploadFailed');
+      $('progress-note').textContent = '';
+      setSubmitting(false);
+    }
+  }
+
+  function updateOnlineState(){
+    $('offline-banner').classList.toggle('hidden',navigator.onLine);
+  }
+
+  function init(){
+    setLanguage(state.lang);
+    updateOnlineState();
+
+    $('lang-en').addEventListener('click',()=>setLanguage('en'));
+    $('lang-zh').addEventListener('click',()=>setLanguage('zh'));
+
+    $('share-btn').addEventListener('click',()=>{
+      $('share-btn').classList.add('hidden');
+      $('token-area').classList.remove('hidden');
+      setTimeout(()=>$('guest-name').focus(),20);
+    });
+
+    $('token-input').addEventListener('input',event => {
+      event.target.value = cleanCode(event.target.value);
+    });
+
+    $('token-input').addEventListener('keydown',event => {
+      if (event.key === 'Enter') claimCode();
+    });
+
+    $('continue-btn').addEventListener('click',claimCode);
+    $('choose-btn').addEventListener('click',()=>$('video-file').click());
+    $('video-file').addEventListener('change',event=>loadVideo(event.target.files?.[0]));
+    $('another-btn').addEventListener('click',resetVideo);
+    $('submit-btn').addEventListener('click',submitMemory);
+
+    $('video-stage').addEventListener('click',togglePlay);
+    $('video-preview').addEventListener('play',updatePlaymark);
+    $('video-preview').addEventListener('pause',updatePlaymark);
+    $('video-preview').addEventListener('timeupdate',()=>{
+      const video = $('video-preview');
+      if (!state.file || state.handle) return;
+      if (!video.paused && (video.currentTime >= state.end-.025 || video.currentTime < state.start-.05)){
+        video.currentTime = state.start;
+        video.play().catch(()=>{});
+      }
+    });
+
+    $('handle-start').addEventListener('pointerdown',event=>startHandle('start',event));
+    $('handle-end').addEventListener('pointerdown',event=>startHandle('end',event));
+    window.addEventListener('pointermove',moveHandle,{passive:false});
+    window.addEventListener('pointerup',endHandle);
+    window.addEventListener('pointercancel',endHandle);
+
+    $('add-caption-btn').addEventListener('click',enableCaption);
+    $('delete-caption-btn').addEventListener('click',removeCaption);
+    $('caption-text').addEventListener('input',updateCaptionPreview);
+
+    $('drag-caption').addEventListener('pointerdown',startCaptionDrag);
+    $('drag-caption').addEventListener('pointermove',moveCaption,{passive:false});
+    $('drag-caption').addEventListener('pointerup',endCaptionDrag);
+    $('drag-caption').addEventListener('pointercancel',endCaptionDrag);
+
+    window.addEventListener('online',updateOnlineState);
+    window.addEventListener('offline',updateOnlineState);
+
+    window.addEventListener('beforeunload',event => {
+      if (state.submitting){
+        event.preventDefault();
+        event.returnValue = '';
+      }
+    });
+  }
+
+  init();
+  </script>
 </body>
 </html>
