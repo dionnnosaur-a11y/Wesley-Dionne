@@ -263,13 +263,20 @@
       -webkit-user-select:none;
     }
 
-    .stage video{
+    .stage video,
+    .stage .photo-preview{
       width:100%;
       height:100%;
       object-fit:cover;
       object-position:center;
       display:block;
       background:#000;
+    }
+
+    .photo-preview{
+      -webkit-user-drag:none;
+      user-select:none;
+      pointer-events:none;
     }
 
     .loader{
@@ -372,7 +379,7 @@
       padding:9px 15px;
       font-family:'Montserrat',sans-serif!important;
       font-weight:800;
-      font-size:1.08rem;
+      font-size:20px;
       line-height:1.2;
       text-align:center;
       white-space:pre-wrap;
@@ -642,10 +649,10 @@
         <span id="code-pill" class="pill"></span>
       </div>
 
-      <input id="video-file" type="file" accept="video/*" hidden>
+      <input id="video-file" type="file" accept="video/*,image/*" hidden>
 
-      <button id="choose-btn" class="btn" type="button" data-i18n="chooseBtn">Select Video</button>
-      <div id="choose-help" class="helper" data-i18n="chooseHelp">Choose a video up to 5 minutes long, then select your favourite 5–10 seconds.</div>
+      <button id="choose-btn" class="btn" type="button" data-i18n="chooseBtn">Select Photo or Video</button>
+      <div id="choose-help" class="helper" data-i18n="chooseHelp">Choose a photo, or a video up to 5 minutes long.</div>
 
       <div id="offline-banner" class="offline hidden" data-i18n="offline">You are offline. Keep this page open and reconnect before submitting.</div>
 
@@ -657,6 +664,7 @@
           </div>
 
           <video id="video-preview" playsinline webkit-playsinline preload="metadata"></video>
+          <img id="photo-preview" class="photo-preview hidden" alt="Selected photo preview">
           <div id="playmark" class="playmark paused"></div>
 
           <button id="add-caption-btn" class="add-caption" type="button" data-i18n="addCaption">💬 + Add Caption</button>
@@ -685,15 +693,17 @@
           <div id="handle-end" class="handle"></div>
         </div>
 
-        <div class="duration">
+        <div id="duration-row" class="duration">
           <span data-i18n="selected">SELECTED:</span>
           <strong><span id="duration-display">0.0</span>s</strong>
           <span data-i18n="clipLimit">(5–10 seconds)</span>
         </div>
 
+        <div id="photo-duration" class="duration hidden" data-i18n="photoDuration">Photo story: 5.0 seconds</div>
+
         <div>
           <button id="another-btn" class="btn outline" type="button" data-i18n="anotherBtn">Choose Another</button>
-          <button id="submit-btn" class="btn" type="button" data-i18n="submitBtn">Submit Clip</button>
+          <button id="submit-btn" class="btn" type="button" data-i18n="submitBtn">Submit Memory</button>
         </div>
 
         <div id="progress-box" class="progress-box hidden" aria-live="polite">
@@ -755,10 +765,10 @@
       codeHelp: 'Enter the 4-character code from your invitation.',
       continueBtn: 'Continue',
       editorTitle: 'Trim & Caption',
-      chooseBtn: 'Select Video',
-      chooseHelp: 'Choose a video up to 5 minutes long, then select your favourite 5–10 seconds.',
+      chooseBtn: 'Select Photo or Video',
+      chooseHelp: 'Choose a photo, or a video up to 5 minutes long. Videos can be trimmed to 5–10 seconds.',
       offline: 'You are offline. Keep this page open and reconnect before submitting.',
-      loadingVideo: 'Loading video…',
+      loadingVideo: 'Loading memory…',
       addCaption: '💬 + Add Caption',
       trash: '🗑️ Drag here to delete',
       captionPlaceholder: 'Type caption…',
@@ -766,7 +776,7 @@
       selected: 'SELECTED:',
       clipLimit: '(5–10 seconds)',
       anotherBtn: 'Choose Another',
-      submitBtn: 'Submit Clip',
+      submitBtn: 'Submit Memory',
       thanksTitle: 'Thank You!',
       thanksMessage: 'Your memory is in the moderation queue.',
       errName: 'Please enter your preferred name.',
@@ -775,7 +785,7 @@
       errLong: 'Please choose a video that is 5 minutes or shorter.',
       errVideo: 'This browser could not read that video. Please choose another video.',
       errClip: 'Please select between 5 and 10 seconds.',
-      errNoVideo: 'Please select a video first.',
+      errNoVideo: 'Please select a photo or video first.',
       errOffline: 'You are offline. Reconnect before submitting.',
       claiming: 'Checking guest code…',
       preparing: 'Preparing your clip…',
@@ -785,9 +795,12 @@
       finalizing: 'Finishing your clip…',
       done: 'Complete',
       keepOpen: 'Please keep this page open until the clip is ready.',
-      processingWait: 'The upload is complete. Mux is now trimming the selected section and applying your caption.',
+      processingWait: 'Upload complete. Mux is now creating your final Story and applying your caption.',
       uploadFailed: 'Upload failed. Please check your connection and try again.',
-      processingFailed: 'We could not process this video. Please choose another video and try again.'
+      processingFailed: 'We could not process this memory. Please choose another file and try again.',
+      photoDuration: 'Photo story: 5.0 seconds',
+      errPhoto: 'This browser could not read that photo. Please choose another photo.',
+      uploadingPhoto: 'Uploading photo…'
     },
     zh: {
       subtitle: '用您的视角，记录我们的婚礼',
@@ -799,10 +812,10 @@
       codeHelp: '请输入邀请函上的4位宾客邀请码。',
       continueBtn: '继续',
       editorTitle: '剪辑与字幕',
-      chooseBtn: '选择视频',
-      chooseHelp: '请选择5分钟以内的视频，再选出您最喜欢的5至10秒。',
+      chooseBtn: '选择照片或视频',
+      chooseHelp: '请选择照片，或5分钟以内的视频。视频可剪辑为5至10秒。',
       offline: '目前没有网络。请保持此页面开启，恢复网络后再提交。',
-      loadingVideo: '正在加载视频…',
+      loadingVideo: '正在加载…',
       addCaption: '💬 + 添加字幕',
       trash: '🗑️ 拖到这里删除',
       captionPlaceholder: 'Type caption…',
@@ -810,7 +823,7 @@
       selected: '已选：',
       clipLimit: '（5至10秒）',
       anotherBtn: '重新选择',
-      submitBtn: '提交视频',
+      submitBtn: '提交回忆',
       thanksTitle: '谢谢您！',
       thanksMessage: '您的视频已进入审核队列。',
       errName: '请输入您的称呼。',
@@ -819,7 +832,7 @@
       errLong: '请选择5分钟或更短的视频。',
       errVideo: '此浏览器无法读取该视频，请选择其他视频。',
       errClip: '请选择5至10秒的片段。',
-      errNoVideo: '请先选择视频。',
+      errNoVideo: '请先选择照片或视频。',
       errOffline: '目前没有网络，请恢复网络后再提交。',
       claiming: '正在验证邀请码…',
       preparing: '正在准备视频…',
@@ -829,9 +842,12 @@
       finalizing: '正在完成视频…',
       done: '完成',
       keepOpen: '请保持此页面开启，直到视频处理完成。',
-      processingWait: '上传已经完成。系统正在剪辑所选片段并加入字幕。',
+      processingWait: '上传已经完成。系统正在制作最终限时动态并加入字幕。',
       uploadFailed: '上传失败，请检查网络后重试。',
-      processingFailed: '无法处理该视频，请选择其他视频后重试。'
+      processingFailed: '无法处理此文件，请选择其他照片或视频后重试。',
+      photoDuration: '照片将以5.0秒短片播放',
+      errPhoto: '此浏览器无法读取该照片，请选择其他照片。',
+      uploadingPhoto: '正在上传照片…'
     }
   };
 
@@ -842,6 +858,7 @@
     session: '',
     submissionId: '',
     file: null,
+    mediaType: '', // 'video' or 'photo'
     objectUrl: null,
     sourceDuration: 0,
     start: 0,
@@ -965,6 +982,7 @@
     if (state.submitting) return;
 
     state.file = null;
+    state.mediaType = '';
     state.sourceDuration = 0;
     state.start = 0;
     state.end = 10;
@@ -972,8 +990,18 @@
 
     $('video-file').value = '';
     $('video-preview').pause();
+    $('video-preview').muted = false;
     $('video-preview').removeAttribute('src');
     $('video-preview').load();
+    $('video-preview').classList.remove('hidden');
+    $('photo-preview').removeAttribute('src');
+    $('photo-preview').classList.add('hidden');
+    $('playmark').classList.remove('hidden');
+    $('trim-track').classList.remove('hidden');
+    $('duration-row').classList.remove('hidden');
+    $('photo-duration').classList.add('hidden');
+    $('filmstrip').innerHTML = '';
+
     $('editor-controls').classList.add('hidden');
     $('choose-btn').classList.remove('hidden');
     $('choose-help').classList.remove('hidden');
@@ -983,14 +1011,31 @@
     removeCaption();
   }
 
+  async function loadMedia(file){
+    if (!file || state.submitting) return;
+    if (String(file.type || '').startsWith('image/')) return loadPhoto(file);
+    if (String(file.type || '').startsWith('video/')) return loadVideo(file);
+
+    $('editor-error').textContent = t('errVideo');
+  }
+
   async function loadVideo(file){
     if (!file || state.submitting) return;
 
     state.file = file;
+    state.mediaType = 'video';
     revokeObjectUrl();
     state.objectUrl = URL.createObjectURL(file);
 
     const video = $('video-preview');
+    $('photo-preview').classList.add('hidden');
+    $('photo-preview').removeAttribute('src');
+    video.classList.remove('hidden');
+    $('playmark').classList.remove('hidden');
+    $('trim-track').classList.remove('hidden');
+    $('duration-row').classList.remove('hidden');
+    $('photo-duration').classList.add('hidden');
+
     $('editor-error').textContent = '';
     $('editor-controls').classList.remove('hidden');
     $('video-loader').classList.remove('hidden');
@@ -1023,7 +1068,6 @@
       removeCaption();
       generateFilmstrip();
 
-      /* User specifically asked not to show Select Video after selection */
       $('choose-btn').classList.add('hidden');
       $('choose-help').classList.add('hidden');
       $('video-loader').classList.add('hidden');
@@ -1039,6 +1083,64 @@
     }
   }
 
+  async function loadPhoto(file){
+    if (!file || state.submitting) return;
+
+    state.file = file;
+    state.mediaType = 'photo';
+    revokeObjectUrl();
+    state.objectUrl = URL.createObjectURL(file);
+
+    const image = $('photo-preview');
+    const video = $('video-preview');
+    $('editor-error').textContent = '';
+    $('editor-controls').classList.remove('hidden');
+    $('video-loader').classList.remove('hidden');
+
+    try{
+      await new Promise((resolve,reject) => {
+        const loaded = () => { cleanup(); resolve(); };
+        const failed = () => { cleanup(); reject(new Error('photo')); };
+        const cleanup = () => {
+          image.removeEventListener('load', loaded);
+          image.removeEventListener('error', failed);
+        };
+        image.addEventListener('load', loaded, {once:true});
+        image.addEventListener('error', failed, {once:true});
+        image.src = state.objectUrl;
+      });
+
+      if (!image.naturalWidth || !image.naturalHeight) throw new Error('photo');
+
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+      video.classList.add('hidden');
+      image.classList.remove('hidden');
+      $('playmark').classList.add('hidden');
+      $('trim-track').classList.add('hidden');
+      $('duration-row').classList.add('hidden');
+      $('photo-duration').classList.remove('hidden');
+      $('filmstrip').innerHTML = '';
+
+      /* A still photo becomes a real 5-second video on the backend. */
+      state.sourceDuration = 5;
+      state.start = 0;
+      state.end = 5;
+
+      removeCaption();
+      $('choose-btn').classList.add('hidden');
+      $('choose-help').classList.add('hidden');
+      $('video-loader').classList.add('hidden');
+    }catch(error){
+      $('video-loader').classList.add('hidden');
+      $('editor-controls').classList.add('hidden');
+      $('choose-btn').classList.remove('hidden');
+      $('choose-help').classList.remove('hidden');
+      $('editor-error').textContent = t('errPhoto');
+    }
+  }
+
   function updatePlaymark(){
     const paused = $('video-preview').paused;
     $('playmark').classList.toggle('paused', paused);
@@ -1047,7 +1149,7 @@
 
   function togglePlay(event){
     if (event.target.closest('#drag-caption') || event.target.closest('#add-caption-btn')) return;
-    if (!state.file) return;
+    if (!state.file || state.mediaType !== 'video') return;
 
     const video = $('video-preview');
     if (video.paused){
@@ -1082,7 +1184,7 @@
   }
 
   function startHandle(which,event){
-    if (!state.file || state.submitting) return;
+    if (!state.file || state.mediaType !== 'video' || state.submitting) return;
     event.preventDefault();
     event.stopPropagation();
     state.handle = which;
@@ -1183,24 +1285,47 @@
     }
   }
 
+  function captionLength(text){
+    return Array.from((text || '').trim()).length;
+  }
+
+  /* Deliberately obvious dynamic sizing: longer captions visibly shrink. */
   function captionFontCss(text){
-    const len = (text || '').trim().length;
-    if (len > 68) return '.68rem';
-    if (len > 54) return '.74rem';
-    if (len > 42) return '.82rem';
-    if (len > 30) return '.90rem';
-    if (len > 20) return '.98rem';
-    return '1.08rem';
+    const len = captionLength(text);
+    if (len > 70) return 11;
+    if (len > 56) return 12;
+    if (len > 42) return 13;
+    if (len > 30) return 14.5;
+    if (len > 20) return 16;
+    if (len > 12) return 18;
+    return 20;
   }
 
   function captionFontCanvas(text){
-    const len = (text || '').trim().length;
-    if (len > 68) return 36;
-    if (len > 54) return 40;
-    if (len > 42) return 44;
-    if (len > 30) return 49;
-    if (len > 20) return 54;
-    return 59;
+    const len = captionLength(text);
+    if (len > 70) return 36;
+    if (len > 56) return 39;
+    if (len > 42) return 43;
+    if (len > 30) return 48;
+    if (len > 20) return 53;
+    if (len > 12) return 59;
+    return 65;
+  }
+
+  function fitCaptionPreview(text){
+    const preview = $('caption-preview');
+    const stage = $('video-stage');
+    let size = captionFontCss(text);
+    preview.style.fontSize = size + 'px';
+
+    /* Also shrink by actual rendered height so a caption never dominates the frame. */
+    const maxHeight = Math.max(68, stage.clientHeight * .19);
+    let attempts = 0;
+    while (preview.getBoundingClientRect().height > maxHeight && size > 11 && attempts < 12){
+      size -= 1;
+      preview.style.fontSize = size + 'px';
+      attempts += 1;
+    }
   }
 
   function enableCaption(event){
@@ -1251,7 +1376,7 @@
     $('caption-text').value = text;
     $('caption-preview').textContent = text || t('captionPlaceholder');
     $('caption-preview').style.opacity = text ? '1' : '.6';
-    $('caption-preview').style.fontSize = captionFontCss(text);
+    fitCaptionPreview(text);
 
     if (text.length > 54) $('caption-preview').style.padding = '7px 11px';
     else if (text.length > 30) $('caption-preview').style.padding = '8px 13px';
@@ -1422,6 +1547,61 @@
     return canvas.toDataURL('image/png');
   }
 
+  function dataUrlBytes(dataUrl){
+    const comma = String(dataUrl).indexOf(',');
+    if (comma < 0) return Infinity;
+    const b64 = dataUrl.slice(comma+1);
+    return Math.ceil(b64.length * 3 / 4);
+  }
+
+  function drawPhotoCover(canvas,image){
+    const ctx = canvas.getContext('2d');
+    const sw = image.naturalWidth;
+    const sh = image.naturalHeight;
+    const scale = Math.max(canvas.width/sw, canvas.height/sh);
+    const dw = sw * scale;
+    const dh = sh * scale;
+    const dx = (canvas.width-dw)/2;
+    const dy = (canvas.height-dh)/2;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(image,dx,dy,dw,dh);
+  }
+
+  async function buildPhotoJpeg(){
+    if (state.mediaType !== 'photo') return '';
+    const image = $('photo-preview');
+    if (!image.naturalWidth || !image.naturalHeight) throw new Error(t('errPhoto'));
+
+    /* Resize/crop on the phone as an IMAGE only — no iOS video transcoding. */
+    let canvas = document.createElement('canvas');
+    canvas.width = CONFIG.STORY_WIDTH;
+    canvas.height = CONFIG.STORY_HEIGHT;
+    drawPhotoCover(canvas,image);
+
+    let quality = .84;
+    let data = canvas.toDataURL('image/jpeg',quality);
+    while (dataUrlBytes(data) > 1_300_000 && quality > .46){
+      quality -= .08;
+      data = canvas.toDataURL('image/jpeg',quality);
+    }
+
+    /* Very detailed photos get a 720p fallback to stay safely below D1's BLOB limit. */
+    if (dataUrlBytes(data) > 1_300_000){
+      canvas = document.createElement('canvas');
+      canvas.width = 720;
+      canvas.height = 1280;
+      drawPhotoCover(canvas,image);
+      data = canvas.toDataURL('image/jpeg',.72);
+    }
+
+    if (dataUrlBytes(data) > 1_450_000){
+      throw new Error('This photo is unusually large after processing. Please choose another photo.');
+    }
+
+    return data;
+  }
+
   function setProgress(percent,label,note=''){
     const p = Math.max(0,Math.min(100,Number(percent)||0));
     $('progress-box').classList.remove('hidden');
@@ -1535,15 +1715,17 @@
       $('editor-error').textContent = t('errOffline');
       return;
     }
-    if (!state.file){
+    if (!state.file || !state.mediaType){
       $('editor-error').textContent = t('errNoVideo');
       return;
     }
 
-    const clipDuration = state.end-state.start;
-    if (clipDuration < CONFIG.MIN_CLIP_SECONDS-.1 || clipDuration > CONFIG.MAX_CLIP_SECONDS+.1){
-      $('editor-error').textContent = t('errClip');
-      return;
+    if (state.mediaType === 'video'){
+      const clipDuration = state.end-state.start;
+      if (clipDuration < CONFIG.MIN_CLIP_SECONDS-.1 || clipDuration > CONFIG.MAX_CLIP_SECONDS+.1){
+        $('editor-error').textContent = t('errClip');
+        return;
+      }
     }
 
     setSubmitting(true);
@@ -1554,43 +1736,67 @@
       const captionPng = captionText ? await buildCaptionPng() : '';
       setProgress(4,t('preparing'),t('keepOpen'));
 
-      const create = await api('/api/upload/create', {
-        method:'POST',
-        headers:{Authorization:`Bearer ${state.session}`},
-        body:JSON.stringify({
-          sourceDuration:+state.sourceDuration.toFixed(3),
-          startTime:+state.start.toFixed(3),
-          endTime:+state.end.toFixed(3),
-          captionText,
-          captionX:+state.captionX.toFixed(5),
-          captionY:+state.captionY.toFixed(5),
-          captionPng,
-          fileName:state.file.name,
-          fileSize:state.file.size
-        })
-      });
+      if (state.mediaType === 'video'){
+        const create = await api('/api/upload/create', {
+          method:'POST',
+          headers:{Authorization:`Bearer ${state.session}`},
+          body:JSON.stringify({
+            sourceDuration:+state.sourceDuration.toFixed(3),
+            startTime:+state.start.toFixed(3),
+            endTime:+state.end.toFixed(3),
+            captionText,
+            captionX:+state.captionX.toFixed(5),
+            captionY:+state.captionY.toFixed(5),
+            captionPng,
+            fileName:state.file.name,
+            fileSize:state.file.size
+          })
+        });
 
-      /* Keep backend IDs from the response in case the backend ever changes them. */
-      if (create.submissionId) state.submissionId = create.submissionId;
+        if (create.submissionId) state.submissionId = create.submissionId;
+        setProgress(5,t('uploading'),t('keepOpen'));
+        await upchunkUpload(create.uploadUrl,state.file);
+      }else{
+        /* Photo: crop/resize to Story format, send the small JPEG to our Worker,
+           and let Mux turn it into a real five-second video. */
+        const photoJpeg = await buildPhotoJpeg();
+        setProgress(8,t('uploadingPhoto'),t('keepOpen'));
 
-      setProgress(5,t('uploading'),t('keepOpen'));
-      await upchunkUpload(create.uploadUrl,state.file);
+        const baseVideoUrl = new URL('story-base.mp4',window.location.href).href;
+        const create = await api('/api/photo/create', {
+          method:'POST',
+          headers:{Authorization:`Bearer ${state.session}`},
+          body:JSON.stringify({
+            photoJpeg,
+            baseVideoUrl,
+            captionText,
+            captionX:+state.captionX.toFixed(5),
+            captionY:+state.captionY.toFixed(5),
+            captionPng,
+            fileName:state.file.name,
+            fileSize:state.file.size
+          })
+        });
+
+        if (create.submissionId) state.submissionId = create.submissionId;
+        setProgress(88,t('uploaded'),t('processingWait'));
+      }
+
       await pollUntilReady();
 
       setProgress(100,t('done'));
       await new Promise(resolve => setTimeout(resolve,450));
-      /* Stop preview/audio completely before showing Thank You */
+
       const previewVideo = $('video-preview');
       previewVideo.pause();
       previewVideo.muted = true;
       previewVideo.removeAttribute('src');
       previewVideo.load();
-
+      $('photo-preview').removeAttribute('src');
       revokeObjectUrl();
-      
+
       $('page-editor').classList.add('hidden');
       $('page-thanks').classList.remove('hidden');
-      
     }catch(error){
       console.error('Submission error:',error);
       $('editor-error').textContent = error.message || t('uploadFailed');
@@ -1626,7 +1832,7 @@
 
     $('continue-btn').addEventListener('click',claimCode);
     $('choose-btn').addEventListener('click',()=>$('video-file').click());
-    $('video-file').addEventListener('change',event=>loadVideo(event.target.files?.[0]));
+    $('video-file').addEventListener('change',event=>loadMedia(event.target.files?.[0]));
     $('another-btn').addEventListener('click',resetVideo);
     $('submit-btn').addEventListener('click',submitMemory);
 
@@ -1635,7 +1841,7 @@
     $('video-preview').addEventListener('pause',updatePlaymark);
     $('video-preview').addEventListener('timeupdate',()=>{
       const video = $('video-preview');
-      if (!state.file || state.handle) return;
+      if (!state.file || state.mediaType !== 'video' || state.handle) return;
       if (!video.paused && (video.currentTime >= state.end-.025 || video.currentTime < state.start-.05)){
         video.currentTime = state.start;
         video.play().catch(()=>{});
