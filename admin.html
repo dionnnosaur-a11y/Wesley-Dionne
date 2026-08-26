@@ -1,76 +1,1143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#faf8f3">
-<title>Wesley & Dionne | Admin</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{--gold:#c5a059;--gold-dark:#9e7a37;--cream:#faf8f3;--white:#fff;--text:#2c2925;--muted:#6e675f;--red:#b33a3a;--green:#55795d;--line:rgba(197,160,89,.28)}
-*{box-sizing:border-box;margin:0;padding:0}body{background:var(--cream);color:var(--text);font-family:Montserrat,sans-serif;min-height:100vh;padding:14px}.hidden{display:none!important}button,input{font:inherit}.shell{max-width:1050px;margin:auto}.login{max-width:430px;margin:7vh auto 0;background:#fff;border:1px solid var(--line);border-radius:18px;padding:30px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.06)}.script{font-family:'Alex Brush',cursive;color:var(--gold-dark);font-size:3rem}.label{font-size:.7rem;letter-spacing:.13em;font-weight:800;color:var(--muted)}.input{width:100%;border:1px solid rgba(158,122,55,.6);border-radius:10px;padding:12px;text-align:center;margin-top:16px;outline:0}.btn{border:0;border-radius:999px;padding:10px 17px;min-height:41px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#fff;font-weight:700;cursor:pointer}.btn.small{font-size:.75rem;padding:8px 12px;min-height:35px}.btn.green{background:var(--green)}.btn.red{background:var(--red)}.btn.dark{background:#292725}.btn.outline{background:#fff;color:var(--muted);border:1px solid #aaa}.btn:disabled{opacity:.45}.error{color:var(--red);font-size:.78rem;margin-top:8px;min-height:1em}.top{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;display:flex;justify-content:space-between;gap:12px;align-items:center;box-shadow:0 7px 25px rgba(0,0,0,.05)}.brand{display:flex;gap:12px;align-items:center}.mini-xi{color:#8a1c1c;font-size:1.7rem}.title{font-weight:800}.sub{font-size:.72rem;color:var(--muted);margin-top:3px}.actionsTop{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0}.stat{background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px;text-align:center}.stat strong{display:block;color:var(--gold-dark);font-size:1.5rem}.stat span{font-size:.7rem;color:var(--muted);font-weight:700}.tabs{display:flex;gap:7px;overflow:auto;margin:12px 0}.tab{white-space:nowrap;border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:9px 14px;font-weight:700;cursor:pointer}.tab.active{background:var(--gold-dark);color:#fff}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:13px}.empty{grid-column:1/-1;background:#fff;border:1px dashed var(--line);border-radius:14px;padding:35px;text-align:center;color:var(--muted)}.memory{background:#fff;border:1px solid var(--line);border-radius:15px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.045)}.thumb{position:relative;width:100%;aspect-ratio:9/16;background:#111;overflow:hidden}.thumb img{width:100%;height:100%;object-fit:cover;display:block}.thumb .processing{position:absolute;inset:0;display:grid;place-items:center;color:#fff;background:rgba(0,0,0,.52);padding:20px;text-align:center;font-size:.8rem}.body{padding:13px}.guestrow{display:flex;justify-content:space-between;gap:8px}.guest{font-weight:800}.token{font-size:.7rem;color:var(--gold-dark);font-weight:800}.meta{font-size:.7rem;color:var(--muted);line-height:1.5;margin-top:5px}.captioncopy{font-size:.75rem;margin-top:8px;padding:8px;background:#f8f6f1;border-radius:8px}.rowbtn{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.order{display:flex;gap:5px;align-items:center;margin-top:8px}.order span{font-size:.68rem;color:var(--muted)}.tokenpanel{margin:13px 0;padding:14px;background:#fff;border:1px solid var(--line);border-radius:14px}.tokenpanel .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.tokenpanel input{width:85px;border:1px solid #bbb;border-radius:8px;padding:8px;text-transform:uppercase}.tokenstats{font-size:.75rem;color:var(--muted);margin-top:8px}.modal{position:fixed;inset:0;z-index:100;background:#000;display:grid;place-items:center}.playerWrap{position:relative;height:min(94vh,900px);aspect-ratio:9/16;max-width:100vw;background:#000;overflow:hidden}.playerWrap video{width:100%;height:100%;object-fit:cover;display:block}.playerbar{position:fixed;z-index:120;top:max(12px,env(safe-area-inset-top));left:12px;right:12px;display:flex;justify-content:space-between;pointer-events:none}.counter,.close{pointer-events:auto;background:rgba(0,0,0,.58);color:#fff;border:0;border-radius:999px}.counter{padding:9px 13px;font-size:.75rem;font-weight:800}.close{width:43px;height:43px;cursor:pointer;font-size:1.1rem}.dragging{opacity:.45}
-@media(max-width:600px){body{padding:10px}.top{align-items:flex-start;flex-direction:column}.actionsTop{justify-content:flex-start}.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr);gap:6px}.stat{padding:11px}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#faf8f3">
+  <title>Wesley & Dionne | Admin</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      /* ======================================================
+         CHANGE COLOUR THEMES HERE
+         Matches the guest-facing index.html
+         ====================================================== */
+      --gold:#c5a059;
+      --gold-dark:#9e7a37;
+      --cream:#faf8f3;
+      --white:#ffffff;
+      --text:#2c2925;
+      --muted:#6e675f;
+      --red:#8a1c1c;
+      --danger:#c74444;
+      --green:#5d7c65;
+      --line:rgba(197,160,89,.30);
+      --shadow:0 10px 30px rgba(0,0,0,.055);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{min-height:100%}
+    body{
+      background:var(--cream);
+      color:var(--text);
+      font-family:'Montserrat',sans-serif;
+      min-height:100vh;
+      padding:max(14px,env(safe-area-inset-top)) 14px max(28px,env(safe-area-inset-bottom));
+    }
+    button,input,select{font:inherit}
+    button{-webkit-tap-highlight-color:transparent}
+    .hidden{display:none!important}
+
+    .shell{width:min(100%,1180px);margin:0 auto}
+
+    /* LOGIN */
+    .login-card{
+      width:min(100%,430px);
+      margin:7vh auto 0;
+      background:var(--white);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:32px 24px;
+      text-align:center;
+      box-shadow:var(--shadow);
+    }
+    .script{
+      font-family:'Alex Brush',cursive;
+      color:var(--gold-dark);
+      font-size:3rem;
+      line-height:1;
+    }
+    .xi{color:var(--red);font-size:2rem;margin:10px 0}
+    .eyebrow{
+      color:var(--muted);
+      font-size:.7rem;
+      font-weight:800;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+    .login-input{
+      width:100%;
+      margin-top:18px;
+      border:1px solid rgba(158,122,55,.62);
+      border-radius:10px;
+      padding:12px;
+      text-align:center;
+      outline:0;
+      background:#fff;
+      font-size:16px;
+    }
+    .login-input:focus{border-color:var(--gold-dark);box-shadow:0 0 0 3px rgba(197,160,89,.12)}
+    .error{color:var(--red);font-size:.78rem;line-height:1.45;min-height:1.2em;margin-top:9px}
+
+    /* BUTTONS */
+    .btn{
+      border:0;
+      border-radius:999px;
+      min-height:42px;
+      padding:10px 17px;
+      background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .btn.small{font-size:.74rem;min-height:36px;padding:8px 12px}
+    .btn.outline{background:#fff;color:var(--muted);border:1px solid rgba(110,103,95,.55)}
+    .btn.dark{background:#2d2a27}
+    .btn.green{background:var(--green)}
+    .btn.red{background:var(--danger)}
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+
+    /* HEADER */
+    .topbar{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      box-shadow:var(--shadow);
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand-xi{font-size:1.7rem;color:var(--red)}
+    .brand-title{font-weight:800}
+    .brand-sub{font-size:.71rem;color:var(--muted);margin-top:3px}
+    .top-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+
+    /* STATS */
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0}
+    .stat{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+      text-align:center;
+    }
+    .stat strong{display:block;color:var(--gold-dark);font-size:1.55rem}
+    .stat span{font-size:.69rem;color:var(--muted);font-weight:700}
+
+    /* TOOLBAR */
+    .panel{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:15px;
+      padding:13px;
+      margin:12px 0;
+    }
+    .panel-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .panel-note{font-size:.72rem;color:var(--muted);line-height:1.5;margin-top:8px}
+    .search{
+      flex:1 1 220px;
+      min-width:180px;
+      border:1px solid rgba(110,103,95,.38);
+      border-radius:999px;
+      padding:9px 13px;
+      outline:0;
+      background:#fff;
+      font-size:.8rem;
+    }
+    .search:focus{border-color:var(--gold-dark)}
+
+    /* TABS */
+    .tabs{display:flex;gap:7px;overflow:auto;margin:12px 0;padding-bottom:2px}
+    .tab{
+      flex:0 0 auto;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--muted);
+      border-radius:999px;
+      padding:9px 14px;
+      font-weight:700;
+      font-size:.78rem;
+      cursor:pointer;
+    }
+    .tab.active{background:var(--gold-dark);border-color:var(--gold-dark);color:#fff}
+
+    /* CARDS */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:13px}
+    .empty{
+      grid-column:1/-1;
+      background:#fff;
+      border:1px dashed var(--line);
+      border-radius:15px;
+      padding:38px 20px;
+      text-align:center;
+      color:var(--muted);
+      font-size:.85rem;
+    }
+    .memory{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:0 6px 20px rgba(0,0,0,.045);
+      transition:transform .15s ease,opacity .15s ease;
+    }
+    .memory.dragging{opacity:.45;transform:scale(.985)}
+    .thumb{
+      position:relative;
+      width:100%;
+      aspect-ratio:9/16;
+      background:#121212;
+      overflow:hidden;
+      cursor:pointer;
+    }
+    .thumb img{display:block;width:100%;height:100%;object-fit:cover}
+    .thumb-status{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding:22px;
+      background:rgba(0,0,0,.60);
+      color:#fff;
+      font-size:.77rem;
+      line-height:1.5;
+    }
+    .play-badge{
+      position:absolute;
+      left:50%;top:50%;transform:translate(-50%,-50%);
+      width:48px;height:48px;border-radius:50%;
+      background:rgba(0,0,0,.58);
+      display:grid;place-items:center;
+      color:#fff;font-size:1.1rem;
+      pointer-events:none;
+    }
+    .card-body{padding:13px}
+    .guest-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+    .guest{font-weight:800;min-width:0;overflow-wrap:anywhere}
+    .token{font-size:.69rem;color:var(--gold-dark);font-weight:800;white-space:nowrap}
+    .meta{font-size:.69rem;color:var(--muted);line-height:1.55;margin-top:5px}
+    .status-chip{
+      display:inline-flex;
+      align-items:center;
+      border-radius:999px;
+      padding:3px 7px;
+      font-size:.63rem;
+      font-weight:800;
+      margin-top:7px;
+      border:1px solid var(--line);
+      color:var(--muted);
+      background:#fdfbf7;
+    }
+    .status-chip.pending{color:#7d642c;background:#fff8e8}
+    .status-chip.approved{color:#47664f;background:#eef6f0}
+    .status-chip.error{color:#8a1c1c;background:#fff0f0}
+    .caption-copy{font-size:.74rem;line-height:1.45;margin-top:8px;padding:8px;background:#f8f6f1;border-radius:8px;overflow-wrap:anywhere}
+    .error-copy{font-size:.7rem;line-height:1.45;margin-top:8px;padding:8px;background:#fff1f1;color:var(--red);border-radius:8px}
+    .row-btn{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+    .order{display:flex;gap:5px;align-items:center;margin-top:8px}
+    .order span{font-size:.67rem;color:var(--muted);margin-left:2px}
+
+    /* PLAYER */
+    .player-modal{
+      position:fixed;
+      inset:0;
+      z-index:200;
+      background:#000;
+      display:grid;
+      place-items:center;
+      padding:0;
+    }
+    .player-wrap{
+      position:relative;
+      height:min(100dvh,1000px);
+      width:min(100vw,562px);
+      background:#000;
+      overflow:hidden;
+    }
+    .player-wrap video{width:100%;height:100%;display:block;object-fit:cover;background:#000}
+    .player-bar{
+      position:fixed;
+      z-index:220;
+      top:max(12px,env(safe-area-inset-top));
+      left:12px;
+      right:12px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      pointer-events:none;
+    }
+    .counter,.player-close{
+      pointer-events:auto;
+      border:0;
+      background:rgba(0,0,0,.62);
+      color:#fff;
+      border-radius:999px;
+      backdrop-filter:blur(5px);
+    }
+    .counter{padding:9px 13px;font-size:.73rem;font-weight:800;max-width:calc(100vw - 80px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .player-close{width:43px;height:43px;cursor:pointer;font-size:1.05rem;flex:0 0 auto}
+
+    .toast{
+      position:fixed;
+      z-index:300;
+      left:50%;
+      bottom:max(18px,env(safe-area-inset-bottom));
+      transform:translateX(-50%) translateY(20px);
+      max-width:min(90vw,460px);
+      background:#2e2a27;
+      color:#fff;
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:.76rem;
+      font-weight:700;
+      opacity:0;
+      pointer-events:none;
+      transition:.2s;
+      text-align:center;
+    }
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    @media(max-width:650px){
+      body{padding-left:10px;padding-right:10px}
+      .topbar{align-items:flex-start;flex-direction:column}
+      .top-actions{justify-content:flex-start}
+      .stats{grid-template-columns:repeat(2,1fr);gap:6px}
+      .stat{padding:11px}
+      .grid{grid-template-columns:1fr}
+      .panel-row .btn{flex:1 1 auto}
+      .player-wrap{height:100dvh;width:100vw}
+    }
+  </style>
 </head>
 <body>
+
 <div class="shell">
-<section id="login" class="login"><div class="script">Wesley & Dionne</div><div class="label">WEDDING ADMIN</div><input id="adminCode" class="input" type="password" placeholder="ADMIN PASSWORD" autocomplete="current-password"><button id="loginBtn" class="btn" style="margin-top:12px">Enter Admin</button><div id="loginError" class="error"></div></section>
-<section id="app" class="hidden">
-<header class="top"><div class="brand"><div class="mini-xi">囍</div><div><div class="label">ADMIN · VIDEO QUEUE</div><div class="title">Wesley & Dionne</div><div class="sub">Real shared moderation queue</div></div></div><div class="actionsTop"><button id="refresh" class="btn outline small">↻ Refresh</button><button id="play" class="btn dark small">▶ Play Approved Queue</button></div></header>
-<div class="stats"><div class="stat"><strong id="pendingStat">0</strong><span>Pending</span></div><div class="stat"><strong id="approvedStat">0</strong><span>Approved</span></div><div class="stat"><strong id="processingStat">0</strong><span>Processing</span></div><div class="stat"><strong id="totalStat">0</strong><span>Total</span></div></div>
-<div class="tokenpanel"><div class="row"><button id="generate300" class="btn small">Generate 300 Guest Codes</button><button id="downloadCodes" class="btn outline small hidden">Download Last Codes CSV</button><input id="resetCode" maxlength="4" placeholder="CODE"><button id="resetToken" class="btn outline small">Reset Code</button></div><div id="tokenStats" class="tokenstats">Token statistics will appear here.</div></div>
-<div class="tabs"><button class="tab active" data-tab="pending">Pending</button><button class="tab" data-tab="approved">Approved</button><button class="tab" data-tab="processing">Processing</button><button class="tab" data-tab="all">All</button></div>
-<main id="grid" class="grid"></main>
-</section>
+
+  <!-- ========================================================
+       LOGIN
+       ======================================================== -->
+  <section id="login" class="login-card">
+    <div class="script">Wesley & Dionne</div>
+    <div class="xi">囍</div>
+    <div class="eyebrow">Wedding Memory Admin</div>
+    <input id="admin-password" class="login-input" type="password" autocomplete="current-password" placeholder="Admin password">
+    <button id="login-btn" class="btn" style="margin-top:12px">Enter Admin</button>
+    <div id="login-error" class="error" role="alert"></div>
+  </section>
+
+  <!-- ========================================================
+       ADMIN APP
+       ======================================================== -->
+  <section id="app" class="hidden">
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-xi">囍</div>
+        <div>
+          <div class="eyebrow">Admin · Moderation Queue</div>
+          <div class="brand-title">Wesley & Dionne</div>
+          <div class="brand-sub">Shared live queue · Mux + D1</div>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button id="refresh-btn" class="btn outline small" type="button">↻ Refresh</button>
+        <button id="play-approved-btn" class="btn dark small" type="button">▶ Play Approved Queue</button>
+        <button id="logout-btn" class="btn outline small" type="button">Log out</button>
+      </div>
+    </header>
+
+    <div class="stats">
+      <div class="stat"><strong id="pending-stat">0</strong><span>Pending</span></div>
+      <div class="stat"><strong id="approved-stat">0</strong><span>Approved</span></div>
+      <div class="stat"><strong id="processing-stat">0</strong><span>Processing</span></div>
+      <div class="stat"><strong id="total-stat">0</strong><span>Total</span></div>
+    </div>
+
+    <section class="panel">
+      <div class="panel-row">
+        <button id="generate-codes-btn" class="btn small" type="button">Generate 300 Guest Codes</button>
+        <button id="download-all-codes-btn" class="btn outline small" type="button">Download All Codes CSV</button>
+        <input id="search" class="search" type="search" placeholder="Search guest name or code…">
+      </div>
+      <div id="token-stats" class="panel-note">Loading guest-code statistics…</div>
+    </section>
+
+    <nav class="tabs" aria-label="Submission filters">
+      <button class="tab active" type="button" data-tab="pending">Pending</button>
+      <button class="tab" type="button" data-tab="approved">Approved</button>
+      <button class="tab" type="button" data-tab="processing">Processing</button>
+      <button class="tab" type="button" data-tab="errors">Errors</button>
+      <button class="tab" type="button" data-tab="all">All</button>
+    </nav>
+
+    <main id="grid" class="grid"></main>
+  </section>
 </div>
-<section id="player" class="modal hidden"><div class="playerbar"><div id="counter" class="counter"></div><button id="close" class="close">✕</button></div><div class="playerWrap"><video id="queueVideo" playsinline controls preload="metadata"></video></div></section>
+
+<!-- ==========================================================
+     FULL-SCREEN PLAYER
+     ========================================================== -->
+<section id="player" class="player-modal hidden" aria-modal="true" role="dialog">
+  <div class="player-bar">
+    <div id="player-counter" class="counter"></div>
+    <button id="player-close" class="player-close" type="button" aria-label="Close player">✕</button>
+  </div>
+  <div class="player-wrap">
+    <video id="queue-video" playsinline webkit-playsinline controls preload="metadata"></video>
+  </div>
+</section>
+
+<div id="toast" class="toast"></div>
+
 <script type="module">
-import Hls from "https://cdn.jsdelivr.net/npm/hls.js@1.6.13/+esm";
+  import Hls from "https://cdn.jsdelivr.net/npm/hls.js@1.6.13/+esm";
 
-const API_BASE='https://YOUR-WORKER.workers.dev';
-const $=id=>document.getElementById(id);
-const S={adminTicket:sessionStorage.getItem('wd_admin_ticket')||'',items:[],tab:'pending',lastCodes:[],drag:null,queue:[],qi:0,hls:null};
-function configured(){if(API_BASE.includes('YOUR-WORKER'))throw new Error('Set API_BASE to your deployed Worker URL first.')}
-async function api(path,options={}){configured();const headers=new Headers(options.headers||{});if(S.adminTicket)headers.set('Authorization',`Bearer ${S.adminTicket}`);if(options.body&&!(options.body instanceof FormData)&&!headers.has('Content-Type'))headers.set('Content-Type','application/json');const r=await fetch(API_BASE+path,{...options,headers});let d={};try{d=await r.json()}catch{}if(!r.ok)throw new Error(d.error||`Request failed (${r.status})`);return d}
-function bytes(n){if(!n)return'—';const u=['B','KB','MB','GB'];let i=0,v=n;while(v>=1024&&i<u.length-1){v/=1024;i++}return v.toFixed(i?1:0)+' '+u[i]}
-function date(n){return new Date(n).toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}
-function duration(x){return Math.max(0,(+x.endTime||0)-(+x.startTime||0))}
-function statusProcessing(x){return ['uploading','processing_source','processing_clip'].includes(x.status)}
+  /* ==========================================================
+     PUBLIC WORKER URL — SAFE TO KEEP IN GITHUB
+     ========================================================== */
+  const API_BASE = 'https://wd0501-wedding-api.dionnnosaur.workers.dev';
 
-$('loginBtn').onclick=login;$('adminCode').onkeydown=e=>{if(e.key==='Enter')login()};
-async function login(){try{$('loginError').textContent='';const d=await api('/api/admin/login',{method:'POST',body:JSON.stringify({password:$('adminCode').value})});S.adminTicket=d.ticket;sessionStorage.setItem('wd_admin_ticket',S.adminTicket);showApp()}catch(e){$('loginError').textContent=e.message}}
-async function showApp(){$('login').classList.add('hidden');$('app').classList.remove('hidden');await refresh()}
-if(S.adminTicket){showApp().catch(()=>{S.adminTicket='';sessionStorage.removeItem('wd_admin_ticket')})}
+  const $ = id => document.getElementById(id);
 
-$('refresh').onclick=refresh;document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{S.tab=t.dataset.tab;render()});
-async function refresh(){const d=await api('/api/admin/submissions');S.items=d.submissions||[];await loadTokenStats();render()}
-async function loadTokenStats(){try{const d=await api('/api/admin/tokens');const m=Object.fromEntries((d.stats||[]).map(x=>[x.status,Number(x.count)]));$('tokenStats').textContent=`Codes — available: ${m.available||0} · reserved: ${m.reserved||0} · used: ${m.used||0}`}catch{}}
-function stats(){$('pendingStat').textContent=S.items.filter(x=>x.status==='pending').length;$('approvedStat').textContent=S.items.filter(x=>x.status==='approved').length;$('processingStat').textContent=S.items.filter(statusProcessing).length;$('totalStat').textContent=S.items.length;$('play').disabled=!S.items.some(x=>x.status==='approved')}
-function visible(){if(S.tab==='all')return [...S.items].sort((a,b)=>b.createdAt-a.createdAt);if(S.tab==='processing')return S.items.filter(statusProcessing).sort((a,b)=>a.createdAt-b.createdAt);if(S.tab==='approved')return S.items.filter(x=>x.status==='approved').sort((a,b)=>(a.sortOrder??99999)-(b.sortOrder??99999)||a.createdAt-b.createdAt);return S.items.filter(x=>x.status==='pending').sort((a,b)=>a.createdAt-b.createdAt)}
-function button(text,cls,fn){const b=document.createElement('button');b.type='button';b.className=cls;b.textContent=text;b.onclick=fn;return b}
-function render(){stats();document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===S.tab));const g=$('grid'),items=visible(),approved=S.items.filter(x=>x.status==='approved').sort((a,b)=>(a.sortOrder??99999)-(b.sortOrder??99999));g.innerHTML='';if(!items.length){g.innerHTML='<div class="empty">Nothing here yet.</div>';return}items.forEach(item=>g.appendChild(card(item,approved)))}
-function card(item,approved){const c=document.createElement('article');c.className='memory';c.dataset.id=item.id;if(S.tab==='approved'){c.draggable=true;c.ondragstart=()=>{S.drag=item.id;c.classList.add('dragging')};c.ondragend=()=>{S.drag=null;c.classList.remove('dragging')};c.ondragover=e=>e.preventDefault();c.ondrop=async e=>{e.preventDefault();if(!S.drag||S.drag===item.id)return;const arr=[...approved],from=arr.findIndex(x=>x.id===S.drag),to=arr.findIndex(x=>x.id===item.id);if(from<0||to<0)return;const [m]=arr.splice(from,1);arr.splice(to,0,m);await api('/api/admin/reorder',{method:'POST',body:JSON.stringify({ids:arr.map(x=>x.id)})});await refresh()}}
- const thumb=document.createElement('div');thumb.className='thumb';if(item.thumbnailUrl){const img=document.createElement('img');img.src=item.thumbnailUrl;img.alt='Video thumbnail';thumb.appendChild(img)}else{const p=document.createElement('div');p.className='processing';p.textContent=item.status==='error'?(item.error||'Processing error'):'Video is still processing…';thumb.appendChild(p)}
- const body=document.createElement('div');body.className='body';body.innerHTML=`<div class="guestrow"><div class="guest"></div><div class="token"></div></div><div class="meta"></div>${item.captionText?'<div class="captioncopy"></div>':''}`;body.querySelector('.guest').textContent=item.guestName||'Guest';body.querySelector('.token').textContent='#'+(item.token||'—');body.querySelector('.meta').textContent=`${duration(item).toFixed(1)}s · ${bytes(item.fileSize)} · ${date(item.createdAt)} · ${item.status}`;if(item.captionText)body.querySelector('.captioncopy').textContent=`Caption: “${item.captionText}”`;
- const row=document.createElement('div');row.className='rowbtn';if(item.hlsUrl)row.appendChild(button('Preview','btn dark small',()=>openSingle(item)));if(item.status==='pending')row.appendChild(button('Approve','btn green small',()=>setStatus(item,'approved')));if(item.status==='approved')row.appendChild(button('Back to Pending','btn outline small',()=>setStatus(item,'pending')));if(!statusProcessing(item)&&item.status!=='rejected')row.appendChild(button('Reject','btn outline small',()=>setStatus(item,'rejected')));row.appendChild(button('Delete','btn red small',()=>deleteItem(item)));body.appendChild(row);
- if(item.status==='approved'&&S.tab==='approved'){const i=approved.findIndex(x=>x.id===item.id),order=document.createElement('div');order.className='order';const up=button('↑','btn outline small',()=>move(i,-1,approved)),down=button('↓','btn outline small',()=>move(i,1,approved));up.disabled=i<=0;down.disabled=i>=approved.length-1;const sp=document.createElement('span');sp.textContent='Playback position '+(i+1);order.append(up,down,sp);body.appendChild(order)}
- c.append(thumb,body);return c}
-async function setStatus(item,status){await api(`/api/admin/submissions/${item.id}`,{method:'PATCH',body:JSON.stringify({status})});await refresh()}
-async function deleteItem(item){if(!confirm(`Delete ${item.guestName||'this submission'} permanently?`))return;await api(`/api/admin/submissions/${item.id}`,{method:'DELETE'});await refresh()}
-async function move(i,d,arr){const j=i+d;if(j<0||j>=arr.length)return;[arr[i],arr[j]]=[arr[j],arr[i]];await api('/api/admin/reorder',{method:'POST',body:JSON.stringify({ids:arr.map(x=>x.id)})});await refresh()}
+  const state = {
+    adminSession: sessionStorage.getItem('wd0501_admin_session') || '',
+    submissions: [],
+    tokens: [],
+    tab: 'pending',
+    query: '',
+    draggingId: null,
+    queue: [],
+    queueIndex: 0,
+    hls: null,
+    refreshTimer: null,
+    busy: false
+  };
 
-function destroyHls(){if(S.hls){S.hls.destroy();S.hls=null}}
-function attachHls(video,url){destroyHls();if(video.canPlayType('application/vnd.apple.mpegurl')){video.src=url}else if(Hls.isSupported()){S.hls=new Hls();S.hls.loadSource(url);S.hls.attachMedia(video)}else throw new Error('HLS playback is not supported in this browser.')}
-function showPlayer(item,index,total,onEnded){const v=$('queueVideo');$('player').classList.remove('hidden');$('counter').textContent=`${index+1} / ${total} · ${item.guestName||'Guest'}`;attachHls(v,item.hlsUrl);v.onended=onEnded||null;v.play().catch(()=>{})}
-function openSingle(item){showPlayer(item,0,1,null)}
-$('close').onclick=closePlayer;function closePlayer(){const v=$('queueVideo');v.pause();v.removeAttribute('src');v.load();destroyHls();$('player').classList.add('hidden')}
-$('play').onclick=()=>{S.queue=S.items.filter(x=>x.status==='approved'&&x.hlsUrl).sort((a,b)=>(a.sortOrder??99999)-(b.sortOrder??99999));S.qi=0;if(S.queue.length)playQueueItem()};function playQueueItem(){if(S.qi>=S.queue.length){closePlayer();return}const item=S.queue[S.qi];showPlayer(item,S.qi,S.queue.length,()=>{S.qi++;playQueueItem()})}
+  /* ==========================================================
+     API
+     ========================================================== */
+  async function api(path, options = {}){
+    const headers = new Headers(options.headers || {});
 
-$('generate300').onclick=async()=>{if(!confirm('Generate 300 new unique 4-character guest codes?'))return;const d=await api('/api/admin/tokens/generate',{method:'POST',body:JSON.stringify({count:300})});S.lastCodes=d.codes||[];$('downloadCodes').classList.toggle('hidden',!S.lastCodes.length);await loadTokenStats();alert(`${S.lastCodes.length} codes generated.`)};
-$('downloadCodes').onclick=()=>{const csv='guest_code\n'+S.lastCodes.join('\n')+'\n';const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='WD0501_guest_codes.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
-$('resetToken').onclick=async()=>{const code=$('resetCode').value.trim().toUpperCase();if(code.length!==4)return alert('Enter a 4-character code.');if(!confirm(`Reset ${code} so it can be used again?`))return;await api('/api/admin/tokens/reset',{method:'POST',body:JSON.stringify({code})});$('resetCode').value='';await loadTokenStats();alert(`${code} reset.`)};
+    if (state.adminSession){
+      headers.set('Authorization', `Bearer ${state.adminSession}`);
+    }
+
+    if (options.body && !(options.body instanceof FormData) && !headers.has('Content-Type')){
+      headers.set('Content-Type','application/json');
+    }
+
+    const response = await fetch(API_BASE + path, {...options, headers});
+
+    let body = null;
+    try { body = await response.json(); } catch { body = null; }
+
+    if (!response.ok){
+      const error = new Error(body?.error || `Request failed (${response.status})`);
+      error.status = response.status;
+      throw error;
+    }
+
+    return body;
+  }
+
+  function toast(message){
+    const el = $('toast');
+    el.textContent = message;
+    el.classList.add('show');
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  function setBusy(value){
+    state.busy = value;
+    document.querySelectorAll('button').forEach(button => {
+      if (button.id !== 'player-close') button.disabled = value;
+    });
+    updateStats();
+  }
+
+  /* ==========================================================
+     AUTH
+     ========================================================== */
+  async function login(){
+    const password = $('admin-password').value;
+    $('login-error').textContent = '';
+    $('login-btn').disabled = true;
+
+    try{
+      const result = await api('/api/admin/login', {
+        method:'POST',
+        body:JSON.stringify({password})
+      });
+
+      /* Live Worker returns `session`, not the old prototype `ticket`. */
+      state.adminSession = result.session;
+      sessionStorage.setItem('wd0501_admin_session', state.adminSession);
+      $('admin-password').value = '';
+      await showApp();
+    }catch(error){
+      $('login-error').textContent = error.message;
+    }finally{
+      $('login-btn').disabled = false;
+    }
+  }
+
+  function logout(){
+    state.adminSession = '';
+    sessionStorage.removeItem('wd0501_admin_session');
+    stopAutoRefresh();
+    closePlayer();
+    $('app').classList.add('hidden');
+    $('login').classList.remove('hidden');
+    $('admin-password').focus();
+  }
+
+  async function showApp(){
+    $('login').classList.add('hidden');
+    $('app').classList.remove('hidden');
+
+    try{
+      await refreshAll();
+      startAutoRefresh();
+    }catch(error){
+      if (error.status === 401){
+        logout();
+        $('login-error').textContent = 'Admin session expired. Please log in again.';
+      }else{
+        throw error;
+      }
+    }
+  }
+
+  /* ==========================================================
+     DATA
+     ========================================================== */
+  function isReadyStatus(status){
+    return status === 'pending' || status === 'approved';
+  }
+
+  function isErrorStatus(status){
+    return status === 'error';
+  }
+
+  function isProcessingStatus(status){
+    return !isReadyStatus(status) && !isErrorStatus(status);
+  }
+
+  async function refreshAll(silent = false, force = false){
+    if (state.busy && !force) return;
+
+    try{
+      const [submissionsResult, tokensResult] = await Promise.all([
+        api('/api/admin/submissions'),
+        api('/api/admin/tokens')
+      ]);
+
+      state.submissions = submissionsResult.submissions || [];
+      state.tokens = tokensResult.tokens || [];
+      render();
+
+      if (!silent) toast('Queue refreshed');
+    }catch(error){
+      if (error.status === 401){
+        logout();
+        $('login-error').textContent = 'Admin session expired. Please log in again.';
+        return;
+      }
+      if (!silent) alert(error.message);
+      throw error;
+    }
+  }
+
+  function startAutoRefresh(){
+    stopAutoRefresh();
+    state.refreshTimer = setInterval(() => {
+      if (document.visibilityState === 'visible' && $('player').classList.contains('hidden')){
+        refreshAll(true).catch(()=>{});
+      }
+    }, 15000);
+  }
+
+  function stopAutoRefresh(){
+    if (state.refreshTimer){
+      clearInterval(state.refreshTimer);
+      state.refreshTimer = null;
+    }
+  }
+
+  /* ==========================================================
+     FORMATTERS
+     ========================================================== */
+  function formatBytes(value){
+    const n = Number(value);
+    if (!Number.isFinite(n) || n <= 0) return '—';
+    const units = ['B','KB','MB','GB'];
+    let i = 0;
+    let v = n;
+    while (v >= 1024 && i < units.length-1){ v /= 1024; i += 1; }
+    return `${v.toFixed(i ? 1 : 0)} ${units[i]}`;
+  }
+
+  function formatDate(epochSeconds){
+    const n = Number(epochSeconds);
+    if (!Number.isFinite(n)) return '—';
+    return new Date(n * 1000).toLocaleString([], {
+      dateStyle:'medium',
+      timeStyle:'short'
+    });
+  }
+
+  function clipDuration(item){
+    const explicit = Number(item.duration);
+    if (Number.isFinite(explicit) && explicit > 0) return explicit;
+    const start = Number(item.startTime) || 0;
+    const end = Number(item.endTime) || 0;
+    return Math.max(0, end-start);
+  }
+
+  function humanStatus(status){
+    const map = {
+      pending:'Pending review',
+      approved:'Approved',
+      error:'Processing error',
+      creating_upload:'Preparing upload',
+      waiting_upload:'Waiting for upload',
+      source_processing:'Processing source',
+      creating_clip:'Creating clip',
+      clip_processing:'Finishing clip',
+      photo_processing:'Processing photo',
+      creating_photo:'Creating photo story'
+    };
+    return map[status] || String(status || 'Unknown').replaceAll('_',' ');
+  }
+
+  /* ==========================================================
+     FILTERS + STATS
+     ========================================================== */
+  function approvedSorted(){
+    return state.submissions
+      .filter(item => item.status === 'approved')
+      .sort((a,b) =>
+        (a.sortOrder ?? 999999) - (b.sortOrder ?? 999999) ||
+        (a.createdAt ?? 0) - (b.createdAt ?? 0)
+      );
+  }
+
+  function currentItems(){
+    let items;
+
+    if (state.tab === 'pending'){
+      items = state.submissions.filter(item => item.status === 'pending');
+    }else if (state.tab === 'approved'){
+      items = approvedSorted();
+    }else if (state.tab === 'processing'){
+      items = state.submissions
+        .filter(item => isProcessingStatus(item.status))
+        .sort((a,b) => (a.createdAt ?? 0) - (b.createdAt ?? 0));
+    }else if (state.tab === 'errors'){
+      items = state.submissions
+        .filter(item => isErrorStatus(item.status))
+        .sort((a,b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
+    }else{
+      items = [...state.submissions]
+        .sort((a,b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
+    }
+
+    const q = state.query.trim().toLowerCase();
+    if (q){
+      items = items.filter(item =>
+        String(item.guestName || '').toLowerCase().includes(q) ||
+        String(item.token || '').toLowerCase().includes(q)
+      );
+    }
+
+    return items;
+  }
+
+  function updateStats(){
+    const pending = state.submissions.filter(item => item.status === 'pending').length;
+    const approved = state.submissions.filter(item => item.status === 'approved').length;
+    const processing = state.submissions.filter(item => isProcessingStatus(item.status)).length;
+
+    $('pending-stat').textContent = pending;
+    $('approved-stat').textContent = approved;
+    $('processing-stat').textContent = processing;
+    $('total-stat').textContent = state.submissions.length;
+
+    $('play-approved-btn').disabled = state.busy || !state.submissions.some(item => item.status === 'approved' && item.hlsUrl);
+
+    const production = state.tokens.filter(token => token.code !== 'TEST');
+    const counts = production.reduce((acc, token) => {
+      const key = token.status || 'unknown';
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+
+    const testToken = state.tokens.find(token => token.code === 'TEST');
+
+    $('token-stats').textContent =
+      `Production codes: ${production.length} · available: ${counts.available || 0} · reserved: ${counts.reserved || 0} · used: ${counts.used || 0}` +
+      (testToken ? ` · TEST: ${testToken.status}` : '');
+  }
+
+  /* ==========================================================
+     RENDER
+     ========================================================== */
+  function render(){
+    updateStats();
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.tab === state.tab);
+    });
+
+    const grid = $('grid');
+    const items = currentItems();
+    const approved = approvedSorted();
+
+    grid.innerHTML = '';
+
+    if (!items.length){
+      const empty = document.createElement('div');
+      empty.className = 'empty';
+      empty.textContent = state.query ? 'No matching submissions.' : 'Nothing here yet.';
+      grid.appendChild(empty);
+      return;
+    }
+
+    items.forEach(item => grid.appendChild(makeCard(item, approved)));
+  }
+
+  function makeButton(text, className, handler){
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = className;
+    button.textContent = text;
+    button.addEventListener('click', event => {
+      event.stopPropagation();
+      handler();
+    });
+    return button;
+  }
+
+  function makeCard(item, approved){
+    const card = document.createElement('article');
+    card.className = 'memory';
+    card.dataset.id = item.id;
+
+    /* Desktop drag/drop ordering. Mobile also gets ↑ ↓ controls. */
+    if (state.tab === 'approved'){
+      card.draggable = true;
+
+      card.addEventListener('dragstart', () => {
+        state.draggingId = item.id;
+        card.classList.add('dragging');
+      });
+
+      card.addEventListener('dragend', () => {
+        state.draggingId = null;
+        card.classList.remove('dragging');
+      });
+
+      card.addEventListener('dragover', event => event.preventDefault());
+
+      card.addEventListener('drop', async event => {
+        event.preventDefault();
+        if (!state.draggingId || state.draggingId === item.id) return;
+
+        const list = [...approved];
+        const from = list.findIndex(x => x.id === state.draggingId);
+        const to = list.findIndex(x => x.id === item.id);
+        if (from < 0 || to < 0) return;
+
+        const [moved] = list.splice(from,1);
+        list.splice(to,0,moved);
+        await saveOrder(list);
+      });
+    }
+
+    const thumb = document.createElement('div');
+    thumb.className = 'thumb';
+
+    if (item.thumbnailUrl){
+      const image = document.createElement('img');
+      image.src = item.thumbnailUrl;
+      image.alt = `Memory from ${item.guestName || 'guest'}`;
+      image.loading = 'lazy';
+      thumb.appendChild(image);
+
+      if (item.hlsUrl){
+        const play = document.createElement('div');
+        play.className = 'play-badge';
+        play.textContent = '▶';
+        thumb.appendChild(play);
+        thumb.addEventListener('click', () => openSingle(item));
+      }
+    }else{
+      const status = document.createElement('div');
+      status.className = 'thumb-status';
+      status.textContent = item.status === 'error'
+        ? (item.error || 'Processing error')
+        : `${humanStatus(item.status)}…`;
+      thumb.appendChild(status);
+    }
+
+    const body = document.createElement('div');
+    body.className = 'card-body';
+
+    const guestRow = document.createElement('div');
+    guestRow.className = 'guest-row';
+
+    const guest = document.createElement('div');
+    guest.className = 'guest';
+    guest.textContent = item.guestName || 'Guest';
+
+    const token = document.createElement('div');
+    token.className = 'token';
+    token.textContent = '#' + (item.token || '—');
+
+    guestRow.append(guest, token);
+
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    meta.textContent = `${clipDuration(item).toFixed(1)}s · ${formatBytes(item.fileSize)} · ${formatDate(item.createdAt)}`;
+
+    const chip = document.createElement('div');
+    chip.className = `status-chip ${item.status || ''}`;
+    chip.textContent = humanStatus(item.status);
+
+    body.append(guestRow, meta, chip);
+
+    if (item.captionText){
+      const caption = document.createElement('div');
+      caption.className = 'caption-copy';
+      caption.textContent = `Caption: “${item.captionText}”`;
+      body.appendChild(caption);
+    }
+
+    if (item.error){
+      const error = document.createElement('div');
+      error.className = 'error-copy';
+      error.textContent = item.error;
+      body.appendChild(error);
+    }
+
+    const row = document.createElement('div');
+    row.className = 'row-btn';
+
+    if (item.hlsUrl){
+      row.appendChild(makeButton('Preview','btn dark small',() => openSingle(item)));
+    }
+
+    if (item.status === 'pending'){
+      row.appendChild(makeButton('Approve','btn green small',() => setStatus(item,'approved')));
+      row.appendChild(makeButton('Reject & Delete','btn red small',() => rejectAndDelete(item)));
+    }else if (item.status === 'approved'){
+      row.appendChild(makeButton('Back to Pending','btn outline small',() => setStatus(item,'pending')));
+      row.appendChild(makeButton('Delete','btn red small',() => deleteSubmission(item)));
+    }else if (item.status === 'error'){
+      row.appendChild(makeButton('Delete','btn red small',() => deleteSubmission(item)));
+    }
+
+    body.appendChild(row);
+
+    if (item.status === 'approved' && state.tab === 'approved'){
+      const index = approved.findIndex(x => x.id === item.id);
+      const order = document.createElement('div');
+      order.className = 'order';
+
+      const up = makeButton('↑','btn outline small',() => moveApproved(index,-1,approved));
+      const down = makeButton('↓','btn outline small',() => moveApproved(index,1,approved));
+      up.disabled = index <= 0;
+      down.disabled = index >= approved.length-1;
+
+      const label = document.createElement('span');
+      label.textContent = `Playback position ${index+1}`;
+      order.append(up,down,label);
+      body.appendChild(order);
+    }
+
+    card.append(thumb,body);
+    return card;
+  }
+
+  /* ==========================================================
+     MODERATION
+     ========================================================== */
+  async function setStatus(item, status){
+    setBusy(true);
+    try{
+      await api(`/api/admin/submissions/${encodeURIComponent(item.id)}`, {
+        method:'PATCH',
+        body:JSON.stringify({status})
+      });
+      await refreshAll(true, true);
+      toast(status === 'approved' ? 'Approved' : 'Moved back to pending');
+    }catch(error){
+      alert(error.message);
+    }finally{
+      setBusy(false);
+    }
+  }
+
+  async function rejectAndDelete(item){
+    const ok = confirm(`Reject and permanently delete ${item.guestName || 'this submission'}?\n\nThis also deletes its Mux video.`);
+    if (!ok) return;
+    await deleteSubmission(item, true);
+  }
+
+  async function deleteSubmission(item, rejected = false){
+    if (!rejected){
+      const ok = confirm(`Permanently delete ${item.guestName || 'this submission'}?\n\nThis also deletes its Mux video.`);
+      if (!ok) return;
+    }
+
+    setBusy(true);
+    try{
+      await api(`/api/admin/submissions/${encodeURIComponent(item.id)}`, {
+        method:'DELETE'
+      });
+      await refreshAll(true, true);
+      toast(rejected ? 'Submission rejected and deleted' : 'Submission deleted');
+    }catch(error){
+      alert(error.message);
+    }finally{
+      setBusy(false);
+    }
+  }
+
+  async function saveOrder(items){
+    setBusy(true);
+    try{
+      await api('/api/admin/reorder', {
+        method:'POST',
+        body:JSON.stringify({ids:items.map(item => item.id)})
+      });
+      await refreshAll(true, true);
+      toast('Playback order saved');
+    }catch(error){
+      alert(error.message);
+    }finally{
+      setBusy(false);
+    }
+  }
+
+  async function moveApproved(index, delta, list){
+    const target = index + delta;
+    if (target < 0 || target >= list.length) return;
+
+    const reordered = [...list];
+    [reordered[index],reordered[target]] = [reordered[target],reordered[index]];
+    await saveOrder(reordered);
+  }
+
+  /* ==========================================================
+     GUEST CODES
+     ========================================================== */
+  async function generateCodes(){
+    const ok = confirm('Generate 300 additional unique 4-character guest codes?');
+    if (!ok) return;
+
+    setBusy(true);
+    try{
+      const result = await api('/api/admin/tokens/generate', {
+        method:'POST',
+        body:JSON.stringify({count:300})
+      });
+
+      await refreshAll(true, true);
+      downloadCsv(result.codes || [], 'WD0501_new_guest_codes.csv');
+      toast(`${result.count || 0} codes generated`);
+    }catch(error){
+      alert(error.message);
+    }finally{
+      setBusy(false);
+    }
+  }
+
+  function downloadCsv(codes, filename){
+    if (!codes.length){
+      alert('There are no codes to download.');
+      return;
+    }
+
+    const csv = 'guest_code\n' + codes.join('\n') + '\n';
+    const url = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function downloadAllCodes(){
+    const productionCodes = state.tokens
+      .filter(token => token.code !== 'TEST')
+      .map(token => token.code)
+      .sort();
+
+    downloadCsv(productionCodes, 'WD0501_all_guest_codes.csv');
+  }
+
+  /* ==========================================================
+     HLS PLAYER
+     ========================================================== */
+  function destroyHls(){
+    if (state.hls){
+      state.hls.destroy();
+      state.hls = null;
+    }
+  }
+
+  function attachHls(video, url){
+    destroyHls();
+
+    if (video.canPlayType('application/vnd.apple.mpegurl')){
+      video.src = url;
+      return;
+    }
+
+    if (Hls.isSupported()){
+      state.hls = new Hls({enableWorker:true});
+      state.hls.loadSource(url);
+      state.hls.attachMedia(video);
+      return;
+    }
+
+    throw new Error('HLS playback is not supported in this browser.');
+  }
+
+  function requestFullscreenIfPossible(){
+    const player = $('player');
+    if (player.requestFullscreen && !document.fullscreenElement){
+      player.requestFullscreen().catch(()=>{});
+    }
+  }
+
+  function showPlayer(item, index, total, onEnded){
+    const video = $('queue-video');
+    $('player').classList.remove('hidden');
+    $('player-counter').textContent = `${index+1} / ${total} · ${item.guestName || 'Guest'}`;
+
+    attachHls(video,item.hlsUrl);
+    video.onended = onEnded || null;
+    video.currentTime = 0;
+
+    video.play().catch(()=>{});
+  }
+
+  function openSingle(item){
+    if (!item.hlsUrl) return;
+    state.queue = [];
+    state.queueIndex = 0;
+    showPlayer(item,0,1,null);
+  }
+
+  function playApprovedQueue(){
+    state.queue = approvedSorted().filter(item => item.hlsUrl);
+    state.queueIndex = 0;
+
+    if (!state.queue.length){
+      alert('There are no approved clips ready to play.');
+      return;
+    }
+
+    playQueueItem();
+    requestFullscreenIfPossible();
+  }
+
+  function playQueueItem(){
+    if (state.queueIndex >= state.queue.length){
+      closePlayer();
+      toast('Approved queue finished');
+      return;
+    }
+
+    const item = state.queue[state.queueIndex];
+    showPlayer(item,state.queueIndex,state.queue.length,() => {
+      state.queueIndex += 1;
+      playQueueItem();
+    });
+  }
+
+  function closePlayer(){
+    const video = $('queue-video');
+    video.pause();
+    video.onended = null;
+    video.removeAttribute('src');
+    video.load();
+    destroyHls();
+    $('player').classList.add('hidden');
+
+    if (document.fullscreenElement){
+      document.exitFullscreen().catch(()=>{});
+    }
+  }
+
+  /* ==========================================================
+     EVENTS
+     ========================================================== */
+  $('login-btn').addEventListener('click',login);
+  $('admin-password').addEventListener('keydown',event => {
+    if (event.key === 'Enter') login();
+  });
+
+  $('logout-btn').addEventListener('click',logout);
+  $('refresh-btn').addEventListener('click',() => refreshAll(false));
+  $('play-approved-btn').addEventListener('click',playApprovedQueue);
+  $('generate-codes-btn').addEventListener('click',generateCodes);
+  $('download-all-codes-btn').addEventListener('click',downloadAllCodes);
+
+  $('search').addEventListener('input',event => {
+    state.query = event.target.value;
+    render();
+  });
+
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click',() => {
+      state.tab = tab.dataset.tab;
+      render();
+    });
+  });
+
+  $('player-close').addEventListener('click',closePlayer);
+
+  document.addEventListener('keydown',event => {
+    if (event.key === 'Escape' && !$('player').classList.contains('hidden')){
+      closePlayer();
+    }
+  });
+
+  document.addEventListener('visibilitychange',() => {
+    if (document.visibilityState === 'visible' && state.adminSession && $('player').classList.contains('hidden')){
+      refreshAll(true).catch(()=>{});
+    }
+  });
+
+  /* ==========================================================
+     BOOT
+     ========================================================== */
+  if (state.adminSession){
+    showApp().catch(error => {
+      console.error(error);
+      logout();
+    });
+  }else{
+    $('admin-password').focus();
+  }
 </script>
+
 </body>
 </html>
